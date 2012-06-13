@@ -1,0 +1,279 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}tsThemes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
+<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript">
+    function filter_unit_type (e) {
+        document.location.href='/gom/list/2/'+$(this).val();
+        e.preventDefault();
+    }
+    function filter_text_func (e) {
+        switch (parseInt($('#id_filter').val())) {
+            case(3):
+                document.location.href='/gom/list/3/'+$('#id_filter_cost').val() + '/' + $("#id_filter_text").val() +'/';
+                break;
+            case(5):
+                document.location.href='/gom/list/5/'+$('#id_filter_name').val() + '/' + $("#id_filter_text").val() +'/';
+                break;
+            default:
+                alert('invalid filter text value' + parseInt($('#id_filter').val()));
+                break;
+        }
+        e.preventDefault();
+    }
+    function filter_image (e) {
+        document.location.href='/gom/list/6/'+$(this).val();
+        e.preventDefault();
+    }
+    function filter_manu (e) {
+        document.location.href='/gom/list/4/'+$(this).val();
+        e.preventDefault();
+    }
+    function filter_owner (e) {
+        document.location.href='/gom/list/1/'+$(this).val();
+        e.preventDefault();
+    }
+    function filterClick(event) {
+        var $val = parseInt($(this).val());
+        switch ($val){
+            case 1:
+                $("#id_filter_name").hide();
+                $("#id_filter_cost").hide();
+                $("#id_filter_text").hide();
+                $("#id_filter_button").hide();
+                $("#id_filter_unit_type").hide();
+                $("#id_filter_manu").hide();
+                $("#id_filter_image").hide();
+                $("#id_filter_owner").show();
+                break;
+            case 2:
+                $("#id_filter_name").hide();
+                $("#id_filter_owner").hide();
+                $("#id_filter_cost").hide();
+                $("#id_filter_button").hide();
+                $("#id_filter_text").hide();
+                $("#id_filter_manu").hide();
+                $("#id_filter_image").hide();
+                $("#id_filter_unit_type").show();
+                break;
+            case 3:
+                $("#id_filter_name").hide();
+                $("#id_filter_owner").hide();
+                $("#id_filter_unit_type").hide();
+                $("#id_filter_manu").hide();
+                $("#id_filter_image").hide();
+                $("#id_filter_cost").show();
+                $("#id_filter_text").show();
+                $("#id_filter_button").show();
+                break;
+            case 4:
+                $("#id_filter_name").hide();
+                $("#id_filter_owner").hide();
+                $("#id_filter_cost").hide();
+                $("#id_filter_button").hide();
+                $("#id_filter_text").hide();
+                $("#id_filter_unit_type").hide();
+                $("#id_filter_image").hide();
+                $("#id_filter_manu").show();
+                break;
+            case 5:
+                $("#id_filter_cost").hide();
+                $("#id_filter_owner").hide();
+                $("#id_filter_unit_type").hide();
+                $("#id_filter_manu").hide();
+                $("#id_filter_image").hide();
+                $("#id_filter_name").show();
+                $("#id_filter_text").show();
+                $("#id_filter_button").show();
+                break;
+            case 6:
+                $("#id_filter_name").hide();
+                $("#id_filter_owner").hide();
+                $("#id_filter_cost").hide();
+                $("#id_filter_button").hide();
+                $("#id_filter_text").hide();
+                $("#id_filter_unit_type").hide();
+                $("#id_filter_manu").hide();
+                $("#id_filter_image").show();
+                break;
+            default:
+                alert("Invalid filter type: " + $val);
+
+        }
+        return false;
+    }
+function initFilters( filterType, filterValue, filterValue2 ) {
+        if ( filterType ){
+            $('#id_filter').val(filterType);
+            switch ( filterType) {
+                case('1'):
+                    $("#id_filter_owner").val(filterValue);
+                    $("#id_filter_owner").show();
+                    break;
+                case('2'):
+                    $("#id_filter_unit_type").val(filterValue);
+                    $("#id_filter_unit_type").show();
+                    break;
+                case('3'):
+                    $("#id_filter_cost").val(filterValue);
+                    $("#id_filter_cost").show();
+                    $("#id_filter_text").val(filterValue2);
+                    $("#id_filter_text").show();
+                    $("#id_filter_button").show();
+                    break;
+                case('4'):
+                    $("#id_filter_manu").val(filterValue);
+                    $("#id_filter_manu").show();
+                    break;
+                case('5'):
+                    $("#id_filter_name").val(filterValue);
+                    $("#id_filter_name").show();
+                    $("#id_filter_text").val(filterValue2);
+                    $("#id_filter_text").show();
+                    $("#id_filter_button").show();
+                    break;
+                case('6'):
+                    $("#id_filter_image").val(filterValue);
+                    $("#id_filter_image").show();
+                    break;
+            }
+        }
+    }
+    
+    $(document).ready(function() { 
+        $("#id_filter_cost").hide();
+        $("#id_filter_text").hide();
+        $("#id_filter_button").hide();
+        $("#id_filter_owner").hide();
+        $("#id_filter_unit_type").hide();
+        $("#id_filter_manu").hide();
+        $("#id_filter_name").hide();
+        $("#id_filter_image").hide();
+        $("#id_unit_table").tablesorter({sortList: [[1,0],[0,0]], headers:
+            { 4: { sorter: false }, 5: { sorter: false } } });
+        initFilters('{{filterType}}', '{{filterValue}}', '{{filterValue2}}');
+        $("#id_filter").change(filterClick);
+        $('#id_filter_unit_type').change(filter_unit_type);
+        $('#id_filter_owner').change(filter_owner);
+        $('#id_filter_manu').change(filter_manu);
+        $('#id_filter_image').change(filter_image);
+        $('#id_filter_button').click(filter_text_func);
+    } 
+    ); 
+</script>
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "List Units" %}{% endblock %}
+
+{% block body %}
+<h1>{% trans "Units" %}</h1>
+<h4>Filter by: 
+<select id="id_filter" name="filter">
+    <option value="" selected="selected">{% trans 'None' %}</option>
+    <option value="1">{%trans "Owner" %}</option>
+    <option value="2">{%trans "Unit Type" %}</option>
+    <option value="3">{%trans "Unit Cost" %}</option>
+    <option value="4">{%trans "Manufacturer" %}</option>
+    <option value="5">{%trans "Name" %}</option>
+    <option value="6">{%trans "Image" %}</option>
+</select>
+<select id="id_filter_owner" name="filter_owner">
+    <option value="" selected="selected">{% trans 'None' %}</option>
+    {% for user in owners %}
+    <option value="{{user.id}}">{{user}}</option>
+    {% endfor %}
+</select>
+<select id="id_filter_unit_type" name="filter_unit_type">
+    <option value="" selected="selected">{% trans 'None' %}</option>
+    <option value="1">{% trans 'Grunt Squad' %}</option>
+    <option value="2">{% trans 'Squad Attachment' %}</option>
+    <option value="3">{% trans 'Specialist' %}</option>
+    <option value="4">{% trans 'Commander' %}</option>
+    <option value="11">{% trans 'Tank' %}</option>
+    <option value="12">{% trans 'Mecha' %}</option>
+    <option value="13">{% trans 'GSV' %}</option>
+    <option value="14">{% trans 'ASV' %}</option>
+    <option value="15">{% trans 'Artillery' %}</option>
+</select>
+<select id="id_filter_cost" name="filter_cost">
+    <option value="1" selected="selected">></option>
+    <option value="2"><</option>
+    <option value="3">=</option>
+</select>
+<select id="id_filter_name" name="filter_name">
+    <option value="1" selected="selected">{% trans 'Contains' %}</option>
+    <option value="2">{% trans 'Starts with' %}</option>
+    <option value="3">{% trans 'Ends with' %}</option>
+</select>
+<select id="id_filter_image" name="filter_image">
+    <option value="" selected="selected">----</option>
+    <option value="1">{% trans 'Has Image' %}</option>
+    <option value="2">{% trans 'No Image' %}</option>
+</select>
+<input type="text" id="id_filter_text"/>
+<button name="filter_button" id="id_filter_button" type="button">{% trans "Click to Filter" %}</button>
+<select id="id_filter_manu" name="filter_manu">
+    <option value="" selected="selected">{% trans 'None' %}</option>
+    {% for manu in manufacturers %}
+    <option value="{{manu.id}}">{{manu.manuName}}</option>
+    {% endfor %}
+</select>
+</h4>
+
+{% if units %}
+
+<form method="post" id="multi_PDF" action="/gom/list/handle/" enctype="multipart/form-data"> {% csrf_token %}
+<table id="id_unit_table">
+<thead> 
+<tr> 
+    <th>{% trans 'Name' %}</th> 
+    <th>{% trans 'Owner' %}</th> 
+    <th>{% trans 'Cost' %}</th>
+    <th>{% trans 'Manufacturer' %}</th>
+    <th><button name="pdf" type="submit">{% trans "Create Multi Card PDF" %}</button></th>
+    {% if user.is_authenticated %}
+    <th><button name="force" type="submit">{% trans "Add to Force" %}</button></th>
+    {% else %}
+    <th>{% trans "Add to Force" %}</th>
+    {% endif %}
+</tr> 
+</thead> 
+    <tbody>
+    {% for item in units %}
+    <tr><td><a href="/gom/unit/{{item.id}}/">{{item.name}}</a></td>
+        <td>{{item.owner.get}}</td>
+        <td>{{item.getCost}}</td>
+        <td>{{item.manu.get.manuName}}</td>
+        <td>
+            <select name="pdf_{{item.id}}">
+                <option value="" selected="selected">None</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </td>
+        <td>
+            <select name="force_{{item.id}}">
+            {% if user.is_authenticated %}
+                <option value="" selected="selected">None</option>
+                {% for force in forces %}
+                    <option value="{{force.id}}">{{force.name}}</option>
+                {% endfor %}
+            {% else %}
+                <option value="" selected="selected">{% trans 'Requires login' %}</option>
+            {% endif %}
+            </select>
+        </td>
+    </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+</form>
+{% endblock %}

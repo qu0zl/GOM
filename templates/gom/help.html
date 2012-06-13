@@ -1,0 +1,11 @@
+{% load i18n %}
+<ul>
+    <li>
+    <a href="#" class="menu">{% trans 'Help' %}</a>
+        <ul class="menu-dropdown">
+            <li><a href="{% url unit_help %}">Unit Creation</a></li>
+            <li><a href="{% url force_help %}">Force Creation</a></li>
+            <li><a href="{% url multi_help %}">Multi Card PDF</a></li>
+        </ul>
+    </li>
+</ul>

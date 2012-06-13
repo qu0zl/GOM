@@ -1,0 +1,62 @@
+{% extends "banner_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block banner %}
+<h1>{% trans "Welcome to the<br>Grunt-o-matic" %}</h1>
+
+    <p>
+    {% blocktrans %}
+        <br>
+        The <b>Grunt-o-matic</b> is a tool for creating cards for the 15mm Sci-Fi game <a href="http://www.gruntz.biz/">Gruntz</a>.
+        <br>
+        {% endblocktrans %}
+        </p>
+    <p>
+    {% blocktrans %}
+        Cards can be individually created or multiple cards may be placed on the same PDF for printing as a single page.
+    {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+        You may view other user's Gruntz units, and download PDF cards for them without registering.
+        If you wish to make your own Gruntz units then you need to create a free user account
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+        Javascript is required for the Grunt-o-matic GUI to function fully, although you can still produce all cards without it.
+        Development is aimed at Google Chrome, Mozilla Firefox and Apple Safari.
+        Recent versions of IE should work but are un-tested.
+        {% endblocktrans %}
+    </p>
+    
+    {% if user.is_authenticated %}
+        {% if user.is_authenticated == False %}
+        {% url what_next as what_next_url %}
+        <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}" class="btn primary large">What Next</a>?{% endblocktrans %}</p>
+        {% endif %}
+    {% else %}
+        {% url acct_login as login_url %}
+        {% ifsetting ACCOUNT_OPEN_SIGNUP %}
+            {% url acct_signup as signup_url %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn">Log In</a> or <a href="{{ signup_url }}" class="btn primary">Sign Up</a> to try out the site.{% endblocktrans %}</p>
+        {% else %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn primary large">Log In</a> to try out the site.{% endblocktrans %}</p>
+        {% endifsetting %}
+    {% endif %}
+    {% endblock %}
+
+    {% block column-1 %}
+    {% endblock %}
+    {% block column-2 %}
+    {% endblock %}
+    {% block column-3 %}
+    {% endblock %}
+    {% block column-4 %}
+    {% endblock %}

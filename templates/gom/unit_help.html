@@ -1,0 +1,27 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Unit Creation" %}{% endblock %}
+
+{% block body %}
+<h1>{% trans "Unit Creation Guide" %}</h1>
+
+<p><h4>Step 1: Login. Register a user account first if you have not already done so.</h4></p>
+
+<p><h4>Step 2: Select {% trans "New Unit" %} from the top navigation bar.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NU1.jpg"/></p>
+<p><h4>Step 3: Modify your unit's stats</h4></p>
+<p>Enter unit name and unit type.</p>
+<p>Modify stats using the drop down boxes.</p>
+<p><h4>You must save your unit before you can create your unit PDF card</h4></p>
+<p><h4>Select the 'Save' button.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NU2.jpg"/></p>
+<p><h4>To output your unit PDF select the 'PDF' button at the bottom of the unit creation page.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NU3.jpg"/></p>
+<p><h4>To add a unit to a Force, select it from the <a href='/gom/list/all/'>unit list page</a> and click the 'Add to Force' button.</h4></p>
+{% endblock %}

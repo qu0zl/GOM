@@ -1,0 +1,136 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/view.js"></script>
+    <script type="text/javascript">
+        function cacheData() {
+            $.data(this, 'current', $(this).val());
+        }
+    $( document ).ready( function()
+    {
+    $('select').change(onSelect);
+    $('select').each(cacheData);
+
+    } );
+    function onSelect (e) {
+        var count = $(this).val();
+        if ( count < 1 ) {
+            if (!confirm( "{% trans 'Do you really want to remove this entry?' %}" )) {
+                //$(this).val($.data(this, 'current'));
+                return false;
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/gom/force/forceEntryCount/",
+            data:{'entry':$(this).attr('name'),
+            'count':count,
+            },
+            dataType: "json",
+            success: function(msg){
+                // See if we have to delete this select
+                if (msg['delete']){
+                    $('#id_entry_'+msg['delete']).remove();
+                }
+                if (msg['cost']){
+                    $('#id_cost').text(msg['cost']);
+                }
+            },
+            error: function(msg){
+            {% if user.is_authenticated and request.user == force_owner %}
+                alert('Failed to update unit count');
+            {% else %}
+                alert('Unable to change unit entries. This is not your force.');
+            {% endif %}
+            },
+            });
+        e.preventDefault();
+    }
+</script>
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Edit Force" %}{% endblock %}
+
+{% block body %}
+    {% if force_id == '0' or user.is_authenticated and request.user == force_owner %}
+    <h1>{% trans "Edit Force"%}</h1>
+    {% if force_id == '0'%}
+    <h4>Note: This page is to create a new force, containing multiple units that you create seperately.<br>If you only wish to create a unit or vehicle rather than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> instead.</h4>
+    {% endif %}
+    {% else %}
+    <h1>{% trans "Other User's Force - View Only"%}</h1>
+    {% endif %}
+    
+    <dl class="what_next">
+        <form method="post" id="forceForm" action="/gom/force/{{force_id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tbody>
+                    <tr><td>
+                        <table>
+                            <tbody>
+                                <tr><td>
+                            <table>
+                                <tbody>
+                                    <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
+                                    <tr><td>{{formObject.cost.label}}</td><td id="id_cost">{{force.getCost}}</td></tr>
+                                    <tr><td>{{formObject.description.label}}</td><td>{{formObject.description}}</td></tr>
+                                </tbody>
+                            </table>
+                            </td><td>
+                            <table>
+                                <tbody>
+                                    {% if force.units.count == 0 %}
+                                        {% if force_id != '0' and user.is_authenticated and request.user == force_owner %}
+                                        <a href='/gom/list/all'>{% trans 'Add units' %}</a>
+                                        {% endif %}
+                                        {%else %}
+                                        <tr><th>{%trans 'Unit Name' %}</th><th>{% trans 'Count *' %}</th></tr>
+                                        {% for item in force.units %}
+                                        <tr id="id_entry_{{item.id}}">
+                                            <td><a href="/gom/unit/{{item.unit.id}}/">{{item.unit.name}}</a></td>
+                                            <td>
+                                                <select name="entry_{{item.id}}">
+                                                    <option value="0">0</option>
+                                                    {% for i in 123456789|make_list %}
+                                                        {% if i|add:"0" == item.count %}
+                                                            <option value="{{i}}" selected="selected">{{i}}</option>
+                                                        {% else %}
+                                                            <option value="{{i}}">{{i}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </td></tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                    </td></tr>
+                    </tbody>
+                    </table>
+            </td>
+    </tr>
+            </tbody>
+        </table>
+            <table>
+                <tbody>
+                    <tr>
+                        {% if force_id == '0' or user.is_authenticated and request.user == force_owner %}
+                        <td> <button name="save" type="submit" id="id_save">{% trans "Save" %}</button> </td>
+                        {% endif %}
+                        {% if user.is_authenticated and request.user == force_owner %}
+                            <td> <button name="delete" type="submit" id="id_delete">{% trans "delete" %}</button> </td>
+                        {% endif %}
+                        {% if force_id != '0' %} {% comment %} this wouldn't redirect url and we could end up with multiple versions of this unit saved {% endcomment %}
+                            <td> <button name="pdf" type="submit">{% trans "PDF" %}</button> </td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        <h4>{%trans '*Note: by design only one card is outputed for each Unit Entry. The count value is used in calculating force point cost.<br> If you wish to have multiple duplicate cards included in a force then add one entry for each card that you require.' %}</h4>
+{% endblock %}

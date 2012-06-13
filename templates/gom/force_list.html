@@ -1,0 +1,43 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() 
+        { 
+        $("#id_force_table").tablesorter({sortForce: [[0,0]]} ); 
+        } 
+    ); 
+</script>
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "List Forces" %}{% endblock %}
+
+{% block body %}
+{% if Forces %}
+<h1>{% trans "Forces" %}</h1>
+<form method="post" id="multi_PDF" action="/gom/pdf/multi/" enctype="multipart/form-data"> {% csrf_token %}
+<table id="id_force_table">
+<thead> 
+<tr> 
+    <th>{% trans 'Name' %}</th> 
+    <th>{% trans 'Owner' %}</th> 
+    <th>{% trans 'Cost' %}</th> 
+</tr> 
+</thead> 
+    <tbody>
+    {% for item in Forces %}
+    <tr><td><a href="/gom/force/{{item.id}}/">{{item.name}}</a></td>
+        <td>{{item.owner.get}}</td>
+        <td>{{item.cost}}</td>
+    </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+</form>
+<h4>{% trans 'Empty forces that do not belong to you have been excluded.' %}</h4>
+{% endblock %}

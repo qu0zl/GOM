@@ -1,0 +1,408 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/view.js"></script>
+
+<script type="text/javascript">
+    function updateSave() {
+        if ( {{ saved }} == 1 ) {
+            $('#id_save').html("{% trans "Saved" %}").delay('slow').queue(function(n) {
+            $(this).html("{% trans "Save" %}");
+            n();})
+        }
+    }
+
+    function showWeapons(utype) {
+        if ( utype < 10 ) {
+            $('#id_shoot_tr').show();
+            $('#id_assault_tr').show();
+            $('#id_mental_tr').show();
+            // Hide vehicle specific stuff
+            $('#id_mainWeapons_tb').hide();
+            $('#id_mainWeapons2_tb').hide();
+            $('#id_mainWeapons3_tb').hide();
+            $('#id_mainWeapons4_tb').hide();
+            $('#id_AIWeapons_tb').hide();
+            $('#id_AIWeapons2_tb').hide();
+            $('#id_modz_tr').hide();
+            $('#id_cmdTek_tr').hide();
+            switch (utype) {
+                case 1:
+                    $('#id_basicWeapons_tb').show();
+                    $('#id_SAWeapons_tb').hide();
+                    $('#id_SpecWeapons_tb').hide();
+                    break;
+                case 2:
+                    $('#id_SAWeapons_td').html('{% trans "SA Weapons" %}');
+                    $('#id_basicWeapons_tb').hide();
+                    $('#id_SAWeapons_tb').show();
+                    $('#id_SpecWeapons_tb').hide();
+                    break;
+                case 3:
+                    $('#id_basicWeapons_tb').hide();
+                    $('#id_SAWeapons_tb').hide();
+                    $('#id_SpecWeapons_tb').show();
+                    break;
+                case 4:
+                    $('#id_SAWeapons_td').html('{% trans "Commander Weapons" %}');
+                    $('#id_basicWeapons_tb').hide();
+                    $('#id_SAWeapons_tb').show();
+                    $('#id_SpecWeapons_tb').hide();
+                    break;
+                default:
+                    alert('Invalid infantry unit type:' + utype);
+                    break;
+            }
+        } else {
+            var size = $('#id_size').val();
+            $('#id_shoot_tr').hide();
+            $('#id_assault_tr').hide();
+            $('#id_mental_tr').hide();
+            $('#id_SAWeapons_tb').hide();
+            $('#id_SpecWeapons_tb').hide();
+            $('#id_basicWeapons_tb').hide();
+            $('#id_grenades_tb').hide();
+            $('#id_CCW_tb').hide();
+            $('#id_modz_tr').show();
+            $('#id_AIWeapons_tb').show();
+            switch (utype) {
+                case 11:
+                case 12:
+                    $('#id_mainWeapons_tb').show();
+                    if ( size == 5 ) {
+                        $('#id_mainWeapons2_tb').show();
+                        $('#id_mainWeapons3_tb').show();
+                        $('#id_mainWeapons4_tb').show();
+                        $('#id_AIWeapons2_tb').show();
+                    } else if ( size >=3 ) {
+                        $('#id_mainWeapons2_tb').show();
+                        $('#id_mainWeapons3_tb').show();
+                        $('#id_mainWeapons4_tb').hide();
+                        $('#id_AIWeapons2_tb').show();
+                    } else if ( size == 2 ) {
+                        $('#id_mainWeapons2_tb').show();
+                        $('#id_mainWeapons3_tb').hide();
+                        $('#id_mainWeapons4_tb').hide();
+                        $('#id_AIWeapons2_tb').hide();
+                    }  else {
+                        $('#id_mainWeapons2_tb').hide();
+                        $('#id_mainWeapons3_tb').hide();
+                        $('#id_mainWeapons4_tb').hide();
+                        $('#id_AIWeapons2_tb').hide();
+                    }
+                    $('#id_cmdTek_tr').hide();
+                    break;
+                case 13:
+                case 14:
+                    $('#id_mainWeapons_tb').hide();
+                    $('#id_mainWeapons2_tb').hide();
+                    $('#id_mainWeapons3_tb').hide();
+                    $('#id_mainWeapons4_tb').hide();
+                    if ( size >= 3 )
+                        $('#id_AIWeapons2_tb').show();
+                    else
+                        $('#id_AIWeapons2_tb').hide();
+                    $('#id_cmdTek_tr').show();
+                    break;
+                case 15:
+                    $('#id_mainWeapons3_tb').hide();
+                    $('#id_mainWeapons4_tb').hide();
+                    if ( size >= 3 ) {
+                        $('#id_AIWeapons2_tb').show();
+                        $('#id_mainWeapons2_tb').show();
+                    } else {
+                        $('#id_AIWeapons2_tb').hide();
+                        $('#id_mainWeapons2_tb').hide();
+                    }
+                    $('#id_cmdTek_tr').hide();
+                    break;
+                default:
+                    alert ('No weapon support for this vehicle type yet');
+                    break;
+            }
+        }
+    }
+
+    function updateStats(utype, size) {
+        if ( utype >= 3) {
+            $('#id_size_tr').show();
+            $('#id_damage_tr').show();
+        } else {
+            $('#id_size_tr').hide();
+            $('#id_damage_tr').hide();
+        }
+        if ( utype == 3)
+            $('#id_spec_abilities').show();
+        else
+            $('#id_spec_abilities').hide();
+        mobiClick(); // updates mecha walk box
+        $("#id_guard option[value='9']").remove();
+        $("#id_soak option[value='16']").remove();
+        $("#id_soak option[value='17']").remove();
+        $("#id_soak option[value='18']").remove();
+        $("#id_soak option[value='19']").remove();
+        // size and damage boxes
+        switch (utype) {
+            case (4):
+                $('#id_dam_text').html([0,12,14,16,18,20][size]);
+                // deliberately fall through into 1,2
+            case (1):
+            case (2):
+                $('#id_mobility_tr').hide();
+                break;
+            case (3):
+                $('#id_dam_text').html([0,4,5,6,7,8][size]);
+                $('#id_mobility_tr').show();
+                // calc values then lock them
+                $("#id_guard").val(15-size);
+                if ( size == 5 ) { 
+                    $("#id_soak").append("<option value='16'>{% trans 'Spec. Assault(16)'%}</option>")
+                }
+                $("#id_soak").val(11+size);
+                break;
+            // vehicles
+            case 11:
+                var damValues= [0, 14, 18, 22, 26, 30];
+                var soak = 14+size;
+                var guard = 14-size;
+                if (guard < 10)
+                    $("#id_guard").append("<option value='"+guard+"'>{% trans 'Super Slow'%} ("+guard+")</option>")
+                $('#id_guard').val(14-size);
+                if (soak > 15)
+                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                $('#id_soak').val(14+size);
+                $('#id_dam_text').html(damValues[size]);
+                $('#id_mobility_tr').show();
+                break;
+            case 12: //mecha
+                var damValues= [0, 12, 14, 16, 20, 24];
+                var soak = 13+size;
+                $('#id_guard').val(15-size);
+                if (soak > 15)
+                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                $('#id_soak').val(soak);
+                $('#id_dam_text').html(damValues[size]);
+                $('#id_mobility_tr').hide();
+                break;
+            case 13: //GSV
+                var damValues= [0, 10, 12, 16, 20, 22];
+                var soakValues=[0, 15, 15, 16, 17, 18];
+                var soak = soakValues[size];
+                $('#id_guard').val(14-size);
+                if (soak > 15)
+                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                $('#id_soak').val(soakValues[size]);
+                $('#id_dam_text').html(damValues[size]);
+                $('#id_mobility_tr').show();
+                break;
+            case 14: //ASV
+                var damValues= [0, 10, 12, 14, 16, 18];
+                var soakValues=[0, 13, 14, 15, 16, 17];
+                var soak = soakValues[size];
+                if (soak > 15)
+                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                $('#id_guard').val(15-size);
+                $('#id_soak').val(soakValues[size]);
+                $('#id_dam_text').html(damValues[size]);
+                $('#id_mobility_tr').hide();
+                // show air mobility field
+                break;
+            case 15: //Artillery
+                var damValues= [0, 12, 14, 18, 22, 24];
+                var soak=13+size;
+                $("#id_guard").val(14-size);
+                if (soak > 15)
+                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                $("#id_soak").val(13+size);
+                $('#id_dam_text').html(damValues[size]);
+                $('#id_mobility_tr').show();
+                break;
+            default:
+                alert ('Unit type ' + utype + ' not yet supported.');
+        }
+
+        if ( utype == 1 || utype == 2 || utype == 4 ) {
+            $("#id_guard option").removeAttr("disabled");
+            $("#id_soak option").removeAttr("disabled");
+        } else {
+            $("#id_guard option:selected").removeAttr("disabled");
+            $("#id_soak option:selected").removeAttr("disabled");
+            $("#id_guard option").not(":selected").attr("disabled", "disabled");
+            $("#id_soak option").not(":selected").attr("disabled", "disabled");
+        }
+
+        // Hide perks
+        if (utype == 1 || utype == 3 || utype == 4)
+            $('#id_perks_tr').show();
+        else
+            $('#id_perks_tr').hide();
+
+        showWeapons(utype, size);
+    }
+
+    function sizeClick(event) {
+        var size = parseInt($('#id_size').val());
+        var utype = parseInt($('#id_unitType').val());
+        updateStats(utype, size);
+        return false;
+    }
+    // if it's a specialist, and walking, show the mecha walk check box
+    function mobiClick(event) {
+        if (parseInt($('#id_unitType').val()) == 3) {
+            if ($('#id_mobility').val() == 1)
+                $('#id_mech_walk').show();
+            else
+                $('#id_mech_walk').hide();
+        }
+    }
+function weaponOR(event) {
+        if ($(this).is(':checked'))
+            $('#tr_'+$(this).attr('name')).show();
+        else
+            $('#tr_'+$(this).attr('name')).hide();
+    }
+    $( document ).ready( function()
+        {
+        $('#id_delete').click(confirmDelete);
+        $('#id_unitType').change(sizeClick);
+        $('#id_size').change(sizeClick);
+        $('#id_mobility').change(mobiClick);
+        $('#id_mech_walk').hide();
+        $('[type=checkbox].[name^="OR_"]').change(weaponOR);
+        $('[type=checkbox].[name^="OR_"]').each(weaponOR);
+        updateStats( parseInt($('#id_unitType').val()), parseInt($('#id_size').val()) );
+        updateSave();
+        } );
+</script>
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Edit Unit" %}{% endblock %}
+
+{% block body %}
+    {% if unit_id == '0' or user.is_authenticated and request.user == unit_owner %}
+    <h1>{% trans "Edit Unit"%}</h1>
+    {% else %}
+    <h1>{% trans "Other User's Unit - View Only"%}</h1>
+    {% endif %}
+    
+    <dl class="what_next">
+        <form method="post" id="unit" action="/gom/unit/{{unit_id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tbody>
+                    <tr><td>
+                        <table>
+                            <tbody>
+                                <tr><td>
+                            <table>
+                                <tbody>
+                                    <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
+                                    <tr><td>{% trans "Unit Type" %}</td><td>{{formObject.unitType}}</td>
+                                    <tr id="id_size_tr"><td>{{formObject.size.label}}</td><td>{{formObject.size}}</td>
+                                    <tr id="id_shoot_tr"><td>{{formObject.shoot.label}}</td><td>{{formObject.shoot}}</td></tr>
+                                    <tr id="id_assault_tr"><td>{{formObject.assault.label}}</td><td>{{formObject.assault}}</td></tr>
+                                    <tr><td>{{formObject.guard.label}}</td><td>{{formObject.guard}}</td></tr>
+                                    <tr><td>{{formObject.soak.label}}</td><td>{{formObject.soak}}</td></tr>
+                                    <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
+                                    <tr id="id_mental_tr"><td>{{formObject.mental.label}}</td><td>{{formObject.mental}}</td></tr>
+                                    <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
+                                    <tbody id="id_AIWeapons_tb">
+                                        <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
+                                        <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
+                                    </tbody>
+                                    <tbody id="id_AIWeapons2_tb">
+                                        <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
+                                        <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
+                                    </tbody>
+                                </tbody>
+                            </table>
+                            </td><td>
+                            <table>
+                                <tbody>
+                                    {% if filename %}
+                                    <tr><td><img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
+                                    {% endif %}
+                                    <tr><td>{{formObject.image.label}}</td><td>{{formObject.image}}</td></tr>
+                                    <tbody id="id_basicWeapons_tb">
+                                        <tr><td>{% trans "Grunt Weapons" %}</td><td>{{formObject.basicWeapons}}</td><td>{{formObject.OR_basic}}</td></tr>
+                                        <tr id="tr_OR_basic"><td>{{formObject.basic_Custom.label}}</td><td>{{formObject.basic_Custom}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_SAWeapons_tb">
+                                        <tr><td>{% trans "SA/Commander weapons" %}</td><td>{{formObject.SAWeapons}}</td><td>{{formObject.OR_SA}}</td></tr>
+                                        <tr id="tr_OR_SA"><td>{{formObject.SA_Custom.label}}</td><td>{{formObject.SA_Custom}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_SpecWeapons_tb">
+                                        <tr><td>{% trans "Specialist Weapons" %}</td><td>{{formObject.SpecWeapons}}</td><td>{{formObject.OR_Spec}}</td></tr>
+                                        <tr id="tr_OR_Spec"><td>{{formObject.Spec_Custom.label}}</td><td>{{formObject.Spec_Custom}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_CCW_tb">
+                                        <tr><td>{% trans "CCW" %}</td><td>{{formObject.CCW}}</td><td>{{formObject.OR_CCW}}</td></tr>
+                                        <tr id="tr_OR_CCW"><td>{{formObject.CCW_Custom.label}}</td><td>{{formObject.CCW_Custom}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_grenades_tb">
+                                        <tr><td>{{formObject.grenades.label}}</td><td>{{formObject.grenades}}</td><td>{{formObject.OR_grenades}}</td></tr>
+                                        <tr id="tr_OR_grenades"><td>{{formObject.grenades_Custom.label}}</td><td>{{formObject.grenades_Custom}}</td></tr>
+                                    </tbody>
+                                </tbody>
+                                <tbody id="id_mainWeapons_tb">
+                                    <tr><td>{{formObject.mainWeapons.label}}</td><td>{{formObject.mainWeapons}}</td><td>{{formObject.OR_MW}}</td></tr>
+                                    <tr id="tr_OR_MW"><td>{{formObject.MW_Custom.label}}</td><td>{{formObject.MW_Custom}}</td></tr> 
+                                </tbody>
+                                <tbody id="id_mainWeapons2_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons2}}</td><td>{{formObject.OR_MW2}}</td></tr>
+                                    <tr id="tr_OR_MW2"><td>{{formObject.MW2_Custom.label}}</td><td>{{formObject.MW2_Custom}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons3_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons3}}</td><td>{{formObject.OR_MW3}}</td></tr>
+                                    <tr id="tr_OR_MW3"><td>{{formObject.MW3_Custom.label}}</td><td>{{formObject.MW3_Custom}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons4_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons4}}</td><td>{{formObject.OR_MW4}}</td></tr>
+                                    <tr id="tr_OR_MW4"><td>{{formObject.MW4_Custom.label}}</td><td>{{formObject.MW4_Custom}}</td></tr>
+                                </tbody>
+                                <tbody>
+                                    <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
+                                    <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
+                                    <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                                    <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
+                                    <tr id="id_perks_tr"><td>{% trans "Perk" %}</td><td>{{formObject.perks}}</td></tr>
+                                </tbody>
+                            </table>
+                    </td></tr>
+                    </tbody>
+                    </table>
+            </td>
+            <td>
+                <table> <!-- Description table -->
+                    <tbody>
+                        <tr><td>{% trans "Description:" %}</td></tr>
+                        <tr><td>{{formObject.desc}}</td></tr>
+                        <tr><td>{% trans "Manufacturer:"%}</td></tr>
+                        <tr><td>{{formObject.manu}}</td></tr>
+                    </tbody>
+                </table>
+            </td>
+    </tr>
+            </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        {% if unit_id == '0' or user.is_authenticated and request.user == unit_owner %}
+                        <td> <button name="save" type="submit">{% trans "Save" %}</button> </td>
+                        {% endif %}
+                        {% if user.is_authenticated and request.user == unit_owner %}
+                        <td> <button name="delete" type="submit" id="id_delete">{% trans "delete" %}</button> </td>
+                        {% endif %}
+                        {% if unit_id != '0' %} {% comment %} this wouldn't redirect url and we could end up with multiple versions of this unit saved {% endcomment %}
+                        <td> <button name="pdf" type="submit">{% trans "PDF" %}</button> </td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+
+        </form>
+{% endblock %}

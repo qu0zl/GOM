@@ -1,0 +1,24 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Multi Card PDF Creation" %}{% endblock %}
+
+{% block body %}
+<h1>{% trans "Multi Card PDF Creation Guide" %}</h1>
+
+<p><h3>{% trans "Important: If you want to create an army/force that is saved online, has a force description, total cost and total unit list, and is viewable by others online then you want to <a href=/gom/help/force>create a Force</a> instead of a Multi Card PDF."%}</h3></p>
+<p><h3>{%trans "Multi Card PDFs are a quick way to select 1 to 5 copies of a number of units and have up to 24 of them output on an up to 3 page long PDF. Force creation supports all of this and more and is the suggested way to manage army creation." %}</h3></p>
+
+<p><h4>Step 1: Select {% trans "View Units" %} from the top navigation bar.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NM0.jpg"/></p>
+<p><h4>Step 2: Select any units you wish to add, via the 'Create Multi Card PDF' column.</h4></p>
+<p>You may select 1 to 5 copies of a unit's card to be included via this drop-down selection box.</p>
+<p>The table may be sorted by Name, Owner or Unit cost. Select the table header columns to change sorting order.</p>
+<p><img src="{{ STATIC_URL }}/help/NM1.jpg"/></p>
+<p><h4>Step 3: Select the 'Create Multi Card PDF' button in the table header.</h4></p>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<script src="{{ STATIC_URL }}js/view.js"></script>
+<script type="text/javascript">
+    function updateSave() {
+        if ( {{ saved }} == 1 ) {
+            $('#id_save').html("{% trans "Saved" %}").delay('slow').queue(function(n) {
+            $(this).html("{% trans "Save" %}");
+            n();})
+        }
+    }
+    function mainWeapons() {
+        var size = $('#id_size').val();
+        var vtype = parseInt($('#id_vehicleType').val());
+        switch (vtype) {
+            case 1:
+            case 2:
+                $('#id_mainWeapons1_tr').show();
+                if ( size == 5 ) {
+                    $('#id_mainWeapons2_tr').show();
+                    $('#id_mainWeapons3_tr').show();
+                    $('#id_mainWeapons4_tr').show();
+                    $('#id_AIWeapons2').show();
+                } else if ( size >=3 ) {
+                    $('#id_mainWeapons2_tr').show();
+                    $('#id_mainWeapons3_tr').show();
+                    $('#id_mainWeapons4_tr').hide();
+                    $('#id_AIWeapons2').show();
+                } else if ( size == 2 ) {
+                    $('#id_mainWeapons2_tr').show();
+                    $('#id_mainWeapons3_tr').hide();
+                    $('#id_mainWeapons4_tr').hide();
+                    $('#id_AIWeapons2').hide();
+                }  else {
+                    $('#id_mainWeapons2_tr').hide();
+                    $('#id_mainWeapons3_tr').hide();
+                    $('#id_mainWeapons4_tr').hide();
+                    $('#id_AIWeapons2').hide();
+                }
+                $('#id_cmdTek_tr').hide();
+                break;
+            case 3:
+            case 4:
+                $('#id_mainWeapons1_tr').hide();
+                $('#id_mainWeapons2_tr').hide();
+                $('#id_mainWeapons3_tr').hide();
+                $('#id_mainWeapons4_tr').hide();
+                if ( size >= 3 )
+                    $('#id_AIWeapons2').show();
+                else
+                    $('#id_AIWeapons2').hide();
+                $('#id_cmdTek_tr').show();
+                break;
+            case 5:
+                $('#id_mainWeapons3_tr').hide();
+                $('#id_mainWeapons4_tr').hide();
+                if ( size >= 3 ) {
+                    $('#id_AIWeapons2').show();
+                    $('#id_mainWeapons2_tr').show();
+                } else {
+                    $('#id_AIWeapons2').hide();
+                    $('#id_mainWeapons2_tr').hide();
+                }
+                break;
+            default:
+                alert ('No weapon support for this vehicle type yet');
+                break;
+        }
+
+    }
+function updateStats(size, vtype) {
+    switch (vtype) {
+        case 1: // vehicle
+            var damValues= [0, 14, 18, 22, 26, 30];
+            $('#guard_text').html(14-size);
+            $('#soak_text').html(14+size);
+            $('#id_dam_text').html(damValues[size]);
+            $('#id_mobility_tr').show();
+            break;
+        case 2: //mecha
+            var damValues= [0, 12, 14, 16, 20, 24];
+            $('#guard_text').html(15-size);
+            $('#soak_text').html(13+size);
+            $('#id_dam_text').html(damValues[size]);
+            $('#id_mobility_tr').hide();
+            break;
+        case 3: //GSV
+            var damValues= [0, 10, 12, 16, 20, 22];
+            var soakValues=[0, 15, 15, 16, 17, 18];
+            $('#guard_text').html(14-size);
+            $('#soak_text').html(soakValues[size]);
+            $('#id_dam_text').html(damValues[size]);
+            $('#id_mobility_tr').show();
+            break;
+        case 4: //ASV
+            var damValues= [0, 10, 12, 14, 16, 18];
+            var soakValues=[0, 13, 14, 15, 16, 17];
+            $('#guard_text').html(15-size);
+            $('#soak_text').html(soakValues[size]);
+            $('#id_dam_text').html(damValues[size]);
+            $('#id_mobility_tr').hide();
+            // show air mobility field
+            break;
+        case 5: //Artillery
+            var damValues= [0, 12, 14, 18, 22, 24];
+            $('#guard_text').html(14-size);
+            $('#soak_text').html(13+size);
+            $('#id_dam_text').html(damValues[size]);
+            $('#id_mobility_tr').show();
+            break;
+        default:
+            alert ('Vehicle type ' + vtype + ' not yet supported.');
+    }
+        mainWeapons();
+        return;
+    }
+
+function sizeClick(event) {
+        var size = parseInt($('#id_size').val());
+        var vtype = parseInt($('#id_vehicleType').val());
+        updateStats(size, vtype);
+        mainWeapons();
+        return false;
+    }
+
+    $( document ).ready( function()
+    {
+        $('#id_size').change(sizeClick);
+        $('#id_vehicleType').change(sizeClick);
+        $('#id_delete').click(confirmDelete);
+        mainWeapons();
+        if ($('#id_size').val() && ($('#id_vehicleType').val()))
+            updateStats(parseInt($('#id_size').val()), parseInt($('#id_vehicleType').val()));
+        else
+            updateStats(3,1); // Medium Tank by default
+        updateSave();
+    } );
+    function ajaxformSubmit( responseText, statusText, xhr, $form )
+    {
+        alert( 'callback triggered' );
+        if( responseText[ 'success' ] == true )
+        {
+            alert( "Added item: " + responseText[ 'pk' ] );
+        }
+        // returning false inhibits the browser from opening a "Save As" dialog.
+        return false;
+    }
+</script>
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Edit Vehicle" %}{% endblock %}
+
+{% block body %}
+{% if grunt_id == '0' or user.is_authenticated and request.user == grunt_owner %}
+    <h1>{% trans "Edit Vehicle"%}</h1>
+    {% else %}
+    <h1>{% trans "Other User's Vehicle - View Only"%}</h1>
+    {% endif %}
+    
+    <dl class="what_next">
+        <form method="post" id="gruntForm" action="/gom/vehicle/{{grunt_id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tbody>
+                    <tr><td>
+                        <table>
+                            <tbody>
+                                <tr><td>
+                            <table>
+                                <tbody>
+                                    <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
+                                    <tr><td>{% trans "Vehicle Type" %}</td><td>{{formObject.vehicleType}}</td></tr>
+                                    <tr><td>{{formObject.size.label}}</td><td>{{formObject.size}}</td>
+                                    <!-- need these unused base values included in form or else it won't validate-->
+                                    <td>{{formObject.shoot.as_hidden}}</td>
+                                    <td>{{formObject.assault.as_hidden}}</td>
+                                    <td>{{formObject.guard.as_hidden}}</td>
+                                    <td>{{formObject.soak.as_hidden}}</td>
+                                    <td>{{formObject.mental.as_hidden}}</td>
+                                </tr>
+                                    <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
+                                    <tr><td>{{formObject.guard.label}}</td><td id="guard_text">{{grunt.getGuard}}</td></tr>
+                                    <tr><td>{{formObject.soak.label}}</td><td id="soak_text">{{grunt.getSoak}}</td></tr>
+                                    <tr><td>{% trans "Damage" %}</td><td id="id_dam_text">{{grunt.getDam}}</td></tr>
+                                    <tr><td>{% trans "Cost" %}</td><td>{{grunt.cost}}</td></tr>
+                                    <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td></tr>
+                                    <tr id="id_AIWeapons2_tr"><td></td><td>{{formObject.AIWeapons2}}</td></tr>
+                                </tbody>
+                            </table>
+                            </td><td>
+                            <table>
+                                <tbody>
+                                    {% if filename %}
+                                    <tr><td><img src='{{STATIC_URL}}/user_media/{{filename}}'/>
+                                    {% endif %}
+                                    <tr><td>{{formObject.image.label}}</td><td>{{formObject.image}}</td></tr>
+                                    <tr id="id_mainWeapons1_tr"><td>{{formObject.weapons.label}}</td><td>{{formObject.weapons}}</td></tr>
+                                    <tr id="id_mainWeapons2_tr"><td></td><td>{{formObject.mainWeapons2}}</td></tr>
+                                    <tr id="id_mainWeapons3_tr"><td></td><td>{{formObject.mainWeapons3}}</td></tr>
+                                    <tr id="id_mainWeapons4_tr"><td></td><td>{{formObject.mainWeapons4}}</td></tr>
+                                    <tr><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
+                                    <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
+                                    <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td></tr>
+                                </tbody>
+                            </table>
+                    </td></tr>
+                    </tbody>
+                    </table>
+            </td>
+            <td>
+                <table> <!-- Description table -->
+                    <tbody>
+                        <tr><td>{% trans "Description:" %}</td></tr>
+                        <tr><td>{{formObject.desc}}</td></tr>
+                        <tr><td>{% trans "Manufacturer:"%}</td></tr>
+                        <tr><td>{{formObject.manu}}</td></tr>
+                    </tbody>
+                </table>
+            </td>
+    </tr>
+            </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        {% if grunt_id == '0' or user.is_authenticated and request.user == grunt_owner %}
+                        <td> <button name="save" type="submit" id="id_save">{% trans "Save" %}</button> </td>
+                        {% endif %}
+                        {% if user.is_authenticated and request.user == grunt_owner %}
+                            <td> <button name="delete" type="submit" id="id_delete">{% trans "delete" %}</button> </td>
+                        {% endif %}
+                        {% if grunt_id != '0' %} {% comment %} this wouldn't redirect url and we could end up with multiple versions of this unit saved {% endcomment %}
+                            <td> <button name="pdf" type="submit">{% trans "PDF" %}</button> </td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+
+        </form>
+{% endblock %}

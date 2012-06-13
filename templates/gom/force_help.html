@@ -1,0 +1,28 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% block extra_head %}
+{% endblock extra_head %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Force Creation" %}{% endblock %}
+
+{% block body %}
+<h1>{% trans "Force Creation Guide" %}</h1>
+
+<p><h4>Step 1: Login. Register a user account first if you have not already done so.</h4></p>
+
+<p><h4>Step 2: Select {% trans "New Force" %} from the top navigation bar.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NF1.jpg"/></p>
+<p><h4>Step 3: Modify your Force's base description.</h4></p>
+<p>Enter force name and description.</p>
+<p><h4>You must save your Force before you can add units to it or create your force PDF card</h4></p>
+<p><h4>Select the 'Save' button.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NU2.jpg"/></p>
+<p><h4>To add units to a Force, navigate to the <a href='/gom/list/all/'>unit list page</a></h4></p>
+<p><h4>Select the force you wish to add a unit to, in the unit's table row 'Add to Force' column then select the 'Add to Force' button in the table header.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NF3.jpg"/></p>
+<p><h4>To output your Force PDF select the 'PDF' button at the bottom of the Force creation page.</h4></p>
+<p><img src="{{ STATIC_URL }}/help/NU3.jpg"/></p>
+{% endblock %}
