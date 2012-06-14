@@ -298,7 +298,8 @@ def pdfIt(request, unit_id=0):
         try:
             unit = gom.models.Unit.objects.get(id=unit_id);
             return pdf.PDFit(request, unit)
-        except:
+        except Exception, e:
+            print 'Failed to produce PDF:', e
             return HttpResponseForbidden(_('Unable to produce PDF for this unit.'))
     else:
         if request.user.is_authenticated():

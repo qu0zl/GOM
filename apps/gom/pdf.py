@@ -123,7 +123,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     dmg = grunt.getDam()
     interval = calcCriticalInterval(dmg)
     try:
-        if grunt.gruntType == 1:
+        if grunt.unitType == 1:
             dmgString='1' # Grunt squad
         else: # Is infantry type, but not grunt squad
             dmgString = str(dmg)
@@ -167,7 +167,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
 
 def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
     try: # draw engineer or medic boxes if necessary
-        if grunt.gruntType == 3:
+        if grunt.unitType == 3:
             boxWidth = WIDTH/19
             boxGap = WIDTH/119
             dy = .14*HEIGHT
@@ -184,11 +184,68 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
                 p.setFillColor(colors.black)
                 p.drawCentredString((.80*WIDTH) + 1.5*boxWidth, dy+(boxWidth/4), _('Eng.'))
-    except:
+    except Exception, e:
+        print 'drawMedicEngineer exception:', e
         pass
 
+# Draw the weapon stat for a unitWeapon OR a weapon. Handles both.
+# Which is number of box this is, as we offset downwards for each box.
+# dxs are the x co-ords of the breaks in the weapon box.
+def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon):
+        p.setFillColor(colors.white)
+        dy = y+(.5*inch)-(which*BOX_HEIGHT)
+        p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
+        p.setFillColor(colors.black)
+        p.drawString(x+(.03*inch), dy+(.03*inch), weapon.__unicode__())
+        # Now that we've gotten the name, which may be an override from a unitWeapon
+        # get the associated weapon if this is a unitWeapon. So that either way, we have a weapon from here on.
+        try:
+            weapon = weapon.weapon
+        except:
+            pass
+        dx = dxs[0]
+        p.setFillColor(colors.white)
+        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
+        p.setFillColor(colors.black)
+        if weapon.weaponRange > 0:
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(weapon.weaponRange) )
+        else:
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '-' )
 
-def drawWeapons(p, grunt, WIDTH, HEIGHT):
+        dx = dxs[1]
+        p.setFillColor(colors.white)
+        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
+        p.setFillColor(colors.black)
+        if weapon.weaponDamage != -1:
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(weapon.weaponDamage) )
+        else:
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '*' )
+
+        dx = dxs[2]
+        p.setFillColor(colors.white)
+        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
+
+        p.setFillColor(colors.black)
+        if weapon.weaponAP != 0 :
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(weapon.weaponAP) )
+        else:
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '-' )
+
+
+        dx = dxs[3]
+        p.setFillColor(colors.white)
+        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
+        p.setFillColor(colors.black)
+        if weapon.weaponAE == 0 :
+            AEstring = '-'
+        else:
+            if weapon.weaponAE == -1:
+                AEstring='*'
+            else:
+                AEstring=str(weapon.weaponAE)
+        p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, AEstring )
+
+def drawWeapons(p, unit, WIDTH, HEIGHT):
     x=.02*WIDTH
     y=.3*HEIGHT
     BOX_HEIGHT=.16*inch
@@ -197,20 +254,20 @@ def drawWeapons(p, grunt, WIDTH, HEIGHT):
 
     # Work out how big weapon stat boxes can be - based on number of weapons
     count = 0
-    unitWeaponList = gom.models.UnitWeapon.objects.filter(unit=grunt).order_by('mountType')
+    unitWeaponList = gom.models.UnitWeapon.objects.filter(unit=unit).order_by('mountType')
     ram = unit.getRam()
 
     try:
-         if ram > 0:
-             ramWeapon = gom.models.Weapon(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
-             greg think this over, you're dealing with unitWeapons below and you can't make this be in one without saving
          count = unitWeaponList.count()
+         if ram > 0:
+             ramWeapon = gom.models.Weapons(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
+             count = count+1
          BOX_HEIGHT = TOTAL_HEIGHT/count
          if BOX_HEIGHT > MAX_HEIGHT:
              BOX_HEIGHT=MAX_HEIGHT
     except:
         pass
-greg add ram stuff
+
     p.setFillColor(colors.black)
     p.drawString(x, y+(.5*inch)+BOX_HEIGHT+(.04*inch), _('Attacks:'))
     p.setStrokeColor(colors.darkgrey)
@@ -235,58 +292,23 @@ greg add ram stuff
     p.drawCentredString( dxs[3]+((.11*WIDTH)/2), dys[0]+textYOffset, _('AE'))
 
     i = 0
+    try: # If we have a ram weapon, draw it
+        print 'drawing ram'
+        drawWeaponBox(p, x, y, dxs, textYOffset, i+1, WIDTH, HEIGHT, BOX_HEIGHT, ramWeapon)
+        i = i + 1 # do this after the draw, as we only want to do it if a ramWeapon really exists
+    except Exception, e:
+        print 'ram exception:',e
+        pass
     for unitWeapon in unitWeaponList:
-        p.setFillColor(colors.white)
         i = i + 1
-        dy = y+(.5*inch)-(i*BOX_HEIGHT)
-        p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
-        p.setFillColor(colors.black)
-        p.drawString(x+(.03*inch), dy+(.03*inch), unitWeapon.__unicode__())
-        dx = dxs[0]
-        p.setFillColor(colors.white)
-        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
-        p.setFillColor(colors.black)
-        p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(unitWeapon.weapon.weaponRange) )
+        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon)
 
-        dx = dxs[1]
-        p.setFillColor(colors.white)
-        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
-        p.setFillColor(colors.black)
-        if unitWeapon.weapon.weaponDamage != -1:
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(unitWeapon.weapon.weaponDamage) )
-        else:
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '*' )
-
-        dx = dxs[2]
-        p.setFillColor(colors.white)
-        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
-
-        p.setFillColor(colors.black)
-        if unitWeapon.weapon.weaponAP != 0 :
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(unitWeapon.weapon.weaponAP) )
-        else:
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '-' )
-
-
-        dx = dxs[3]
-        p.setFillColor(colors.white)
-        p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
-        p.setFillColor(colors.black)
-        if unitWeapon.weapon.weaponAE == 0 :
-            AEstring = '-'
-        else:
-            if unitWeapon.weapon.weaponAE == -1:
-                AEstring='*'
-            else:
-                AEstring=str(unitWeapon.weapon.weaponAE)
-        p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, AEstring )
-
-def drawDesc(p, grunt, WIDTH, HEIGHT):
+def drawDesc(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.white)
     p.setStrokeColor(colors.darkgrey)
     # Description box 
     try:
-        if grunt.isVehicle():
+        if unit.isVehicle():
             p.roundRect(.42*WIDTH, .53*HEIGHT, .56*WIDTH, .24*HEIGHT, radius=2, fill=1)
             descY=.67*HEIGHT
         else:
@@ -295,7 +317,7 @@ def drawDesc(p, grunt, WIDTH, HEIGHT):
         descX=.43*WIDTH
         descWidth=.54*WIDTH
         descHeight=.14*HEIGHT
-        desc=grunt.desc
+        desc=unit.desc
         fontSize=5
     except Exception, e: # must be a force
         print e
@@ -304,7 +326,7 @@ def drawDesc(p, grunt, WIDTH, HEIGHT):
         descX=.06*WIDTH
         descWidth=.88*WIDTH
         descHeight=.15*HEIGHT
-        desc=grunt.description
+        desc=unit.description
         fontSize=7
 
     if desc:
@@ -315,7 +337,7 @@ def drawDesc(p, grunt, WIDTH, HEIGHT):
         para.drawPara()
         p.translate(-descX, -descY)
 
-def drawSizeAndMobility(p, grunt, WIDTH, HEIGHT):
+def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
     mobString = (_('None'),_('Walk'),_('Track'),_('Wheels'),_('Hover'),_('Grav'))
     sizeString = (_('None'),_('Scout'),_('Light'),_('Medium'),_('Heavy'),_('Assault'))
     p.setStrokeColor(colors.darkgrey)
@@ -327,13 +349,13 @@ def drawSizeAndMobility(p, grunt, WIDTH, HEIGHT):
     p.roundRect( .01*WIDTH, y-.005*HEIGHT, .12*WIDTH, .05*HEIGHT, radius=6, fill=1, stroke=1)
     p.setFillColor(colors.black)
     p.setFont("Helvetica-Bold", 6)
-    p.drawString( .14*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Mobility:'),mobString[grunt.mobility]) )
+    p.drawString( .14*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Mobility:'),mobString[unit.mobility]) )
 
-    p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[grunt.size]) )
+    p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[unit.size]) )
     p.setFont("Helvetica-Bold", 8)
-    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, str(grunt.getSpeed()) )
+    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, str(unit.getSpeed()) )
 
-def drawType(p, grunt, WIDTH, HEIGHT):
+def drawType(p, unit, WIDTH, HEIGHT):
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
     x = .02*WIDTH
@@ -341,25 +363,25 @@ def drawType(p, grunt, WIDTH, HEIGHT):
     p.roundRect( x, y, .37*WIDTH, .035*HEIGHT, radius=5, fill=1, stroke=1)
     p.setFillColor(colors.black)
     p.setFont("Helvetica-Bold", 7)
-    if grunt.unitType == 1:
+    if unit.unitType == 1:
         uString = _('Grunts Squad')
-    elif grunt.unitType == 2:
+    elif unit.unitType == 2:
         uString = _('Squad Attachment')
-    elif grunt.unitType == 3:
+    elif unit.unitType == 3:
         uString = _('Specialist')
-    elif grunt.unitType == 4:
+    elif unit.unitType == 4:
         uString = _('Commander')
-    elif grunt.unitType == 11:
+    elif unit.unitType == 11:
         uString = _('Tank')
-    elif grunt.unitType == 12:
+    elif unit.unitType == 12:
         uString = _('Mecha')
-    elif grunt.unitType == 13:
+    elif unit.unitType == 13:
         uString = _('Support Vehicle')
-    elif grunt.unitType == 14:
+    elif unit.unitType == 14:
         uString = _('ASV')
-    elif grunt.unitType == 15:
+    elif unit.unitType == 15:
         uString = _('Artillery')
-    if grunt.isVehicle():
+    if unit.isVehicle():
         p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
     else:
         p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
@@ -380,15 +402,15 @@ def shrinkToFit(p, text, width, initialSize, font='Helvetica'):
             initialSize = initialSize -1
     return initialSize
 
-def drawNameAndCost(p, grunt, WIDTH, HEIGHT):
-    cost = grunt.getCost()
+def drawNameAndCost(p, unit, WIDTH, HEIGHT):
+    cost = unit.getCost()
     NAME_X = WIDTH * .05
     NAME_Y = HEIGHT * .95
     LINE_Y = NAME_Y -.02*HEIGHT
     p.setFillColor(colors.black)
-    fontSize = shrinkToFitHB(p, grunt.name, .61*WIDTH ,12)
+    fontSize = shrinkToFitHB(p, unit.name, .61*WIDTH ,12)
     p.setFont("Helvetica-Bold", fontSize)
-    p.drawString( NAME_X, NAME_Y, grunt.name )
+    p.drawString( NAME_X, NAME_Y, unit.name )
     p.setFont("Helvetica", 10)
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
@@ -400,9 +422,9 @@ def drawNameAndCost(p, grunt, WIDTH, HEIGHT):
     # Change to use drawImage once I have a gruntz graphic with transparency
     p.drawInlineImage('static/gruntz.png', .88*WIDTH, LINE_Y-(0.033*HEIGHT) , width=.105*WIDTH, height=.105*HEIGHT, preserveAspectRatio=True)
 
-def drawManu(p, grunt, WIDTH, HEIGHT):
+def drawManu(p, unit, WIDTH, HEIGHT):
     try:
-        manu = grunt.manu.get()
+        manu = unit.manu.get()
         p.setFont("Helvetica", 4)
         p.drawString(.4*WIDTH,.01*HEIGHT, _('Mini: %s') % manu)
     except:
@@ -511,7 +533,7 @@ def drawForceUnitsPlatypusTable(p, force, WIDTH, HEIGHT):
 
 
 # p is the ReportLab canvas object to draw on
-def oneCard(p, WIDTH, HEIGHT, request, grunt):
+def oneCard(p, WIDTH, HEIGHT, request, unit):
     RIGHT=WIDTH-1
     TOP=HEIGHT-1
     # background box
@@ -519,12 +541,12 @@ def oneCard(p, WIDTH, HEIGHT, request, grunt):
     p.setFillColor(colors.white)
     p.setStrokeColor(colors.darkgrey)
     p.roundRect( .02*WIDTH, .59*HEIGHT, .371*WIDTH, .27*HEIGHT, radius=2, fill=1, stroke=1)
-    if grunt.image:
-        imageFilename = str('user_media/%d/%s' % (grunt.owner.get().id, grunt.image))
+    if unit.image:
+        imageFilename = str('user_media/%d/%s' % (unit.owner.get().id, unit.image))
         try:
             p.drawImage(imageFilename, .025*WIDTH, .595*HEIGHT, width=.36*WIDTH,height=.26*HEIGHT, preserveAspectRatio=True)
         except IOError, e:
-            print 'pdfOncard draw fail. Grunt id %d' % grunt.id, e
+            print 'pdfOncard draw fail. Grunt id %d' % unit.id, e
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
     p.rect(0,0,RIGHT, .295*HEIGHT, stroke=1, fill=1)
@@ -534,16 +556,16 @@ def oneCard(p, WIDTH, HEIGHT, request, grunt):
     # Bottom box 
     p.roundRect(.02*WIDTH, .03*HEIGHT, .96*RIGHT, .26*HEIGHT, radius=10, fill=1, stroke=1) 
 
-    drawNameAndCost(p, grunt, WIDTH, HEIGHT)
-    drawStats(p, grunt, WIDTH, HEIGHT)
-    drawWeapons(p, grunt, WIDTH, HEIGHT)
-    drawDamage(p, grunt, WIDTH, HEIGHT)
-    drawMedicEngineer(p, grunt, WIDTH, HEIGHT)
-    drawDesc(p, grunt, WIDTH, HEIGHT)
-    drawPerks(p, grunt, WIDTH, HEIGHT)
-    drawType(p, grunt, WIDTH, HEIGHT)
-    drawManu(p, grunt, WIDTH, HEIGHT)
-    drawSizeAndMobility(p, grunt, WIDTH, HEIGHT)
+    drawNameAndCost(p, unit, WIDTH, HEIGHT)
+    drawStats(p, unit, WIDTH, HEIGHT)
+    drawWeapons(p, unit, WIDTH, HEIGHT)
+    drawDamage(p, unit, WIDTH, HEIGHT)
+    drawMedicEngineer(p, unit, WIDTH, HEIGHT)
+    drawDesc(p, unit, WIDTH, HEIGHT)
+    drawPerks(p, unit, WIDTH, HEIGHT)
+    drawType(p, unit, WIDTH, HEIGHT)
+    drawManu(p, unit, WIDTH, HEIGHT)
+    drawSizeAndMobility(p, unit, WIDTH, HEIGHT)
     # black box around the edge
     p.setStrokeColor(colors.black)
     p.rect(0, 0, RIGHT, TOP, stroke=1)
