@@ -436,10 +436,10 @@ def drawManu(p, unit, WIDTH, HEIGHT):
     p.setFont("Helvetica", 4)
     try:
         manu = unit.manu.get()
-        p.drawString(.4*WIDTH,.01*HEIGHT, _('Mini: %s') % manu)
+        p.drawString(.45*WIDTH,.01*HEIGHT, _('Mini: %s') % manu)
     except:
         pass
-    p.drawString(.05*WIDTH, .01*HEIGHT, _('See Gruntz @ http://gruntz.biz'))
+    p.drawString(.05*WIDTH, .01*HEIGHT, _('See Gruntz @ http://www.gruntz.biz'))
 
 def drawBackgroundBox(p, WIDTH, HEIGHT):
     p.setFillColor(colors.lightgrey)
