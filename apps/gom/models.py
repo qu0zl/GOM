@@ -169,7 +169,7 @@ class Unit(models.Model):
     soak = models.SmallIntegerField(choices=SOAK_CHOICES, default=12, blank=False)
     mental = models.SmallIntegerField(choices=MENTAL_CHOICES, default=7, blank=False)
     skill = models.SmallIntegerField(choices=STAT_CHOICES, default=3, blank=False)
-    weapons = models.ManyToManyField('Weapons', default=1, through='UnitWeapon')
+    weapons = models.ManyToManyField('Weapons', default=None, through='UnitWeapon', blank=True)
     owner = models.ManyToManyField(User, related_name='Owner Table', default=None, blank=False)
     image = models.CharField(max_length=200)
     perks = models.ManyToManyField('Perks', related_name='Perk Table', default=None, blank=True)
@@ -407,9 +407,13 @@ class Unit(models.Model):
                 print 'perkCost returning %d' % cost
                 return cost
             except Exception, e:
-                print 'First perk exception:', e
                 pass
         return 0
+    # Only commanders and specialists currently can have 2 perks
+    def canHaveTwoPerks(self):
+        if self.unitType in [3,4]:
+            return True
+        return False
     def getSpeed(self):
         if self.unitType in (1,2,4):
             return 4 # any modifiers?
@@ -508,14 +512,14 @@ class Manufacturer(models.Model):
 class UnitForm(forms.ModelForm):
     image = forms.ImageField(required=False)
     # Grunt Rifles and Pistols only
-    basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False, empty_label=None)
-    SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False, empty_label=None)
-    SpecWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4,5]), required=False, empty_label=None)
+    basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False)
+    SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
+    SpecWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4,5]), required=False)
     mainWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False, label=_('Main Weapons'))
     mainWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
     mainWeapons3 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
     mainWeapons4 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
-    AIWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False, label="Anti Infantry")
+    AIWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False, label=_("Anti Infantry"))
     AIWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False)
     # Grunt CCWs only
     CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None)
@@ -543,7 +547,8 @@ class UnitForm(forms.ModelForm):
     OR_Spec = forms.BooleanField(required=False)
     OR_CCW = forms.BooleanField(required=False)
     OR_grenades = forms.BooleanField(required=False)
-    perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False)
+    perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk"))
+    perks2 = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk 2"))
     modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
@@ -634,7 +639,12 @@ class UnitForm(forms.ModelForm):
             except Exception, e:
                 print e
             try:
-                self.fields['perks'].initial=kwargs['instance'].perks.get()
+                self.fields['perks'].initial=kwargs['instance'].perks.all()[0]
+            except Exception, e:
+                print e
+                pass
+            try:
+                self.fields['perks2'].initial=kwargs['instance'].perks.all()[1]
             except Exception, e:
                 print e
                 pass

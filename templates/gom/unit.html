@@ -233,11 +233,20 @@
         }
 
         // Hide perks
-        if (utype == 1 || utype == 3 || utype == 4)
-            $('#id_perks_tr').show();
-        else
-            $('#id_perks_tr').hide();
-
+        switch (utype) {
+            case(3):
+            case(4):
+                $('#id_perks_tr').show();
+                $('#id_perks2_tr').show();
+                break;
+            case(1):
+                $('#id_perks_tr').show();
+                $('#id_perks2_tr').hide();
+                break;
+            default:
+                $('#id_perks_tr').hide();
+                $('#id_perks2_tr').hide();
+        }
         showWeapons(utype, size);
     }
 
@@ -368,7 +377,8 @@ function weaponOR(event) {
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
                                     <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
                                     <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
-                                    <tr id="id_perks_tr"><td>{% trans "Perk" %}</td><td>{{formObject.perks}}</td></tr>
+                                    <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
+                                    <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
                                 </tbody>
                             </table>
                     </td></tr>
