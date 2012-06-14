@@ -99,11 +99,14 @@ def unitForm(request, unit_id):
             }, \
             RequestContext(request))
     else: # Make a new temporary unit
-        unit = gom.models.Unit(tempInstance=True)
-        unit.save() # Need to be able to do owner M2M below
-        unit.owner=request.user,
-        unit.save()
-        return redirect('/gom/unit/%d/' % unit.id)
+        if (request.user.is_authenticated()):
+            unit = gom.models.Unit(tempInstance=True)
+            unit.save() # Need to be able to do owner M2M below
+            unit.owner=request.user,
+            unit.save()
+            return redirect('/gom/unit/%d/' % unit.id)
+        else:
+            return HttpResponseForbidden(_('You must be logged in to create a new unit.'))
 
 def scale_dimensions(width, height, longest_side):
     if width > height:
