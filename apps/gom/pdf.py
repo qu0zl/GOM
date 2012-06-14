@@ -198,15 +198,19 @@ def drawWeapons(p, grunt, WIDTH, HEIGHT):
     # Work out how big weapon stat boxes can be - based on number of weapons
     count = 0
     unitWeaponList = gom.models.UnitWeapon.objects.filter(unit=grunt).order_by('mountType')
+    ram = unit.getRam()
 
     try:
+         if ram > 0:
+             ramWeapon = gom.models.Weapon(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
+             greg think this over, you're dealing with unitWeapons below and you can't make this be in one without saving
          count = unitWeaponList.count()
          BOX_HEIGHT = TOTAL_HEIGHT/count
          if BOX_HEIGHT > MAX_HEIGHT:
              BOX_HEIGHT=MAX_HEIGHT
     except:
         pass
-
+greg add ram stuff
     p.setFillColor(colors.black)
     p.drawString(x, y+(.5*inch)+BOX_HEIGHT+(.04*inch), _('Attacks:'))
     p.setStrokeColor(colors.darkgrey)

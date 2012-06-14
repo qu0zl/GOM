@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/greg/virtualenv/gruntz"
+VIRTUAL_ENV="/home/greg/virtualenv/gruntzdev"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

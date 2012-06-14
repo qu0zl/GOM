@@ -85,21 +85,29 @@ def unitForm(request, unit_id):
     image = None
     unit_owner = 0
     if ( unit_id != "0" ):
+        new_unit = False
         unit = gom.models.Unit.objects.get(id=unit_id);
-        print unit
-        form = gom.models.UnitForm(instance=unit)
         unit_owner = unit.owner.get()
         image = '%d/%s' % (unit_owner.id, unit.image)
-    else:
-        form = gom.models.UnitForm()
+        print unit
+    else: # Make a new temporary unit
+        new_unit = True
+        print 'making new tempInstance unit'
+        unit = gom.models.Unit(tempInstance=True)
+        unit.save() # Need to be able to do owner M2M below
+        unit.owner=request.user,
+        unit.save()
+        unit_owner = request.user
+    print 'tempInstance is ', unit.tempInstance
+    form = gom.models.UnitForm(instance=unit)
     #import pdb; pdb.set_trace()
     return render_to_response('gom/unit.html', \
         {
-            'unit_id':unit_id,
             'unit_owner':unit_owner,
             'formObject':form,
             'filename':image,
-            'saved':0
+            'saved':0,
+            'unit':unit,
         }, \
         RequestContext(request))
 
@@ -176,7 +184,7 @@ def vehicleSaveAjax(request, unit_id=0):
 def saveVehicleWeapons(unit, form):
     unit.weapons.clear()
     if form.cleaned_data['AIWeapons']:
-        addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1)
+        addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1, custom=form.cleaned_data['AI_Custom'] if form.cleaned_data['OR_AI'] else None)
     if unit.unitType == 11 or unit.unitType == 12: # Tank or Mecha
         if form.cleaned_data['mainWeapons']:
             try:
@@ -308,7 +316,7 @@ def unitSave(request, unit_id=0):
         print "user is authenticated, and it's a post method by user", request.user
         form = gom.models.UnitForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            if (unit_id == 0): # new unit object
+            if (unit_id == 0): # new unit object - NOW DEFUNCT, delete soon
                 unit = gom.models.Unit( name=form.cleaned_data['name'],
                     unitType=form.cleaned_data['unitType'],
                     shoot=form.cleaned_data['shoot'],
@@ -335,6 +343,10 @@ def unitSave(request, unit_id=0):
                     unit.delete()
                     return HttpResponseRedirect('/gom/list/all/mine/')
                 print form.cleaned_data
+                if unit.tempInstance: # Clear the temp object flag if set
+                    print 'clearing tempInstance'
+                    unit.tempInstance = False
+                    unit.save() # Important enough to warrant an immediate save imo
                 unit.name = form.cleaned_data['name']
                 unit.shoot=form.cleaned_data['shoot']
                 unit.assault=form.cleaned_data['assault']
@@ -521,7 +533,7 @@ def listHandler(request, what):
     return list(request)
 
 def list(request, filterType=None, filterValue=None, filterValue2=None):
-    units = gom.models.Unit.objects.all()
+    units = gom.models.Unit.objects.exclude(tempInstance=True)
     try:
         forces = gom.models.Force.objects.filter(owner=request.user)
     except:

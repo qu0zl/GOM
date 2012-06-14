@@ -178,6 +178,8 @@ class Unit(models.Model):
     mobility = models.SmallIntegerField(choices=MOBILITY_CHOICES, default=1, blank=False)
     size = models.SmallIntegerField(choices=SIZE_CHOICES, default=1, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=True)
+    tempInstance = models.BooleanField(default=False)
+    creationTime = models.DateTimeField(auto_now_add=True, null=True)
 
     unitType = models.SmallIntegerField(choices=GRUNTZ_TYPE_CHOICES, default=1, blank=False)
 
@@ -429,10 +431,11 @@ class Unit(models.Model):
             return speedArray[self.mobility-1][self.size-1]
         return t[self.size]
     def getRam(self):
-        if self.isVehicle():
+        if self.unitType == 12:
             return 6+self.size
-        else:
-            return 0
+        elif self.unitType in (11,13,14,15):
+            return 8+self.size
+        return 0
     def getCost(self):
         if self.cost == 0:
             self.updateCost()
@@ -513,6 +516,8 @@ class UnitForm(forms.ModelForm):
     MW2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW3_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW4_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    AI_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    AI2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     basic_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     SA_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     Spec_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
@@ -522,12 +527,14 @@ class UnitForm(forms.ModelForm):
     OR_MW2 = forms.BooleanField(required=False)
     OR_MW3 = forms.BooleanField(required=False)
     OR_MW4 = forms.BooleanField(required=False)
+    OR_AI = forms.BooleanField(required=False)
+    OR_AI2 = forms.BooleanField(required=False)
     OR_basic = forms.BooleanField(required=False)
     OR_SA = forms.BooleanField(required=False)
     OR_Spec = forms.BooleanField(required=False)
     OR_CCW = forms.BooleanField(required=False)
     OR_grenades = forms.BooleanField(required=False)
-    perks = forms.ModelChoiceField(queryset=Perks.objects.all(), required=False)
+    perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False)
     modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
