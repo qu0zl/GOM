@@ -284,11 +284,12 @@ def forceSave(request, force_id=0):
 
 def addUnitWeapon(targetUnit, newWeapon, mountType=0, custom=None):
     print 'Adding weapon %s (%s) to unit %s with mount type %d' % (newWeapon, custom, targetUnit.name, mountType)
-    if custom != None:
-        w = gom.models.UnitWeapon(weapon=newWeapon, unit=targetUnit, mountType=mountType, nameOverride=custom)
-    else:
-        w = gom.models.UnitWeapon(weapon=newWeapon, unit=targetUnit, mountType=mountType)
-    w.save()
+    if newWeapon:
+        if custom != None:
+            w = gom.models.UnitWeapon(weapon=newWeapon, unit=targetUnit, mountType=mountType, nameOverride=custom)
+        else:
+            w = gom.models.UnitWeapon(weapon=newWeapon, unit=targetUnit, mountType=mountType)
+        w.save()
 
 def pdfIt(request, unit_id=0):
     if request.method == 'POST' and 'pdf' in request.POST:
@@ -377,9 +378,15 @@ def unitSave(request, unit_id=0):
                 if form.cleaned_data['grenades']:
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
                 if form.cleaned_data['perks']:
-                    unit.perks=form.cleaned_data['perks'],
+                    if form.cleaned_data['perks2'] and unit.canHaveTwoPerks():
+                        unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
+                    else:
+                        unit.perks=form.cleaned_data['perks'],
+                elif form.cleaned_data['perks2']:
+                    unit.perks=form.cleaned_data['perks2'],
                 else:
                     unit.perks.clear()
+
                 try:
                     unit.medicSpecialist=form.cleaned_data['medicSpecialist']
                 except:
@@ -437,11 +444,11 @@ def unitSave(request, unit_id=0):
     else:
         return render_to_response('gom/unit.html', \
             {
-                'formObject':form,
-                'unit_id':unit_id,
                 'unit_owner':unit_owner,
+                'formObject':form,
                 'filename':image,
-                'saved':1
+                'saved':1,
+                'unit':unit,
             }, \
             RequestContext(request))
 
