@@ -85,31 +85,25 @@ def unitForm(request, unit_id):
     image = None
     unit_owner = 0
     if ( unit_id != "0" ):
-        new_unit = False
         unit = gom.models.Unit.objects.get(id=unit_id);
         unit_owner = unit.owner.get()
         image = '%d/%s' % (unit_owner.id, unit.image)
-        print unit
+        form = gom.models.UnitForm(instance=unit)
+        return render_to_response('gom/unit.html', \
+            {
+                'unit_owner':unit_owner,
+                'formObject':form,
+                'filename':image,
+                'saved':0,
+                'unit':unit,
+            }, \
+            RequestContext(request))
     else: # Make a new temporary unit
-        new_unit = True
-        print 'making new tempInstance unit'
         unit = gom.models.Unit(tempInstance=True)
         unit.save() # Need to be able to do owner M2M below
         unit.owner=request.user,
         unit.save()
-        unit_owner = request.user
-    print 'tempInstance is ', unit.tempInstance
-    form = gom.models.UnitForm(instance=unit)
-    #import pdb; pdb.set_trace()
-    return render_to_response('gom/unit.html', \
-        {
-            'unit_owner':unit_owner,
-            'formObject':form,
-            'filename':image,
-            'saved':0,
-            'unit':unit,
-        }, \
-        RequestContext(request))
+        return redirect('/gom/unit/%d/' % unit.id)
 
 def scale_dimensions(width, height, longest_side):
     if width > height:
