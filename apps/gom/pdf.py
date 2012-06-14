@@ -122,13 +122,12 @@ def calcCriticalInterval(dmg):
 def drawDamage(p, grunt, WIDTH, HEIGHT):
     dmg = grunt.getDam()
     interval = calcCriticalInterval(dmg)
-    try:
-        if grunt.unitType == 1:
-            dmgString='1' # Grunt squad
-        else: # Is infantry type, but not grunt squad
-            dmgString = str(dmg)
-    except: #  Not infantry type, ie is vheicle
+
+    if grunt.unitType == 1:
+        dmgString='1' # Grunt squad
+    else:
         dmgString = str(dmg)
+
     p.setStrokeColor(colors.black)
     p.setFillColor(colors.white)
     p.setFont("Helvetica-Bold", 6)
@@ -164,6 +163,19 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
             p.roundRect(.88*WIDTH, dy, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
             p.setFillColor(colors.black)
             p.drawRightString(.87 *WIDTH, dy+(boxWidth/4), strings[i])
+
+def drawSlots(p, grunt, WIDTH, HEIGHT):
+    slots = grunt.getSlots()
+    if slots > 0:
+        x = .07*WIDTH
+        boxWidth = WIDTH/19
+        boxGap = WIDTH/119
+        y = .24*HEIGHT
+        p.setStrokeColor(colors.lightgrey)
+        p.setFillColor(colors.white)
+        p.roundRect(x, y, 8*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
+        p.setFillColor(colors.black)
+        p.drawCentredString(x + 4*boxWidth, y+(boxWidth/4), "%s %d" % (_('Transport Slots:'), slots) )
 
 def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
     try: # draw engineer or medic boxes if necessary
@@ -293,11 +305,9 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
 
     i = 0
     try: # If we have a ram weapon, draw it
-        print 'drawing ram'
         drawWeaponBox(p, x, y, dxs, textYOffset, i+1, WIDTH, HEIGHT, BOX_HEIGHT, ramWeapon)
         i = i + 1 # do this after the draw, as we only want to do it if a ramWeapon really exists
     except Exception, e:
-        print 'ram exception:',e
         pass
     for unitWeapon in unitWeaponList:
         i = i + 1
@@ -561,6 +571,7 @@ def oneCard(p, WIDTH, HEIGHT, request, unit):
     drawWeapons(p, unit, WIDTH, HEIGHT)
     drawDamage(p, unit, WIDTH, HEIGHT)
     drawMedicEngineer(p, unit, WIDTH, HEIGHT)
+    drawSlots(p, unit, WIDTH, HEIGHT)
     drawDesc(p, unit, WIDTH, HEIGHT)
     drawPerks(p, unit, WIDTH, HEIGHT)
     drawType(p, unit, WIDTH, HEIGHT)

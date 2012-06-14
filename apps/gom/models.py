@@ -430,6 +430,15 @@ class Unit(models.Model):
             speedArray = ((10,10,9,8,8), (13,13,12,11,10), (14,14,13,12,11), (15,15,14,13,12))
             return speedArray[self.mobility-1][self.size-1]
         return t[self.size]
+    def getSlots(self):
+        if self.unitType == 13:
+            t=[0,1,1,2,2,4]
+            return t[self.size]
+        elif self.unitType == 14:
+            t=[0,0,0,1,2,3]
+            return t[self.size]
+        else:
+            return 0
     def getRam(self):
         if self.unitType == 12:
             return 6+self.size
