@@ -1,5 +1,5 @@
 #!/bin/bash
-WORKING_DIR=~/virtualenv/gruntzdev
-cd $WORKING_DIR; source bin/activate
+#export WORKING_DIR before calling this script
+cd $WORKING_DIR
 source bin/activate
 ./cleaner.py
