@@ -433,9 +433,9 @@ def drawNameAndCost(p, unit, WIDTH, HEIGHT):
     p.drawInlineImage('static/gruntz.png', .88*WIDTH, LINE_Y-(0.033*HEIGHT) , width=.105*WIDTH, height=.105*HEIGHT, preserveAspectRatio=True)
 
 def drawManu(p, unit, WIDTH, HEIGHT):
+    p.setFont("Helvetica", 4)
     try:
         manu = unit.manu.get()
-        p.setFont("Helvetica", 4)
         p.drawString(.4*WIDTH,.01*HEIGHT, _('Mini: %s') % manu)
     except:
         pass
