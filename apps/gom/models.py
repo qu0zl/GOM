@@ -708,7 +708,6 @@ def unitDump():
 def force_predelete(sender, **kwargs):
     # the object which is about to be deleted can be accessed via the kwargs 'instance' key.
     obj = kwargs['instance']
-    print 'Force deletion: pre-delete on force', obj.name
     # Find any ForceEntry objects related to this force and delete them
     try:
         entries = ForceEntry.objects.filter(force=obj)
@@ -720,7 +719,6 @@ def force_predelete(sender, **kwargs):
 def unit_predelete(sender, **kwargs):
     # the object which is about to be deleted can be accessed via the kwargs 'instance' key.
     obj = kwargs['instance']
-    print 'pre-delete on object', obj
     # See if this is the only unit belonging to this user using this image file.
     # If so, delete the image file.
     if obj.image:
@@ -742,7 +740,6 @@ def unit_predelete(sender, **kwargs):
             # Keep note of which forces had this entry, so we can update their cost after this loop
             if entry.force not in forceList:
                 forceList.append(entry.force)
-            print 'deleting entry', entry
             entry.delete()
         for force in forceList:
             force.updateCost()

@@ -579,7 +579,6 @@ def list(request):
             else:
                 units=units.filter(image="")
 
-    print 'units are', units
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
