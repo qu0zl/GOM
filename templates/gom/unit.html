@@ -150,10 +150,12 @@
             case (1):
             case (2):
                 $('#id_mobility_tr').hide();
+                $('#id_air_mobility_tr').hide();
                 break;
             case (3):
                 $('#id_dam_text').html([0,4,5,6,7,8][size]);
                 $('#id_mobility_tr').show();
+                $('#id_air_mobility_tr').hide();
                 // calc values then lock them
                 $("#id_guard").val(15-size);
                 if ( size == 5 ) { 
@@ -174,6 +176,7 @@
                 $('#id_soak').val(14+size);
                 $('#id_dam_text').html(damValues[size]);
                 $('#id_mobility_tr').show();
+                $('#id_air_mobility_tr').hide();
                 break;
             case 12: //mecha
                 var damValues= [0, 12, 14, 16, 20, 24];
@@ -184,6 +187,7 @@
                 $('#id_soak').val(soak);
                 $('#id_dam_text').html(damValues[size]);
                 $('#id_mobility_tr').hide();
+                $('#id_air_mobility_tr').hide();
                 break;
             case 13: //GSV
                 var damValues= [0, 10, 12, 16, 20, 22];
@@ -195,6 +199,7 @@
                 $('#id_soak').val(soakValues[size]);
                 $('#id_dam_text').html(damValues[size]);
                 $('#id_mobility_tr').show();
+                $('#id_air_mobility_tr').hide();
                 break;
             case 14: //ASV
                 var damValues= [0, 10, 12, 14, 16, 18];
@@ -206,7 +211,7 @@
                 $('#id_soak').val(soakValues[size]);
                 $('#id_dam_text').html(damValues[size]);
                 $('#id_mobility_tr').hide();
-                // show air mobility field
+                $('#id_air_mobility_tr').show();
                 break;
             case 15: //Artillery
                 var damValues= [0, 12, 14, 18, 22, 24];
@@ -217,6 +222,7 @@
                 $("#id_soak").val(13+size);
                 $('#id_dam_text').html(damValues[size]);
                 $('#id_mobility_tr').show();
+                $('#id_air_mobility_tr').hide();
                 break;
             default:
                 alert ('Unit type ' + utype + ' not yet supported.');
@@ -376,6 +382,7 @@ function weaponOR(event) {
                                     <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
                                     <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                                    <tr id="id_air_mobility_tr"><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
                                     <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
                                     <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
                                     <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>

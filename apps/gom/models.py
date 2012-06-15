@@ -40,6 +40,12 @@ MOBILITY_CHOICES = (
     (4,  _('Hover')),
     (5,  _('Grav'))
 )
+AIR_MOBILITY_CHOICES = (
+    (1,  _('Helicopter')),
+    (2,  _('Prop VTOL')),
+    (3,  _('Jet VTOL')),
+    (4,  _('Grav')),
+)
 STAT_CHOICES = (
     (2,  _('Green (2)')),
     (3,  _('Trained (3)')),
@@ -324,8 +330,13 @@ class Unit(models.Model):
             if self.mobility == 1 and self.mechaSpecialist == True:
                 cost = cost + 1
             return cost
-        elif self.isVehicle() and self.unitType != 12:
-            t = (0, 0, 1, 1, 2, 3)
+        elif self.isVehicle():
+            if self.unitType == 12: # MECHA
+                return 0
+            elif self.unitType == 14: #ASV
+                t = (0, 0, 1, 1, 2, 999)
+            else:
+                t = (0, 0, 1, 1, 2, 3)
             return t[self.mobility]
         else:
             return 0
@@ -553,6 +564,7 @@ class UnitForm(forms.ModelForm):
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
+    air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False)
 
     class Meta:
         model = Unit
@@ -670,6 +682,12 @@ class UnitForm(forms.ModelForm):
                 pass
             try:
                 self.fields['engineerSpecialist'].initial=kwargs['instance'].engineerSpecialist
+            except Exception, e:
+                print e
+                pass
+            try:
+                if kwargs['instance'].unitType == 14: #ASV
+                    self.fields['air_mobility'].initial = kwargs['instance'].mobility
             except Exception, e:
                 print e
                 pass

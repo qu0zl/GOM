@@ -347,8 +347,14 @@ def drawDesc(p, unit, WIDTH, HEIGHT):
         para.drawPara()
         p.translate(-descX, -descY)
 
+def mobString(unit):
+    if unit.unitType == 14: #ASV
+        mobStrings = (_('None'),_('Helicopter'),_('Prop VTOL'),_('Jet VTOL'),_('Grav'),_('Error'))
+    else:
+        mobStrings = (_('None'),_('Walk'),_('Track'),_('Wheels'),_('Hover'),_('Grav'))
+    return mobStrings[unit.mobility]
+
 def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
-    mobString = (_('None'),_('Walk'),_('Track'),_('Wheels'),_('Hover'),_('Grav'))
     sizeString = (_('None'),_('Scout'),_('Light'),_('Medium'),_('Heavy'),_('Assault'))
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
@@ -359,7 +365,7 @@ def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
     p.roundRect( .01*WIDTH, y-.005*HEIGHT, .12*WIDTH, .05*HEIGHT, radius=6, fill=1, stroke=1)
     p.setFillColor(colors.black)
     p.setFont("Helvetica-Bold", 6)
-    p.drawString( .14*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Mobility:'),mobString[unit.mobility]) )
+    p.drawString( .14*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Mobility:'),mobString(unit)) )
 
     p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[unit.size]) )
     p.setFont("Helvetica-Bold", 8)
