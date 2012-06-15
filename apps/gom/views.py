@@ -317,14 +317,14 @@ def unitSave(request, unit_id=0):
         if form.is_valid(): # All validation rules pass
             if (unit_id == 0): # new unit object - NOW DEFUNCT, delete soon
                 unit = gom.models.Unit( name=form.cleaned_data['name'],
-                    unitType=form.cleaned_data['unitType'],
-                    shoot=form.cleaned_data['shoot'],
-                    assault=form.cleaned_data['assault'],
-                    guard=form.cleaned_data['guard'],
-                    soak=form.cleaned_data['soak'],
-                    mental=form.cleaned_data['mental'],
-                    skill=form.cleaned_data['skill'],
-                    size=form.cleaned_data['size'])
+                    unitType=int(form.cleaned_data['unitType']),
+                    shoot=int(form.cleaned_data['shoot']),
+                    assault=int(form.cleaned_data['assault']),
+                    guard=int(form.cleaned_data['guard']),
+                    soak=int(form.cleaned_data['soak']),
+                    mental=int(form.cleaned_data['mental']),
+                    skill=int(form.cleaned_data['skill']),
+                    size=int(form.cleaned_data['size']))
                 unit.save()
                 unit.owner.add(request.user)
                 unit.save()
@@ -347,14 +347,14 @@ def unitSave(request, unit_id=0):
                     unit.tempInstance = False
                     unit.save() # Important enough to warrant an immediate save imo
                 unit.name = form.cleaned_data['name']
-                unit.shoot=form.cleaned_data['shoot']
-                unit.assault=form.cleaned_data['assault']
-                unit.guard=form.cleaned_data['guard']
-                unit.soak=form.cleaned_data['soak']
-                unit.mental=form.cleaned_data['mental']
-                unit.skill=form.cleaned_data['skill']
-                unit.size=form.cleaned_data['size']
-                unit.unitType=form.cleaned_data['unitType']
+                unit.shoot=int(form.cleaned_data['shoot'])
+                unit.assault=int(form.cleaned_data['assault'])
+                unit.guard=int(form.cleaned_data['guard'])
+                unit.soak=int(form.cleaned_data['soak'])
+                unit.mental=int(form.cleaned_data['mental'])
+                unit.skill=int(form.cleaned_data['skill'])
+                unit.size=int(form.cleaned_data['size'])
+                unit.unitType=int(form.cleaned_data['unitType'])
 
             print form.cleaned_data
             # Now add weapon groups
@@ -411,8 +411,13 @@ def unitSave(request, unit_id=0):
             if unit.unitType == 12:
                 print 'Setting mecha mobility'
                 unit.mobility = 1 # Walk - it's a mecha
+            elif unit.unitType == 14:
+                try:
+                    unit.mobility = int(form.cleaned_data['air_mobility'])
+                except:
+                    unit.mobility = 1
             else:
-                unit.mobility = form.cleaned_data['mobility']
+                unit.mobility = int(form.cleaned_data['mobility'])
 
             unit.updateCost()
             unit.save()
