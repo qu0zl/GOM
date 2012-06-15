@@ -552,17 +552,22 @@ def drawForceUnitsPlatypusTable(p, force, WIDTH, HEIGHT):
 def oneCard(p, WIDTH, HEIGHT, request, unit):
     RIGHT=WIDTH-1
     TOP=HEIGHT-1
-    # background box
+    # card background box
     drawBackgroundBox(p, WIDTH, HEIGHT)
-    p.setFillColor(colors.white)
-    p.setStrokeColor(colors.darkgrey)
-    p.roundRect( .02*WIDTH, .59*HEIGHT, .371*WIDTH, .27*HEIGHT, radius=2, fill=1, stroke=1)
+
     if unit.image:
         imageFilename = str('user_media/%d/%s' % (unit.owner.get().id, unit.image))
         try:
-            p.drawImage(imageFilename, .025*WIDTH, .595*HEIGHT, width=.36*WIDTH,height=.26*HEIGHT, preserveAspectRatio=True)
+            p.drawImage(imageFilename, .020*WIDTH, .595*HEIGHT, width=.365*WIDTH,height=.265*HEIGHT, preserveAspectRatio=True)
         except IOError, e:
             print 'pdfOncard draw fail. Grunt id %d' % unit.id, e
+    # image background box
+    p.setFillColor(colors.white)
+    p.setStrokeColor(colors.darkgrey)
+    p.setLineWidth(3)
+    p.roundRect( .015*WIDTH, .59*HEIGHT, .371*WIDTH, .27*HEIGHT, radius=2, fill=0, stroke=1)
+    p.setLineWidth(1)
+
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
     p.rect(0,0,RIGHT, .295*HEIGHT, stroke=1, fill=1)
