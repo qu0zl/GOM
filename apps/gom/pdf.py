@@ -436,7 +436,7 @@ def drawNameAndCost(p, unit, WIDTH, HEIGHT):
     p.setStrokeColor(colors.darkgrey)
     p.lines([ (0,LINE_Y, .85*WIDTH, LINE_Y), (.85*WIDTH,LINE_Y, .88*WIDTH,LINE_Y-(.03*HEIGHT)), (.88*WIDTH, LINE_Y-(.03*HEIGHT), WIDTH-1, LINE_Y-(.03*HEIGHT)) ])
     # Change to use drawImage once I have a gruntz graphic with transparency
-    p.drawInlineImage('static/gruntz.png', .88*WIDTH, LINE_Y-(0.033*HEIGHT) , width=.105*WIDTH, height=.105*HEIGHT, preserveAspectRatio=True)
+    p.drawInlineImage('static/gruntzLogo.jpg', .88*WIDTH, LINE_Y-(0.033*HEIGHT) , width=.105*WIDTH, height=.105*HEIGHT, preserveAspectRatio=True)
 
 def drawManu(p, unit, WIDTH, HEIGHT):
     p.setFont("Helvetica", 4)
