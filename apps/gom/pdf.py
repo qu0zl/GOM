@@ -94,7 +94,7 @@ def drawPerks(p, grunt, WIDTH, HEIGHT):
         perkY = .55*HEIGHT
     else:
         perkX = .05*WIDTH
-        perkY = .12*HEIGHT
+        perkY = .10*HEIGHT
 
     para = paragraph.Paragraph(perkString, justifyStyle())
 
