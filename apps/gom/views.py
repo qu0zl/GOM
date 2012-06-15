@@ -554,6 +554,8 @@ def list(request):
         owner = unit.owner.get()
         if owner not in owners:
             owners.append(owner)
+    # Put owners list in case-insensitive alphabetical order
+    owners.sort(key=lambda x: str.lower(repr(x)))
 
     if request.is_ajax():
         if request.POST['owner']:
