@@ -1,0 +1,30 @@
+{% load i18n %}
+{% for item in units %}
+    <tr><td><a href="/gom/unit/{{item.id}}/">{{item.name}}</a></td>
+        <td>{{item.owner.get}}</td>
+        <td>{{item.getCost}}</td>
+        <td>{{item.manu.get.manuName}}</td>
+        <td>
+            <select name="pdf_{{item.id}}">
+                <option value="" selected="selected">None</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </td>
+        <td>
+            <select name="force_{{item.id}}">
+            {% if user.is_authenticated %}
+                <option value="" selected="selected">None</option>
+                {% for force in forces %}
+                    <option value="{{force.id}}">{{force.name}}</option>
+                {% endfor %}
+            {% else %}
+                <option value="" selected="selected">{% trans 'Requires login' %}</option>
+            {% endif %}
+            </select>
+        </td>
+    </tr>
+    {% endfor %}
