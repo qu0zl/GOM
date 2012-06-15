@@ -537,7 +537,7 @@ def listHandler(request, what):
             return updateForce(request)
     return list(request)
 
-def list(request, filterType=None, filterValue=None, filterValue2=None):
+def list(request):
     units = gom.models.Unit.objects.exclude(tempInstance=True)
     try:
         forces = gom.models.Force.objects.filter(owner=request.user)
@@ -550,40 +550,36 @@ def list(request, filterType=None, filterValue=None, filterValue2=None):
         if owner not in owners:
             owners.append(owner)
 
-    if filterType == '1':
-        units = units.filter(owner=filterValue)
-    elif filterType == '2':
-        units = units.filter(unitType=filterValue)
-    elif filterType == '3' and filterValue2:
-        if filterValue == '1':
-            units=units.filter(cost__gt=filterValue2)
-        elif filterValue == '2':
-            units=units.filter(cost__lt=filterValue2)
-        elif filterValue == '3':
-            units=units.filter(cost=filterValue2)
-    elif filterType == '4':
-        units = units.filter(manu=filterValue)
-    elif filterType == '5' and filterValue2:
-        if filterValue == '1':
-            units=units.filter(name__icontains=filterValue2)
-        elif filterValue == '2':
-            units=units.filter(name__istartswith=filterValue2)
-        elif filterValue == '3':
-            units=units.filter(name__iendswith=filterValue2)
-    elif filterType == '6':
-        if filterValue == '1':
-            units=units.exclude(image="")
-        elif filterValue == '2':
-            units=units.filter(image="")
+    if request.is_ajax():
+        if request.POST['owner']:
+            units = units.filter(owner=request.POST['owner'])
+        if request.POST['unit_type']:
+            units = units.filter(unitType=request.POST['unit_type'])
+        if request.POST['manu']:
+            units = units.filter(manu=request.POST['manu'])
+        if request.POST['cost_max']:
+            units=units.filter(cost__lte=request.POST['cost_max'])
+        if request.POST['cost_min']:
+            units=units.filter(cost__gte=request.POST['cost_min'])
+        #elif filterType == '5' and filterValue2:
+        #    if filterValue == '1':
+        #        units=units.filter(name__icontains=filterValue2)
+        #    elif filterValue == '2':
+        #        units=units.filter(name__istartswith=filterValue2)
+        #    elif filterValue == '3':
+        #        units=units.filter(name__iendswith=filterValue2)
+        if request.POST['image']:
+            if request.POST['image'] == '1':
+                units=units.exclude(image="")
+            else:
+                units=units.filter(image="")
 
-    return render_to_response('gom/list.html', \
+    print 'units are', units
+    return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
             'forces':forces,
             'owners':owners,
-            'filterType':filterType,
-            'filterValue':filterValue,
-            'filterValue2':filterValue2,
             'manufacturers':gom.models.Manufacturer.objects.all().order_by('manuName'),
         }, \
         RequestContext(request))

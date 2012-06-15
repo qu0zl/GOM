@@ -17,7 +17,6 @@ urlpatterns = patterns("",
     (r'^force/(\d+)/save/$', 'gom.views.forceSave'),
     (r'^force/forceEntryCount/$', 'gom.views.updateEntryCount'),
     (r'^list/(?P<what>\w+)/$', 'gom.views.listHandler'),
-    (r'^list/(?P<filterType>\w+)/(?P<filterValue>\w+)/$', 'gom.views.list'),
-    (r'^list/(?P<filterType>\w+)/(?P<filterValue>\w+)/(?P<filterValue2>\w+)/$', 'gom.views.list'),
+    (r'^list/filter/$', 'gom.views.list'),
 )
 
