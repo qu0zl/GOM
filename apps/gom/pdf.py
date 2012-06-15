@@ -564,7 +564,7 @@ def oneCard(p, WIDTH, HEIGHT, request, unit):
     # image background box
     p.setFillColor(colors.white)
     p.setStrokeColor(colors.darkgrey)
-    p.setLineWidth(3)
+    p.setLineWidth(2.5)
     p.roundRect( .015*WIDTH, .59*HEIGHT, .371*WIDTH, .27*HEIGHT, radius=2, fill=0, stroke=1)
     p.setLineWidth(1)
 
