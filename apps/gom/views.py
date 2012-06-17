@@ -245,7 +245,7 @@ def forceSave(request, force_id=0):
                 #test for delete
                 if 'delete' in request.POST:
                     force.delete()
-                    return HttpResponseRedirect('/gom/list/all/mine/')
+                    return HttpResponseRedirect('/gom/list/all//')
                 force.name = form.cleaned_data['name']
 
             # Now update any units in the force
@@ -340,7 +340,7 @@ def unitSave(request, unit_id=0):
                 #test for delete
                 if 'delete' in request.POST:
                     unit.delete()
-                    return HttpResponseRedirect('/gom/list/all/mine/')
+                    return HttpResponseRedirect('/gom/list/all/')
                 print form.cleaned_data
                 if unit.tempInstance: # Clear the temp object flag if set
                     print 'clearing tempInstance'
