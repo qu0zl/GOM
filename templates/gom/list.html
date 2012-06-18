@@ -4,6 +4,7 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{{ STATIC_URL }}tsThemes/blue/style.css" type="text/css" id="" media="print, projection, screen" />
 <script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.form.js"></script>
 <script type="text/javascript">
     function filter (e) {
         $.post( '/gom/list/filter/', 
@@ -15,10 +16,21 @@
         });
         e.preventDefault();
     }
+    function forceUpdate(e){
+        $('#multi_PDF').ajaxSubmit({url:'/gom/list/addForceEntry/',
+            success: function(){ 
+            $('select[name^="force_"]').val('');
+            $('#id_force').html("{% trans "Done" %}").delay('slow').queue(function(n) {
+                            $(this).html("{% trans "Add to Force" %}");
+                            n();})
+            },});
+    e.preventDefault();
+    }
     $(document).ready(function() { 
         $.ajaxSetup ({
             cache: false
-        });
+            });
+        $('#id_force').click(forceUpdate);
         $("#id_unit_table").tablesorter({sortList: [[1,0],[0,0]], headers:
             { 4: { sorter: false }, 5: { sorter: false } } });
         $('select[id^="id_filter_"]').change(filter);
@@ -101,7 +113,7 @@
     <th>{% trans 'Manufacturer' %}</th>
     <th><button name="pdf" type="submit">{% trans "Create Multi Card PDF" %}</button></th>
     {% if user.is_authenticated %}
-    <th><button name="force" type="submit">{% trans "Add to Force" %}</button></th>
+    <th><button id="id_force" name="force" type="submit">{% trans "Add to Force" %}</button></th>
     {% else %}
     <th>{% trans "Add to Force" %}</th>
     {% endif %}

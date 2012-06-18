@@ -496,7 +496,10 @@ def updateForce(request):
                 force.cost = force.cost + (unit.cost*unitCount)
                 force.save()
                 print 'item:%s, value:%s, unit:%s, force:%s' % (item, request.POST[item], unitID, forceID)
-    return list(request)
+    if request.is_ajax():
+        return HttpResponse()
+    else:
+        return list(request)
 
 def forcePDF(request, force):
     units = []
@@ -563,7 +566,7 @@ def listHandler(request, what):
     if request.method == 'POST':
         if 'pdf' in request.POST:
             return multiPDF(request)
-        if 'force' in request.POST:
+        if 'force' in request.POST or what == 'addForceEntry':
             return updateForce(request)
     return list(request)
 
