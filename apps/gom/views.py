@@ -96,6 +96,9 @@ def unitForm(request, unit_id):
                 'filename':image,
                 'saved':0,
                 'unit':unit,
+                'weapons':weaponCosts(),
+                'perkz':perkCosts(),
+                'modz':modCosts(),
             }, \
             RequestContext(request))
     else: # Make a new temporary unit
@@ -305,6 +308,25 @@ def pdfIt(request, unit_id=0):
         else:
             return HttpResponseForbidden(_('You must login to modify units.'))
 
+def perkCosts():
+    p = gom.models.Perks.objects.all()
+    perks = ""
+    for (a,b) in map (lambda x: (x.id, x.perkCost), p):
+        perks = perks + "%s:%s," % (a,b)
+    return perks
+def modCosts():
+    m = gom.models.Modz.objects.all()
+    modz = ""
+    for (a,b) in map (lambda x: (x.id, x.perkCost), m):
+        modz = modz + "%s:%s," % (a,b)
+    return modz
+def weaponCosts():
+    #could try to use django cache system here
+    w = gom.models.Weapons.objects.all()
+    weapons = ""
+    for (a,b) in map (lambda x: (x.id, x.weaponPoints), w):
+        weapons = weapons + "%s:%s," % (a,b)
+    return weapons
 def unitSave(request, unit_id=0):
     print 'trying to save unit %s' % unit_id
     unit_id = int(unit_id)
@@ -454,6 +476,9 @@ def unitSave(request, unit_id=0):
                 'filename':image,
                 'saved':1,
                 'unit':unit,
+                'weapons':weaponCosts(),
+                'perkz':perkCosts(),
+                'modz':modCosts(),
             }, \
             RequestContext(request))
 

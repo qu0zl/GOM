@@ -324,7 +324,7 @@ class Unit(models.Model):
         if self.unitType == 1 or self.unitType == 2 or self.unitType == 4:
             return 0
         elif self.unitType == 3:
-            t = {1:0, 2:1, 3:1, 4:2, 5:3, 6:3}
+            t = (0,0,1,2,3,3)
             cost=t[self.mobility]
             # Check if it's a Mecha walk, rather than a normal walk
             if self.mobility == 1 and self.mechaSpecialist == True:

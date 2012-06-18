@@ -5,6 +5,196 @@
 <script src="{{ STATIC_URL }}js/view.js"></script>
 
 <script type="text/javascript">
+    var WEAPON_COST = {'':0, {{weapons}} };
+    var PERK_COST = {'':0, {{perkz}} };
+    var MODZ_COST = {'':0, {{modz}} };
+    function baseCost(utype, size) {
+        switch (utype) {
+            case(1):
+                return 1;
+            case (2):
+                return 2;
+            case (3):
+                var specCost=0;
+                if ($('#id_medicSpecialist').prop('checked'))
+                    specCost = specCost+5;
+                if ($('#id_engineerSpecialist').prop('checked'))
+                    specCost = specCost+5;
+                return specCost+[0,2,4,6,8,10][size];
+            case (4):
+                return [0,1,3,5,7,9][size];
+            case (11):
+                return [0, 21, 22, 25, 28, 32][size];
+            case (12):
+                return [0, 17, 18, 20, 23, 27][size];
+            case (13):
+                return [0, 15, 16, 19, 22, 26][size];
+            case (14):
+                return [0, 16, 18, 21, 24, 28][size];
+            case (15):
+                return [0, 17, 20, 23, 27, 31][size];
+            default:
+                return 0;
+        }
+    }
+    function mobilityCost(utype){
+        var mobi=$('#id_mobility').val();
+        switch (utype) {
+            case(1):
+            case(2):
+            case(4):
+            case(12):
+                return 0;
+            case(3):
+                var mechaCost=0;
+                if (mobi == 1 && $('#id_mechaSpecialist').prop('checked')) {
+                    mechaCost=1;
+                }
+                return [0,0,1,2,3,3][mobi] + mechaCost;
+            case(14):
+                return [0,0,1,1,2,999][mobi];
+            default:
+                return [0,0,1,1,2,3][mobi];
+        }
+    }
+    function shootCost(utype){
+        if (utype < 10){
+            if (utype == 2)
+                return 0;
+            return $('#id_shoot').val()-2;
+        }
+        return 0;
+    }
+    function assaultCost(utype){
+        if (utype < 10){
+            if (utype == 2)
+                return 0;
+            return $('#id_assault').val()-2;
+        }
+        return 0;
+    }
+    function guardCost(utype){
+        if (utype == 1 || utype == 4){
+            var t={10:1, 11:2, 12:4, 13:6, 14:8}
+            return t[$('#id_guard').val()];
+        }
+        return 0;
+    }
+    function skillCost(utype){
+        if (utype == 1 || utype == 3 || utype == 4)
+            return [0,0,1,2,3,5,8,12][$('#id_skill').val()];
+        else if (utype>=11)
+            return [0,0,0,1,2,5,8,12][$('#id_skill').val()];
+        return 0;
+    }
+    function mentalCost(utype){
+        if (utype == 1 || utype == 4 || utype == 3)
+            return $('#id_mental').val()-4;
+        return 0;
+    }
+    function soakCost(utype){
+        if (utype == 1 || utype == 4){
+            var t={10:1, 11:2, 12:3, 13:4, 14:6, 15:8};
+            return t[$('#id_soak').val()];
+        }
+        return 0;
+    }
+    function perkCost(utype, size) {
+        switch (utype) {
+            case(1):
+                return PERK_COST[$('#id_perks').val()];
+            case(2):
+                return 0;
+            case(3):
+            case(4):
+                if ($('#id_perks').val() != '' && $('#id_perks2').val() != '') {
+                    return 5 + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+                }
+                return PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+            case(13):
+            case(14):
+                if ( $('#id_cmdTek').prop('checked') )
+                    return 6 + MODZ_COST[$('#id_modz').val()];
+                return MODZ_COST[$('#id_modz').val()];
+            case(11):
+            case(12):
+            case(15):
+                return MODZ_COST[$('#id_modz').val()];
+        }
+    }
+    function weaponCost(utype, size) {
+        switch (utype) {
+            case(1):
+                return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+            case(2):
+                return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
+            case(4):
+                return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+            case(3):
+                return WEAPON_COST[$('#id_SpecWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+            case(11):
+            case(12):
+                var main=0;
+                var AI=0;
+                var old_cost=0;
+                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                if (cost != old_cost) { main++; old_cost=cost;}
+                cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
+                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (size >= 2) {
+                    cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
+                    if (cost != old_cost) { main++; old_cost=cost;}
+                    if (size >= 3) {
+                        cost = cost + WEAPON_COST[$('#id_mainWeapons3').val()];
+                        if (cost != old_cost) { main++; old_cost=cost;}
+                        cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                        if (cost != old_cost) { AI++; old_cost=cost;}
+                        if (size >= 5)
+                            cost = cost + WEAPON_COST[$('#id_mainWeapons4').val()];
+                            if (cost != old_cost) { main++; old_cost=cost;}
+                    }
+                }
+                return cost+[0, 1, 4, 8, 13][main]+[0, 2, 4][AI];
+            case(13):
+            case(14):
+                var old_cost=0;
+                var cost = WEAPON_COST[$('#id_AIWeapons').val()];
+                var AI=0;
+                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (size >= 3) {
+                    cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                    if (cost != old_cost) { AI++; old_cost=cost;}
+                }
+                return cost+[0, 2, 4][AI];
+            case(15):
+                var main=0;
+                var AI=0;
+                var old_cost=0;
+                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                if (cost != old_cost) { main++; old_cost=cost;}
+                cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
+                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (size >= 3) {
+                    cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
+                    if (cost != old_cost) { main++; old_cost=cost;}
+                    cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                    if (cost != old_cost) { AI++; old_cost=cost;}
+                }
+                return cost+[0, 1, 4, 8, 13][main]+[0, 2, 4][AI];
+             
+        }
+    }
+
+    function updateCost(){
+        var size = parseInt($('#id_size').val());
+        var utype = parseInt($('#id_unitType').val());
+        var cost = baseCost(utype, size)+shootCost(utype)+assaultCost(utype)+guardCost(utype)+soakCost(utype)+weaponCost(utype,size)+mobilityCost(utype)+mentalCost(utype)+skillCost(utype)+perkCost(utype);
+        if (utype<10)
+            cost = Math.ceil(cost/2);
+        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' perks: '+perkCost(utype)); 
+        $('#id_cost').html(cost);
+    }
+
     function updateSave() {
         if ( {{ saved }} == 1 ) {
             $('#id_save').html("{% trans "Saved" %}").delay('slow').queue(function(n) {
@@ -290,6 +480,11 @@ function weaponOR(event) {
         $('[type=checkbox].[name^="OR_"]').each(weaponOR);
         updateStats( parseInt($('#id_unitType').val()), parseInt($('#id_size').val()) );
         updateSave();
+
+        $('select').change(updateCost);
+        $('#id_medicSpecialist').change(updateCost);
+        $('#id_engineerSpecialist').change(updateCost);
+        $('#id_cmdTek').change(updateCost);
         } );
 </script>
 {% endblock extra_head %}
@@ -339,6 +534,7 @@ function weaponOR(event) {
                             </td><td>
                             <table>
                                 <tbody>
+                                    <tr><td>{% trans 'Cost' %}</td><td id="id_cost">{{unit.cost}}</td></tr>
                                     {% if filename %}
                                     <tr><td><img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
                                     {% endif %}
