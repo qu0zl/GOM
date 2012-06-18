@@ -52,6 +52,7 @@
                 }
                 return [0,0,1,2,3,3][mobi] + mechaCost;
             case(14):
+                mobi=$('#id_air_mobility').val()
                 return [0,0,1,1,2,999][mobi];
             default:
                 return [0,0,1,1,2,3][mobi];
