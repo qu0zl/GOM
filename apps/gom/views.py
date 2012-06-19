@@ -246,7 +246,6 @@ def forceSave(request, force_id=0):
                 force_id = force.id
                 print 'saved new force - %d' % force.id
             else:
-                print 'trying to get force %d' % force_id
                 force = gom.models.Force.objects.get(id=force_id)
                 # If the authenticated user is not the owner of this object then don't let them edit it!
                 if (request.user != force.owner.get()): # If they want a PDF allow that, but nothing else
@@ -254,8 +253,6 @@ def forceSave(request, force_id=0):
                         return forcePDF(request, force)
                     print 'Attempt by user %s to edit force owned by user %s' % (request.user, force.owner.get())
                     return HttpResponseForbidden()
-                print 'Updating force entry %d' % force_id
-                #test for delete
                 if 'delete' in request.POST:
                     force.delete()
                     return HttpResponseRedirect('/gom/list/all//')

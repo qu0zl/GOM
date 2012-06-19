@@ -329,8 +329,7 @@ def drawDesc(p, unit, WIDTH, HEIGHT):
         descHeight=.14*HEIGHT
         desc=unit.desc
         fontSize=5
-    except Exception, e: # must be a force
-        print e
+    except: # must be a force
         p.roundRect(.05*WIDTH,.72 *HEIGHT, .9*WIDTH, .16*HEIGHT, radius=2, fill=1)
         descY=.74*HEIGHT
         descX=.06*WIDTH
