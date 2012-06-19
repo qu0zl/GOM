@@ -1,6 +1,8 @@
 from django.utils.translation import ugettext as _
 from django.db.models import Q
 from reportlab.pdfgen import canvas
+from django.contrib.auth.models import User
+from decimal import *
 from PIL import Image
 import os
 import pdf
@@ -16,6 +18,41 @@ from django.core.files import File
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 import gom.models
+
+def setFilters(request):
+    try:
+        if request.is_ajax() and request.user.is_authenticated():
+            try:
+                user_profile = request.user.profile
+            except Exception ,e:
+                print 'user_profile access exception:', e
+
+            filters = {}
+            try:
+                if request.POST['owner']:
+                    filters['owner']=int(request.POST['owner'])
+                if request.POST['unit_type']:
+                    filters['unit_type'] = int(request.POST['unit_type'])
+                if request.POST['manu']:
+                    filters['manu'] = int(request.POST['manu'])
+                if request.POST['cost_max']:
+                    filters['cost_max'] = int(request.POST['cost_max'])
+                if request.POST['cost_min']:
+                    filters['cost_min'] = int(request.POST['cost_min'])
+                if request.POST['rating_min']:
+                    filters['rating_min']=Decimal(request.POST['rating_min'])
+                if request.POST['image']:
+                    filters['image']=int(request.POST['image'])
+            except KeyError: # Should be a reset call
+                pass
+            user_profile.filterSettings=filters
+            user_profile.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest(_('User unauthorised.'))
+    except Exception, e:
+        print e
+        return HttpResponseBadRequest(_('Failed to update user filters.'))
 
 def unitRate(request, uid):
     try:
@@ -35,14 +72,12 @@ def updateEntryCount(request):
             entry_id = request.POST['entry'][6:]
             count = int(request.POST['count'])
             entry = gom.models.ForceEntry.objects.get(id=entry_id)
-            print 'entry id is %s' % entry_id
             force = entry.force
             if force.owner.get() == request.user:
                 print 'owner match'
             else:
                 print "trying to adjust force entry in someone else's force"
                 return HttpResponseBadRequest(_('Attempt to modify force not owned by this user'))
-            print 'count is %s' % count
             rDict = {}
             if count > 0:
                 entry.count = count
@@ -65,8 +100,6 @@ def updateEntryCount(request):
         return HttpResponseBadRequest(_('Failed to update force entry. Please try again.'))
 
 def forceForm(request, force_id):
-    print 'force ID is %s' % force_id
-
     force_owner = None
     force = None
     if ( force_id != "0" ):
@@ -91,7 +124,6 @@ def forceForm(request, force_id):
         RequestContext(request))
 
 def unitForm(request, unit_id):
-    print 'unit_id is %s' % unit_id
     image = None
     unit_owner = 0
     if ( unit_id != "0" ):
@@ -151,7 +183,6 @@ def handle_uploaded_image(unit, i):
 
     # Make the user's image directory if not already present
     user_dir = 'user_media/%d/' % unit.owner.get().id
-    print 'current dir is %s' % os.getcwd()
     if not os.path.isdir(user_dir):
         print 'trying to make user media directory %s' % user_dir
         os.mkdir(user_dir)
@@ -341,7 +372,6 @@ def unitSave(request, unit_id=0):
     unit_owner = 0
 
     if request.user.is_authenticated() and request.method == 'POST': # If the form has been submitted...
-        print "user is authenticated, and it's a post method by user", request.user
         form = gom.models.UnitForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             if (unit_id == 0): # new unit object - NOW DEFUNCT, delete soon
@@ -528,7 +558,6 @@ def multiPDF(request):
         units = []
         for item in request.POST:
             if request.POST[item] != "":
-                print 'item %s is [%s]' % (item, request.POST[item])
                 if item.startswith('pdf_V'):
                     pk = item[5:]
                     try:
@@ -566,7 +595,6 @@ def force_list(request):
         RequestContext(request))
 
 def listHandler(request, what):
-    print 'what is [%s]' % what
     if what == 'force':
         return force_list(request)
     # See if this isn't a simple list request
@@ -592,19 +620,42 @@ def list(request):
     # Put owners list in case-insensitive alphabetical order
     owners.sort(key=lambda x: str.lower(repr(x)))
 
+    filterDict=None
+    filterSet=None # use to pass defaults for html selects if this is based on user profile
     if request.is_ajax():
-        if request.POST['owner']:
-            units = units.filter(owner=request.POST['owner'])
-        if request.POST['unit_type']:
-            units = units.filter(unitType=request.POST['unit_type'])
-        if request.POST['manu']:
-            units = units.filter(manu=request.POST['manu'])
-        if request.POST['cost_max']:
-            units=units.filter(cost__lte=request.POST['cost_max'])
-        if request.POST['cost_min']:
-            units=units.filter(cost__gte=request.POST['cost_min'])
-        if request.POST['rating_min']:
-            units=units.filter(rating__gte=request.POST['rating_min'])
+        filterDict = request.POST
+    elif request.user.is_authenticated():
+        try:
+            user_profile = request.user.profile
+            filterDict = user_profile.filterSettings
+            filterSet=filterDict
+        except Exception ,e:
+            print 'user_profile access exception:', e
+    if filterDict:
+        try:
+            units = units.filter(owner=filterDict['owner'])
+        except KeyError:
+            pass
+        try:
+            units = units.filter(unitType=filterDict['unit_type'])
+        except KeyError:
+            pass
+        try:
+            units = units.filter(manu=filterDict['manu'])
+        except KeyError:
+            pass
+        try:
+            units=units.filter(cost__lte=filterDict['cost_max'])
+        except KeyError:
+            pass
+        try:
+            units=units.filter(cost__gte=filterDict['cost_min'])
+        except KeyError:
+            pass
+        try:
+            units=units.filter(rating__gte=filterDict['rating_min'])
+        except KeyError:
+            pass
         #elif filterType == '5' and filterValue2:
         #    if filterValue == '1':
         #        units=units.filter(name__icontains=filterValue2)
@@ -612,11 +663,13 @@ def list(request):
         #        units=units.filter(name__istartswith=filterValue2)
         #    elif filterValue == '3':
         #        units=units.filter(name__iendswith=filterValue2)
-        if request.POST['image']:
-            if request.POST['image'] == '1':
+        try:
+            if filterDict['image'] == '1':
                 units=units.exclude(image="")
             else:
                 units=units.filter(image="")
+        except KeyError:
+            pass
 
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
@@ -624,6 +677,7 @@ def list(request):
             'forces':forces,
             'owners':owners,
             'manufacturers':gom.models.Manufacturer.objects.all().order_by('manuName'),
+            'filter_set':filterSet,
         }, \
         RequestContext(request))
 

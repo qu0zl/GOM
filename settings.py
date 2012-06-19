@@ -12,6 +12,8 @@ TEMPLATE_DEBUG = DEBUG
 # tells Pinax to serve media through the staticfiles app.
 SERVE_MEDIA = False
 
+AUTH_PROFILE_MODULE = "profiles.Profile"
+
 # django-compressor is turned off by default due to deployment overhead for
 # most users. See <URL> for more information
 COMPRESS = False
@@ -108,6 +110,7 @@ MIDDLEWARE_CLASSES = [
     "django_openid.consumer.SessionConsumer",
     "django.contrib.messages.middleware.MessageMiddleware",
     "pinax.apps.account.middleware.LocaleMiddleware",
+    "pagination.middleware.PaginationMiddleware",
     "pinax.middleware.security.HideSensistiveFieldsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
@@ -162,9 +165,12 @@ INSTALLED_APPS = [
     # Pinax
     "pinax.apps.account",
     "pinax.apps.signup_codes",
+    "pagination",
+    "idios",
     
     # project
     "gom",
+    "profiles",
 ]
 
 FIXTURE_DIRS = [
@@ -197,6 +203,10 @@ EMAIL_DEBUG = DEBUG
 DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
+
+ABSOLUTE_URL_OVERRIDES = {
+            "auth.user": lambda o: "/profiles/profile/%s/" % o.username,
+            }
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

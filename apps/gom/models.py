@@ -4,11 +4,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from math import ceil
 from django.db.models.signals import pre_delete
+import profiles.models
+#from profiles.models import Profile as BaseProfile
+#import picklefield
+#greg from idios.models import ProfileBase
 import django.contrib.auth.models
 import traceback
 import os
 import sys # needed for stdout
 
+User.profile = property(lambda u: profiles.models.Profile.objects.get_or_create(user=u)[0])
 
 # Create your models here.
 

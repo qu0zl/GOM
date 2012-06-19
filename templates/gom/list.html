@@ -17,6 +17,24 @@
         });
         e.preventDefault();
     }
+    function resetFilters (e) {
+        $.post( '/gom/set/filters/', 
+                { },
+            function( ) {
+                alert("{% trans 'User profile default filters reset to Grunt'o'Matic defaults.' %}");
+        });
+        e.preventDefault();
+    }
+    function setFilters (e) {
+        $.post( '/gom/set/filters/', 
+                { owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
+                cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(),
+                rating_min: $('#id_filter_rating_min').val(),},
+            function( ) {
+                alert("{% trans 'Set.' %}");
+        });
+        e.preventDefault();
+    }
     function forceUpdate(e){
         $('#multi_PDF').ajaxSubmit({url:'/gom/list/addForceEntry/',
             success: function(){ 
@@ -35,6 +53,8 @@
         $("#id_unit_table").tablesorter({sortList: [[1,0],[0,0]], headers:
             { 5: { sorter: false }, 6: { sorter: false } } });
         $('select[id^="id_filter_"]').change(filter);
+        $('#id_set_filters').click(setFilters);
+        $('#id_reset_filters').click(resetFilters);
     } 
     ); 
 </script>
@@ -47,67 +67,11 @@
 {% block body %}
 <h1>{% trans "Units" %}</h1>
 <div>
-<h4>Filter by: 
-<select style="width:110px;" id="id_filter_owner" name="filter_owner">
-    <option value="" selected="selected">{% trans 'Owner' %}</option>
-    {% for user in owners %}
-    <option value="{{user.id}}">{{user}}</option>
-    {% endfor %}
-</select>
-<select style="width:110px;" id="id_filter_unit_type" name="filter_unit_type">
-    <option value="" selected="selected">{% trans 'Unit Type' %}</option>
-    <option value="1">{% trans 'Grunt Squad' %}</option>
-    <option value="2">{% trans 'Squad Attachment' %}</option>
-    <option value="3">{% trans 'Specialist' %}</option>
-    <option value="4">{% trans 'Commander' %}</option>
-    <option value="11">{% trans 'Tank' %}</option>
-    <option value="12">{% trans 'Mecha' %}</option>
-    <option value="13">{% trans 'GSV' %}</option>
-    <option value="14">{% trans 'ASV' %}</option>
-    <option value="15">{% trans 'Artillery' %}</option>
-</select>
-<select style="width:120px;" id="id_filter_manu" name="filter_manu">
-    <option value="" selected="selected">{% trans 'Manufacturer' %}</option>
-    {% for manu in manufacturers %}
-    <option value="{{manu.id}}">{{manu.manuName}}</option>
-    {% endfor %}
-</select>
-<select style="width:110px;" id="id_filter_cost_min" name="filter_cost_min">
-    <option value="" selected="selected">{% trans 'Min Cost' %}</option>
-    <option value="5">>=5</option>
-    <option value="10">>=10</option>
-    <option value="15">>=15</option>
-    <option value="20">>=20</option>
-    <option value="25">>=25</option>
-    <option value="30">>=30</option>
-    <option value="40">>=40</option>
-    <option value="50">>=50</option>
-</select>
-<select style="width:110px;" id="id_filter_cost_max" name="filter_cost_max">
-    <option value="" selected="selected">{% trans 'Max Cost' %}</option>
-    <option value="5"><=5</option>
-    <option value="10"><=10</option>
-    <option value="15"><=15</option>
-    <option value="20"><=20</option>
-    <option value="25"><=25</option>
-    <option value="30"><=30</option>
-    <option value="40"><=40</option>
-    <option value="50"><=50</option>
-</select>
-<select style="width:110px;" id="id_filter_rating_min" name="filter_rating_min">
-    <option value="" selected="selected">{% trans 'Min Rating' %}</option>
-    <option value="2">>=2</option>
-    <option value="3">>=3</option>
-    <option value="3.5">>=3.5</option>
-    <option value="4">>=4</option>
-    <option value="4.5">>=4.5</option>
-</select>
-<select style="width:110px;" id="id_filter_image" name="filter_image">
-    <option value="" selected="selected">{% trans 'Image' %}</option>
-    <option value="1">{% trans 'Has Image' %}</option>
-    <option value="2">{% trans 'No Image' %}</option>
-</select>
-</h4>
+    <h4>Filter by:
+        {%include 'gom/filters.html' %}
+        <button name="set_filters" id="id_set_filters" type="button">{% trans "Make Defaults" %}</button>
+        <button name="reset_filters" id="id_reset_filters" type="button">{% trans "Reset Saved Defaults" %}</button>
+    </h4>
 </div>
 
 {% if units %}
