@@ -17,10 +17,20 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 import gom.models
 
+def unitRate(request, uid):
+    try:
+        if request.is_ajax() and request.user.is_authenticated():
+            unit = gom.models.Unit.objects.get(id=uid)
+            unit.addRating(request.POST['score'], request.user)
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest(_('User unauthorised.'))
+    except Exception, e:
+        print e
+        return HttpResponseBadRequest(_('Failed to rate unit.'))
+
 def updateEntryCount(request):
     try:
-        print request.user
-        print request.POST
         if request.is_ajax() and request.user.is_authenticated():
             entry_id = request.POST['entry'][6:]
             count = int(request.POST['count'])
@@ -596,6 +606,8 @@ def list(request):
             units=units.filter(cost__lte=request.POST['cost_max'])
         if request.POST['cost_min']:
             units=units.filter(cost__gte=request.POST['cost_min'])
+        if request.POST['rating_min']:
+            units=units.filter(rating__gte=request.POST['rating_min'])
         #elif filterType == '5' and filterValue2:
         #    if filterValue == '1':
         #        units=units.filter(name__icontains=filterValue2)

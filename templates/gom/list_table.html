@@ -4,8 +4,13 @@
         <td>{{item.owner.get}}</td>
         <td>{{item.getCost}}</td>
         <td>{{item.manu.get.manuName}}</td>
+        <td>{% if item.rating > 0 %}
+            {{item.rating}}
+            {% else %}
+            {% trans '0' %}
+            {% endif %}</td>
         <td>
-            <select name="pdf_{{item.id}}">
+            <select style="width:110px;" name="pdf_{{item.id}}">
                 <option value="" selected="selected">None</option>
                 <option value="1">1</option>
                 <option value="2">2</option>

@@ -19,6 +19,13 @@ SIZE_CHOICES = (
     (4,  _('Heavy')),
     (5,  _('Assault'))
 )
+RATING_CHOICES = (
+    (1,  _('Bad')),
+    (2,  _('Poor')),
+    (3,  _('OK')),
+    (4,  _('Good')),
+    (5,  _('Great'))
+)
 INFANTRY_TYPE_CHOICES = (
     (1,  _('Grunt Squad')),
     (2,  _('Squad Attachment')),
@@ -155,6 +162,11 @@ class Force(models.Model):
         self.cost = cost
         self.save()
 
+class UnitRating(models.Model):
+    unit = models.ForeignKey('Unit')
+    user = models.ForeignKey(User)
+    rating = models.DecimalField(blank=False, decimal_places=2, max_digits=4)
+
 class UnitWeapon(models.Model):
     weapon = models.ForeignKey('Weapons')
     unit = models.ForeignKey('Unit')
@@ -186,6 +198,7 @@ class Unit(models.Model):
     cost = models.PositiveIntegerField(default=0, blank=True)
     tempInstance = models.BooleanField(default=False)
     creationTime = models.DateTimeField(auto_now_add=True, null=True)
+    rating = models.DecimalField(blank=True, decimal_places=2, max_digits=4, default=0)
 
     unitType = models.SmallIntegerField(choices=GRUNTZ_TYPE_CHOICES, default=1, blank=False)
 
@@ -203,6 +216,36 @@ class Unit(models.Model):
         for weapon in self.weapons.all():
             s = s + repr(weapon)
         return s
+    def addRating(self, rating, user):
+        if rating=='null':
+            print 'Null rating, trying to remove user rating'
+            try:
+                UnitRating.objects.get(user=user, unit=self).delete()
+            except:
+                pass
+        else:
+            try:
+                r=UnitRating.objects.get(user=user, unit=self)
+                r.rating=rating
+            except:
+                r = UnitRating(rating=rating, user=user, unit=self)
+            r.save()
+        self.updateRating()
+    def getRating(self):
+        return self.rating
+    def updateRating(self):
+        ratings = UnitRating.objects.filter(unit=self)
+        len = ratings.count()
+        if len > 0:
+            average = 0
+            for r in ratings:
+                average = average + r.rating
+            self.rating = average/len
+        else:
+            self.rating=0
+        print 'updated unit %d rating to %d' % (self.id, self.rating)
+        self.save()
+
     def dumpObject(self, f):
         f.write('g = gom.models.Unit(name="%s", shoot=%d, assault=%d, guard=%d, soak=%d, mental=%d, skill=%d, desc=%s, mobility=%d, size=%d, unitType=%d, image=%s, mechaSpecialist=%s, engineerSpecialist=%s, medicSpecialist=%s, cmdTek=%s)\n' % (self.name, self.shoot, self.assault, self.guard, self.soak, self.mental, self.skill, repr(self.desc), self.mobility, self.size, self.unitType, repr(self.image), self.mechaSpecialist, self.engineerSpecialist, self.medicSpecialist, self.cmdTek))
         f.write('g.save()\n') # Needed so that we can do below M2M relations

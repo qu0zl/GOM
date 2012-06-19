@@ -3,6 +3,7 @@
 {% load i18n %}
 {% block extra_head %}
 <script src="{{ STATIC_URL }}js/view.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
 
 <script type="text/javascript">
     var WEAPON_COST = {'':0, {{weapons}} };
@@ -486,6 +487,29 @@ function weaponOR(event) {
         $('#id_medicSpecialist').change(updateCost);
         $('#id_engineerSpecialist').change(updateCost);
         $('#id_cmdTek').change(updateCost);
+        $('#star').raty({
+            score:{{unit.getRating}},
+            {% if not user.is_authenticated %}
+                readOnly : true,
+            {% endif %}
+            path : '/site_media/static/raty/',
+            cancel    : true,
+            cancelOff : 'cancel-off.png',
+            cancelOn  : 'cancel-on.png',
+            half      : true,
+            starHalf  : 'star-half.png',
+            starOff   : 'star-off.png',
+            starOn    : 'star-on.png',
+            click: function(score, evt) {
+                $.ajax({
+                    type: "POST",
+                    url: "/gom/unit/{{unit.id}}/rate/",
+                    data:{'score':score,
+                    },
+                    dataType: "json",
+                });
+            }
+        });
         } );
 </script>
 {% endblock extra_head %}
@@ -495,11 +519,13 @@ function weaponOR(event) {
 {% block head_title %}{% trans "Edit Unit" %}{% endblock %}
 
 {% block body %}
-    {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+<table><tr><td>
+{% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
     <h1>{% trans "Edit Unit"%}</h1>
     {% else %}
     <h1>{% trans "Other User's Unit - View Only"%}</h1>
     {% endif %}
+    </td><td><div id="star"></div></td></tr></table>
     
     <dl class="what_next">
         <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
@@ -580,8 +606,6 @@ function weaponOR(event) {
                                 <tbody>
                                     <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
-                                    <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
-                                    <tr id="id_air_mobility_tr"><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
                                     <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
                                     <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
                                     <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
@@ -594,6 +618,8 @@ function weaponOR(event) {
             <td>
                 <table> <!-- Description table -->
                     <tbody>
+                        <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                        <tr id="id_air_mobility_tr"><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
                         <tr><td>{% trans "Description:" %}</td></tr>
                         <tr><td>{{formObject.desc}}</td></tr>
                         <tr><td>{% trans "Manufacturer:"%}</td></tr>

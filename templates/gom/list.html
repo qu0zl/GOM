@@ -9,7 +9,8 @@
     function filter (e) {
         $.post( '/gom/list/filter/', 
                 { owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
-                    cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(), },
+                cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(),
+                rating_min: $('#id_filter_rating_min').val(),},
         function( data ) {
             $("#id_list_table" ).empty().append( data );
             $("#id_unit_table").trigger("update");
@@ -32,7 +33,7 @@
             });
         $('#id_force').click(forceUpdate);
         $("#id_unit_table").tablesorter({sortList: [[1,0],[0,0]], headers:
-            { 4: { sorter: false }, 5: { sorter: false } } });
+            { 5: { sorter: false }, 6: { sorter: false } } });
         $('select[id^="id_filter_"]').change(filter);
     } 
     ); 
@@ -93,6 +94,13 @@
     <option value="40"><=40</option>
     <option value="50"><=50</option>
 </select>
+<select style="width:110px;" id="id_filter_rating_min" name="filter_rating_min">
+    <option value="" selected="selected">{% trans 'Min Rating' %}</option>
+    <option value="2">>=2</option>
+    <option value="3">>=3</option>
+    <option value="4">>=4</option>
+    <option value="4.5">>=4.5</option>
+</select>
 <select style="width:110px;" id="id_filter_image" name="filter_image">
     <option value="" selected="selected">{% trans 'Image' %}</option>
     <option value="1">{% trans 'Has Image' %}</option>
@@ -111,6 +119,7 @@
     <th>{% trans 'Owner' %}</th> 
     <th>{% trans 'Cost' %}</th>
     <th>{% trans 'Manufacturer' %}</th>
+    <th>{% trans 'Rating' %}</th>
     <th><button name="pdf" type="submit">{% trans "Create Multi Card PDF" %}</button></th>
     {% if user.is_authenticated %}
     <th><button id="id_force" name="force" type="submit">{% trans "Add to Force" %}</button></th>
