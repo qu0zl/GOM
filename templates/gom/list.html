@@ -18,14 +18,19 @@
         e.preventDefault();
     }
     function resetFilters (e) {
+        {% if user.is_authenticated %}
         $.post( '/gom/set/filters/', 
                 { },
             function( ) {
                 alert("{% trans 'User profile default filters reset to Grunt'o'Matic defaults.' %}");
         });
+        {% else %}
+        alert("{% trans 'Saving filter settings requires a free user account. Please register or login.' %}");
+        {% endif %}
         e.preventDefault();
     }
     function setFilters (e) {
+        {% if user.is_authenticated %}
         $.post( '/gom/set/filters/', 
                 { owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
                 cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(),
@@ -33,6 +38,9 @@
             function( ) {
                 alert("{% trans 'Set.' %}");
         });
+        {% else %}
+        alert("{% trans 'Saving filter settings requires a free user account. Please register or login.' %}");
+        {% endif %}
         e.preventDefault();
     }
     function forceUpdate(e){

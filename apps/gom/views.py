@@ -51,7 +51,6 @@ def setFilters(request):
         else:
             return HttpResponseBadRequest(_('User unauthorised.'))
     except Exception, e:
-        print e
         return HttpResponseBadRequest(_('Failed to update user filters.'))
 
 def unitRate(request, uid):
@@ -63,7 +62,6 @@ def unitRate(request, uid):
         else:
             return HttpResponseBadRequest(_('User unauthorised.'))
     except Exception, e:
-        print e
         return HttpResponseBadRequest(_('Failed to rate unit.'))
 
 def updateEntryCount(request):
@@ -213,7 +211,6 @@ def handle_uploaded_image(unit, i):
 def vehicleSaveAjax(request, unit_id=0):
     print 'vehicle save'
     if request.user.is_authenticated() and request.method == 'POST': # If the form has been submitted...
-        print 'here'
         if request.is_ajax():
             print 'Ajax request'
             return render(request, 'gom/vehicle.html')
@@ -633,27 +630,33 @@ def list(request):
             print 'user_profile access exception:', e
     if filterDict:
         try:
-            units = units.filter(owner=filterDict['owner'])
+            if filterDict['owner']:
+                units = units.filter(owner=filterDict['owner'])
         except KeyError:
             pass
         try:
-            units = units.filter(unitType=filterDict['unit_type'])
+            if filterDict['unit_type']:
+                units = units.filter(unitType=filterDict['unit_type'])
         except KeyError:
             pass
         try:
-            units = units.filter(manu=filterDict['manu'])
+            if filterDict['manu']:
+                units = units.filter(manu=filterDict['manu'])
         except KeyError:
             pass
         try:
-            units=units.filter(cost__lte=filterDict['cost_max'])
+            if filterDict['cost_max']:
+                units=units.filter(cost__lte=filterDict['cost_max'])
         except KeyError:
             pass
         try:
-            units=units.filter(cost__gte=filterDict['cost_min'])
+            if filterDict['cost_min']:
+                units=units.filter(cost__gte=filterDict['cost_min'])
         except KeyError:
             pass
         try:
-            units=units.filter(rating__gte=filterDict['rating_min'])
+            if filterDict['rating_min']:
+                units=units.filter(rating__gte=filterDict['rating_min'])
         except KeyError:
             pass
         #elif filterType == '5' and filterValue2:
@@ -670,7 +673,6 @@ def list(request):
                 units=units.filter(image="")
         except KeyError:
             pass
-
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
