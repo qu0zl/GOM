@@ -667,7 +667,8 @@ def list(request):
         #    elif filterValue == '3':
         #        units=units.filter(name__iendswith=filterValue2)
         try:
-            if filterDict['image'] == '1':
+            # int(1) if via profile, u'1' if via ajax
+            if filterDict['image'] == 1 or filterDict['image'] == '1':
                 units=units.exclude(image="")
             elif filterDict['image'] != "":
                 units=units.filter(image="")
