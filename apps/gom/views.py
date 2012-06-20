@@ -669,7 +669,7 @@ def list(request):
         try:
             if filterDict['image'] == '1':
                 units=units.exclude(image="")
-            else:
+            elif filterDict['image'] != "":
                 units=units.filter(image="")
         except KeyError:
             pass

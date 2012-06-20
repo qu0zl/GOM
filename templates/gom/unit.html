@@ -617,9 +617,14 @@ function weaponOR(event) {
             </td>
             <td>
                 <table> <!-- Description table -->
+                    <tbody id="id_mobility_tr">
+                        <tr><td>{{formObject.mobility.label}}</td></tr><tr><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                    </tbody>
+                    <tbody id="id_air_mobility_tr">
+                        <tr><td>{{formObject.air_mobility.label}}</td></tr>
+                        <tr><td>{{formObject.air_mobility}}</td></tr>
+                    </tbody>
                     <tbody>
-                        <tr id="id_mobility_tr"><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
-                        <tr id="id_air_mobility_tr"><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
                         <tr><td>{% trans "Description:" %}</td></tr>
                         <tr><td>{{formObject.desc}}</td></tr>
                         <tr><td>{% trans "Manufacturer:"%}</td></tr>
