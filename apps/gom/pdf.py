@@ -94,7 +94,11 @@ def drawPerks(p, grunt, WIDTH, HEIGHT):
         perkY = .55*HEIGHT
     else:
         perkX = .05*WIDTH
-        perkY = .10*HEIGHT
+        if count > 1:
+            # Give more space if they have two perks. They'll need it!
+            perkY = .06 *HEIGHT
+        else:
+            perkY = .10*HEIGHT
 
     para = paragraph.Paragraph(perkString, justifyStyle())
 
