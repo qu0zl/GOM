@@ -167,7 +167,7 @@ def handle_uploaded_image(unit, i):
     imageImage = Image.open(imagefile)
 
     (original_width, original_height) = imageImage.size
-    (width, height) = scale_dimensions(original_width, original_height, longest_side=320)
+    (width, height) = scale_dimensions(original_width, original_height, longest_side=512)
 
     if width != original_width or height != original_height:
         print 'pre-scale w:%d, h:%d' % (original_width, original_height)
