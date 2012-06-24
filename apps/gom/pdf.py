@@ -105,7 +105,10 @@ def drawPerks(p, grunt, WIDTH, HEIGHT):
     if grunt.isVehicle():
         para.wrapOn(p, .54*WIDTH, .14*HEIGHT)
     else:
-        para.wrapOn(p, .9*WIDTH, .14*HEIGHT)
+        if grunt.unitType == 3 and (grunt.medicSpecialist or grunt.engineerSpecialist):
+            para.wrapOn(p, .725*WIDTH, .14*HEIGHT)
+        else:
+            para.wrapOn(p, .9*WIDTH, .14*HEIGHT)
     para.canv = p
     p.translate(perkX, perkY)
     para.drawPara()
