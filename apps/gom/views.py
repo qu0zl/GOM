@@ -423,7 +423,10 @@ def unitSave(request, unit_id=0):
                     unit.modz.clear()
             else: # infantry
                 if unit.unitType == 1:
-                    addUnitWeapon(unit, form.cleaned_data['basicWeapons'], custom=form.cleaned_data['basic_Custom'] if form.cleaned_data['OR_basic'] else None)
+                    if unit.isPowerArmour():
+                        addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
+                    else:
+                        addUnitWeapon(unit, form.cleaned_data['basicWeapons'], custom=form.cleaned_data['basic_Custom'] if form.cleaned_data['OR_basic'] else None)
                 elif unit.unitType == 2 or unit.unitType == 4: # SA or Commander
                     addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
                 elif unit.unitType == 3:
