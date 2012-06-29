@@ -330,7 +330,7 @@ def drawDesc(p, unit, WIDTH, HEIGHT):
             descY=.67*HEIGHT
         else:
             p.roundRect(.42*WIDTH, .53*HEIGHT, .56*WIDTH, .1505*HEIGHT, radius=2, fill=1)
-            descY=.58*HEIGHT
+            descY=.55*HEIGHT
         descX=.43*WIDTH
         descWidth=.54*WIDTH
         descHeight=.14*HEIGHT
