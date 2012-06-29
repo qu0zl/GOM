@@ -290,10 +290,16 @@ class Unit(models.Model):
         return self.soak
     def getGuard(self):
         return self.guard
+    def isPowerArmour(self):
+        return self.unitType == 1 and self.soak >= 14
     def weaponCost(self):
         total = 0
         for weapon in self.weapons.all():
-            total = total + weapon.weaponPoints
+            # See if it's a SA weapon on a power armour squad
+            if self.isPowerArmour() and weapon.weaponType == 4:
+                total = total + (6*weapon.weaponPoints)
+            else:
+                total = total + weapon.weaponPoints
         return total
     def getBaseCost(self):
         if self.unitType == 1:

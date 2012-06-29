@@ -386,7 +386,7 @@ def drawType(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.black)
     p.setFont("Helvetica-Bold", 7)
     if unit.unitType == 1:
-        uString = _('Grunts Squad')
+        uString = _('Gruntz Squad')
     elif unit.unitType == 2:
         uString = _('Squad Attachment')
     elif unit.unitType == 3:

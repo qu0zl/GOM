@@ -125,9 +125,17 @@
         }
     }
     function weaponCost(utype, size) {
+        // adjust to handle PA weapons
         switch (utype) {
             case(1):
-                return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                var soak = parseInt($('#id_soak').val());
+                if ( soak >= 14 ) { // PA squad
+                    if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
+                        return (6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                    } else
+                        return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                } else
+                    return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(4):
@@ -223,8 +231,15 @@
             $('#id_CCW_tb').show();
             switch (utype) {
                 case 1:
-                    $('#id_basicWeapons_tb').show();
-                    $('#id_SAWeapons_tb').hide();
+                    if ( utype == 1 && parseInt($('#id_soak').val()) >= 14 ) {
+                        // PA Squad
+                        $('#id_basicWeapons_tb').hide();
+                        $('#id_SAWeapons_td').html('{% trans "Power Armour Weapons" %}');
+                        $('#id_SAWeapons_tb').show();
+                    } else {
+                        $('#id_basicWeapons_tb').show();
+                        $('#id_SAWeapons_tb').hide();
+                    }
                     $('#id_SpecWeapons_tb').hide();
                     break;
                 case 2:
@@ -450,6 +465,13 @@
         showWeapons(utype, size);
     }
 
+    function soakClick(event) {
+        var utype = parseInt($('#id_unitType').val());
+        if ( utype == 1 ) { // only need to check if we could be a PA gruntz squad
+            showWeapons(utype);
+        }
+        return false;
+    }
     function sizeClick(event) {
         var size = parseInt($('#id_size').val());
         var utype = parseInt($('#id_unitType').val());
@@ -476,6 +498,7 @@ function weaponOR(event) {
         $('#id_delete').click(confirmDelete);
         $('#id_unitType').change(sizeClick);
         $('#id_size').change(sizeClick);
+        $('#id_soak').change(soakClick);
         $('#id_mobility').change(mobiClick);
         $('#id_mech_walk').hide();
         $('[type=checkbox].[name^="OR_"]').change(weaponOR);
@@ -571,7 +594,7 @@ function weaponOR(event) {
                                         <tr id="tr_OR_basic"><td>{{formObject.basic_Custom.label}}</td><td>{{formObject.basic_Custom}}</td></tr>
                                     </tbody>
                                     <tbody id="id_SAWeapons_tb">
-                                        <tr><td>{% trans "SA/Commander weapons" %}</td><td>{{formObject.SAWeapons}}</td><td>{{formObject.OR_SA}}</td></tr>
+                                        <tr><td id="id_SAWeapons_td">{% trans "SA/Commander weapons" %}</td><td>{{formObject.SAWeapons}}</td><td>{{formObject.OR_SA}}</td></tr>
                                         <tr id="tr_OR_SA"><td>{{formObject.SA_Custom.label}}</td><td>{{formObject.SA_Custom}}</td></tr>
                                     </tbody>
                                     <tbody id="id_SpecWeapons_tb">
