@@ -427,6 +427,11 @@ def unitSave(request, unit_id=0):
                         addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
                     else:
                         addUnitWeapon(unit, form.cleaned_data['basicWeapons'], custom=form.cleaned_data['basic_Custom'] if form.cleaned_data['OR_basic'] else None)
+                    # inline squad attachments
+                    if form.cleaned_data['inlineWeapons']:
+                        addUnitWeapon(unit, form.cleaned_data['inlineWeapons'], mountType=2, custom=form.cleaned_data['inline_Custom'] if form.cleaned_data['OR_inline'] else None)
+                    if form.cleaned_data['inlineWeapons2']:
+                        addUnitWeapon(unit, form.cleaned_data['inlineWeapons2'], mountType=2, custom=form.cleaned_data['inline2_Custom'] if form.cleaned_data['OR_inline2'] else None)
                 elif unit.unitType == 2 or unit.unitType == 4: # SA or Commander
                     addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
                 elif unit.unitType == 3:

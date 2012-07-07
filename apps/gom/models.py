@@ -5,9 +5,6 @@ from django.contrib.auth.models import User
 from math import ceil
 from django.db.models.signals import pre_delete
 import profiles.models
-#from profiles.models import Profile as BaseProfile
-#import picklefield
-#greg from idios.models import ProfileBase
 import django.contrib.auth.models
 import traceback
 import os
@@ -112,7 +109,8 @@ WEAPON_TYPE_CHOICES = (
 
 MOUNT_TYPE_CHOICES = (
         (0, _('Main Weapon')),
-        (1, _('Anti-Infantry'))
+        (1, _('Anti-Infantry')),
+        (2, _('Inline'))
 )
 
 MODZ_AVAILABILITY_CHOICES = (
@@ -292,14 +290,25 @@ class Unit(models.Model):
         return self.guard
     def isPowerArmour(self):
         return self.unitType == 1 and self.soak >= 14
+    def inlineCount(self):
+        if self.unitType == 1:
+            return UnitWeapon.objects.filter(unit=self,mountType=2).count()
+        return 0
     def weaponCost(self):
+        unitWeaponList = UnitWeapon.objects.filter(unit=self,mountType__in=[0,1])
         total = 0
-        for weapon in self.weapons.all():
+        for weaponEntry in unitWeaponList:
             # See if it's a SA weapon on a power armour squad
-            if self.isPowerArmour() and weapon.weaponType == 4:
-                total = total + (6*weapon.weaponPoints)
+            if self.isPowerArmour() and weaponEntry.weapon.weaponType == 4:
+                total = total + (6*weaponEntry.weapon.weaponPoints)
             else:
-                total = total + weapon.weaponPoints
+                total = total + weaponEntry.weapon.weaponPoints
+        if self.unitType == 1: # inline squad attachments
+            unitInlineList = UnitWeapon.objects.filter(unit=self,mountType=2)
+            for weaponEntry in unitInlineList:
+                print 'adding new weapon cost and sa entry'
+                # Inlude base SA cost for an inline sqad attachement
+                total = total + weaponEntry.weapon.weaponPoints +2
         return total
     def getBaseCost(self):
         if self.unitType == 1:
@@ -333,7 +342,7 @@ class Unit(models.Model):
         return t[self.size]
     def getDam(self):
         if self.unitType == 1:
-            return 6
+            return 6 + self.inlineCount()
         elif self.unitType == 2:
             return 1
         elif self.unitType == 3:
@@ -419,7 +428,7 @@ class Unit(models.Model):
                 return 0
         except Exception, e:
             print 'soakCost exception on unit %d : %s' % (self.id,e)
-        return 0 # greg fix this, check 16: cost above
+        return 0
     def mentalCost(self):
         if self.isInfantry() and self.unitType != 2:
             return self.mental - 4
@@ -586,6 +595,8 @@ class UnitForm(forms.ModelForm):
     mainWeapons4 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
     AIWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False, label=_("Anti Infantry"))
     AIWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False)
+    inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
+    inlineWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     # Grunt CCWs only
     CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None)
     # Grunt grenades only
@@ -599,6 +610,8 @@ class UnitForm(forms.ModelForm):
     basic_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     SA_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     Spec_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    inline_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    inline2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     CCW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     grenades_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     OR_MW = forms.BooleanField(required=False)
@@ -612,6 +625,8 @@ class UnitForm(forms.ModelForm):
     OR_Spec = forms.BooleanField(required=False)
     OR_CCW = forms.BooleanField(required=False)
     OR_grenades = forms.BooleanField(required=False)
+    OR_inline = forms.BooleanField(required=False)
+    OR_inline2 = forms.BooleanField(required=False)
     perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk"))
     perks2 = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk 2"))
     modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
@@ -702,6 +717,18 @@ class UnitForm(forms.ModelForm):
                 if AIWeapons[1].nameOverride:
                     self.fields['AI2_Custom'].initial=AIWeapons[1].nameOverride
                     self.fields['OR_AI2'].initial=True
+            except Exception, e:
+                print e
+            try:
+                inlineWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=2)
+                self.fields['inlineWeapons'].initial=inlineWeapons[0].weapon
+                if inlineWeapons[0].nameOverride:
+                    self.fields['inline_Custom'].initial=inlineWeapons[0].nameOverride
+                    self.fields['OR_inline'].initial=True
+                self.fields['inlineWeapons2'].initial=inlineWeapons[1].weapon
+                if inlineWeapons[1].nameOverride:
+                    self.fields['inline2_Custom'].initial=inlineWeapons[1].nameOverride
+                    self.fields['OR_inline2'].initial=True
             except Exception, e:
                 print e
             try:

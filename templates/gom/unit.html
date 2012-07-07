@@ -129,13 +129,20 @@
         switch (utype) {
             case(1):
                 var soak = parseInt($('#id_soak').val());
+                //need to include base SA cost of 2 per inline weapon guy
+                var old_cost=0;
+                var inline_cost = WEAPON_COST[$('#id_inlineWeapons').val()];
+                if (inline_cost != old_cost) { inline_cost += 2; old_cost=inline_cost;}
+                inline_cost = old_cost + WEAPON_COST[$('#id_inlineWeapons2').val()];
+                if (inline_cost != old_cost) { inline_cost += 2;}
+
                 if ( soak >= 14 ) { // PA squad
                     if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
-                        return (6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return inline_cost+(6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                     } else
-                        return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return inline_cost+WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                 } else
-                    return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                    return inline_cost+WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(4):
@@ -213,7 +220,11 @@
         }
     }
 
-    function showWeapons(utype) {
+function showWeapons(utype) {
+        if ( utype == 1 )
+            $('#id_inlineWeapons_tb').show()
+        else
+            $('#id_inlineWeapons_tb').hide()
         if ( utype < 10 ) {
             $('#id_shoot_tr').show();
             $('#id_assault_tr').show();
@@ -608,6 +619,12 @@ function weaponOR(event) {
                                     <tbody id="id_grenades_tb">
                                         <tr><td>{{formObject.grenades.label}}</td><td>{{formObject.grenades}}</td><td>{{formObject.OR_grenades}}</td></tr>
                                         <tr id="tr_OR_grenades"><td>{{formObject.grenades_Custom.label}}</td><td>{{formObject.grenades_Custom}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_inlineWeapons_tb">
+                                        <tr><td id="id_inlineWeapons_td">{% trans "Same-card SA" %}</td><td>{{formObject.inlineWeapons}}</td><td>{{formObject.OR_inline}}</td></tr>
+                                        <tr id="tr_OR_inline"><td>{{formObject.inline_Custom.label}}</td><td>{{formObject.inline_Custom}}</td></tr>
+                                        <tr><td id="id_inlineWeapons2_td">{% trans "Same-card SA 2" %}</td><td>{{formObject.inlineWeapons2}}</td><td>{{formObject.OR_inline2}}</td></tr>
+                                        <tr id="tr_OR_inline2"><td>{{formObject.inline2_Custom.label}}</td><td>{{formObject.inline2_Custom}}</td></tr>
                                     </tbody>
                                 </tbody>
                                 <tbody id="id_mainWeapons_tb">
