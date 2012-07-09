@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/unit_1.0.0.css">
 <script src="{{ STATIC_URL }}js/view.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
 
@@ -102,11 +103,11 @@
         return 0;
     }
     function perkCost(utype, size) {
+        var cmdTekCost = 0;
         switch (utype) {
-            case(1):
-                return PERK_COST[$('#id_perks').val()];
             case(2):
                 return 0;
+            case(1):
             case(3):
             case(4):
                 if ($('#id_perks').val() != '' && $('#id_perks2').val() != '') {
@@ -116,12 +117,15 @@
             case(13):
             case(14):
                 if ( $('#id_cmdTek').prop('checked') )
-                    return 6 + MODZ_COST[$('#id_modz').val()];
-                return MODZ_COST[$('#id_modz').val()];
+                    cmdTekCost = 6;
+                // deliberately fall through
             case(11):
             case(12):
             case(15):
-                return MODZ_COST[$('#id_modz').val()];
+                if ($('#id_modz').val() != '' && $('#id_modz2').val() != '') {
+                    return cmdTekCost + 5 + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+                }
+                return cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
         }
     }
     function weaponCost(utype, size) {
@@ -129,13 +133,20 @@
         switch (utype) {
             case(1):
                 var soak = parseInt($('#id_soak').val());
+                //need to include base SA cost of 2 per inline weapon guy
+                var old_cost=0;
+                var inline_cost = WEAPON_COST[$('#id_inlineWeapons').val()];
+                if (inline_cost != old_cost) { inline_cost += 2; old_cost=inline_cost;}
+                inline_cost = old_cost + WEAPON_COST[$('#id_inlineWeapons2').val()];
+                if (inline_cost != old_cost) { inline_cost += 2;}
+
                 if ( soak >= 14 ) { // PA squad
                     if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
-                        return (6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return inline_cost+(6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                     } else
-                        return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return inline_cost+WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                 } else
-                    return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                    return inline_cost+WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(4):
@@ -213,7 +224,11 @@
         }
     }
 
-    function showWeapons(utype) {
+function showWeapons(utype) {
+        if ( utype == 1 )
+            $('#id_inlineWeapons_tb').show()
+        else
+            $('#id_inlineWeapons_tb').hide()
         if ( utype < 10 ) {
             $('#id_shoot_tr').show();
             $('#id_assault_tr').show();
@@ -225,7 +240,7 @@
             $('#id_mainWeapons4_tb').hide();
             $('#id_AIWeapons_tb').hide();
             $('#id_AIWeapons2_tb').hide();
-            $('#id_modz_tr').hide();
+            $('#id_modz_tb').hide();
             $('#id_cmdTek_tr').hide();
             $('#id_grenades_tb').show();
             $('#id_CCW_tb').show();
@@ -273,7 +288,7 @@
             $('#id_basicWeapons_tb').hide();
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
-            $('#id_modz_tr').show();
+            $('#id_modz_tb').show();
             $('#id_AIWeapons_tb').show();
             switch (utype) {
                 case 11:
@@ -315,6 +330,7 @@
                     $('#id_cmdTek_tr').show();
                     break;
                 case 15:
+                    $('#id_mainWeapons_tb').show();
                     $('#id_mainWeapons3_tb').hide();
                     $('#id_mainWeapons4_tb').hide();
                     if ( size >= 3 ) {
@@ -449,18 +465,13 @@
 
         // Hide perks
         switch (utype) {
+            case(1):
             case(3):
             case(4):
-                $('#id_perks_tr').show();
-                $('#id_perks2_tr').show();
-                break;
-            case(1):
-                $('#id_perks_tr').show();
-                $('#id_perks2_tr').hide();
+                $('#id_perks_tb').show();
                 break;
             default:
-                $('#id_perks_tr').hide();
-                $('#id_perks2_tr').hide();
+                $('#id_perks_tb').hide();
         }
         showWeapons(utype, size);
     }
@@ -469,6 +480,14 @@
         var utype = parseInt($('#id_unitType').val());
         if ( utype == 1 ) { // only need to check if we could be a PA gruntz squad
             showWeapons(utype);
+        }
+        return false;
+    }
+    function publishClick(event) {
+        if ($('#id_publish').prop('checked')) {
+            alert("{% trans 'Once saved, this unit will now appear in the list of published and finished units. Please ensure that the unit is complete.' %}");
+        } else {
+            alert("{% trans 'Once saved, this unit will no longer appear in the list of published and finished units. However other users may still view it if they choose to view non-published units.' %}");
         }
         return false;
     }
@@ -503,6 +522,7 @@ function weaponOR(event) {
         $('#id_mech_walk').hide();
         $('[type=checkbox].[name^="OR_"]').change(weaponOR);
         $('[type=checkbox].[name^="OR_"]').each(weaponOR);
+        $('#id_publish').change(publishClick);
         updateStats( parseInt($('#id_unitType').val()), parseInt($('#id_size').val()) );
         updateSave();
 
@@ -542,23 +562,24 @@ function weaponOR(event) {
 {% block head_title %}{% trans "Edit Unit" %}{% endblock %}
 
 {% block body %}
-<table><tr><td>
-{% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
-    <h1>{% trans "Edit Unit"%}</h1>
-    {% else %}
-    <h1>{% trans "Other User's Unit - View Only"%}</h1>
-    {% endif %}
-    </td><td><div id="star"></div></td></tr></table>
-    
-    <dl class="what_next">
-        <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
-            {{ formset.management_form }}
-            <table>
-                <tbody>
-                    <tr><td>
-                        <table>
-                            <tbody>
-                                <tr><td>
+    <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+        {{ formset.management_form }}
+        <div style="white-space:nowrap; height:50px;">
+            <div style="display:inline; float:left; white-space:nowrap;">
+                {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+                <div style="display:inline; float:left;"><h1>{% trans "Edit Unit"%}</h1></div>
+                <div style="display:inline; float:left; padding-left:10px;">{{formObject.publish.label}} {{formObject.publish}}</div>
+                {% else %}
+                <h1>{% trans "Other User's Unit - View Only"%}</h1>
+                {% endif %}
+            </div>
+            <div style="display:inline; float:right;" id="star"></div>
+            <div style="float:right;white-space:nowrap;">
+                <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{{unit.cost}}</span></h1>
+            </div>
+        </div>
+            <div style="width:100%; clear:both;">
+                <div class="leftColumn">
                             <table>
                                 <tbody>
                                     <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
@@ -568,27 +589,29 @@ function weaponOR(event) {
                                     <tr id="id_assault_tr"><td>{{formObject.assault.label}}</td><td>{{formObject.assault}}</td></tr>
                                     <tr><td>{{formObject.guard.label}}</td><td>{{formObject.guard}}</td></tr>
                                     <tr><td>{{formObject.soak.label}}</td><td>{{formObject.soak}}</td></tr>
-                                    <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
                                     <tr id="id_mental_tr"><td>{{formObject.mental.label}}</td><td>{{formObject.mental}}</td></tr>
                                     <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
-                                    <tbody id="id_AIWeapons_tb">
-                                        <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
-                                        <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
+                                    <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
+                                    <tbody id="id_modz_tb">
+                                        <tr><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
+                                        <tr><td>{% trans "Modz 2" %}</td><td>{{formObject.modz2}}</td></tr>
                                     </tbody>
-                                    <tbody id="id_AIWeapons2_tb">
-                                        <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
-                                        <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
+                                    <tbody id="id_perks_tb">
+                                        <tr><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
+                                        <tr><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
                                     </tbody>
                                 </tbody>
                             </table>
-                            </td><td>
+                        </div>
+                        <div class="centreColumn">
                             <table>
+                                <tbody id="id_mobility_tr">
+                                    <tr><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                                </tbody>
+                                <tbody id="id_air_mobility_tr">
+                                    <tr><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
+                                </tbody>
                                 <tbody>
-                                    <tr><td>{% trans 'Cost' %}</td><td id="id_cost">{{unit.cost}}</td></tr>
-                                    {% if filename %}
-                                    <tr><td><img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
-                                    {% endif %}
-                                    <tr><td>{{formObject.image.label}}</td><td>{{formObject.image}}</td></tr>
                                     <tbody id="id_basicWeapons_tb">
                                         <tr><td>{% trans "Grunt Weapons" %}</td><td>{{formObject.basicWeapons}}</td><td>{{formObject.OR_basic}}</td></tr>
                                         <tr id="tr_OR_basic"><td>{{formObject.basic_Custom.label}}</td><td>{{formObject.basic_Custom}}</td></tr>
@@ -609,6 +632,12 @@ function weaponOR(event) {
                                         <tr><td>{{formObject.grenades.label}}</td><td>{{formObject.grenades}}</td><td>{{formObject.OR_grenades}}</td></tr>
                                         <tr id="tr_OR_grenades"><td>{{formObject.grenades_Custom.label}}</td><td>{{formObject.grenades_Custom}}</td></tr>
                                     </tbody>
+                                    <tbody id="id_inlineWeapons_tb">
+                                        <tr><td id="id_inlineWeapons_td">{% trans "Same-card SA" %}</td><td>{{formObject.inlineWeapons}}</td><td>{{formObject.OR_inline}}</td></tr>
+                                        <tr id="tr_OR_inline"><td>{{formObject.inline_Custom.label}}</td><td>{{formObject.inline_Custom}}</td></tr>
+                                        <tr><td id="id_inlineWeapons2_td">{% trans "Same-card SA 2" %}</td><td>{{formObject.inlineWeapons2}}</td><td>{{formObject.OR_inline2}}</td></tr>
+                                        <tr id="tr_OR_inline2"><td>{{formObject.inline2_Custom.label}}</td><td>{{formObject.inline2_Custom}}</td></tr>
+                                    </tbody>
                                 </tbody>
                                 <tbody id="id_mainWeapons_tb">
                                     <tr><td>{{formObject.mainWeapons.label}}</td><td>{{formObject.mainWeapons}}</td><td>{{formObject.OR_MW}}</td></tr>
@@ -626,38 +655,38 @@ function weaponOR(event) {
                                     <tr><td></td><td>{{formObject.mainWeapons4}}</td><td>{{formObject.OR_MW4}}</td></tr>
                                     <tr id="tr_OR_MW4"><td>{{formObject.MW4_Custom.label}}</td><td>{{formObject.MW4_Custom}}</td></tr>
                                 </tbody>
+                                <tbody id="id_AIWeapons_tb">
+                                    <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
+                                    <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
+                                </tbody>
+                                <tbody id="id_AIWeapons2_tb">
+                                    <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
+                                    <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
+                                </tbody>
                                 <tbody>
-                                    <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
-                                    <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
-                                    <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
-                                    <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
+                                    <tr id="id_spec_abilities"><td>{%trans "Engineer "%} {{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}{{formObject.medicSpecialist}}</td></tr>
                                 </tbody>
                             </table>
-                    </td></tr>
-                    </tbody>
-                    </table>
-            </td>
-            <td>
+                        </div>
+                    <div class="leftColumn">
                 <table> <!-- Description table -->
-                    <tbody id="id_mobility_tr">
-                        <tr><td>{{formObject.mobility.label}}</td></tr><tr><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
-                    </tbody>
-                    <tbody id="id_air_mobility_tr">
-                        <tr><td>{{formObject.air_mobility.label}}</td></tr>
-                        <tr><td>{{formObject.air_mobility}}</td></tr>
-                    </tbody>
+                    <tr><td>{{formObject.image.label}}</td><td>
+                    {% if filename and filename.strip  %}
+                        <img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
+                    {% else %}
+                        {% trans 'None' %}
+                    {% endif %}
+                    </td></tr>
+                    <tr><td colspan=3>{{formObject.image}}</td></tr>
                     <tbody>
-                        <tr><td>{% trans "Description:" %}</td></tr>
-                        <tr><td>{{formObject.desc}}</td></tr>
-                        <tr><td>{% trans "Manufacturer:"%}</td></tr>
-                        <tr><td>{{formObject.manu}}</td></tr>
+                        <tr><td>{% trans "Description:" %}</td><td>{{formObject.desc}}</td></tr>
+                        <tr><td>{% trans "Manufacturer:"%}</td><td>{{formObject.manu}}</td></tr>
                     </tbody>
                 </table>
-            </td>
-    </tr>
-            </tbody>
-            </table>
+            </div>
+        </div>
+        <div style="width=100%; display:block; clear:both;">
             <table>
                 <tbody>
                     <tr>
@@ -673,6 +702,7 @@ function weaponOR(event) {
                     </tr>
                 </tbody>
             </table>
+        </div>
 
         </form>
 {% endblock %}

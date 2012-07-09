@@ -29,6 +29,8 @@ def setFilters(request):
 
             filters = {}
             try:
+                if request.POST['publish']:
+                    filters['publish'] = int(request.POST['publish'])
                 if request.POST['owner']:
                     filters['owner']=int(request.POST['owner'])
                 if request.POST['unit_type']:
@@ -418,7 +420,12 @@ def unitSave(request, unit_id=0):
             if unit.isVehicle():
                 saveVehicleWeapons(unit, form)
                 if form.cleaned_data['modz']:
-                    unit.modz=form.cleaned_data['modz'],
+                    if form.cleaned_data['modz2']:
+                        unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
+                    else:
+                        unit.modz=form.cleaned_data['modz'],
+                elif form.cleaned_data['modz2']:
+                    unit.modz=form.cleaned_data['modz2'],
                 else:
                     unit.modz.clear()
             else: # infantry
@@ -427,6 +434,11 @@ def unitSave(request, unit_id=0):
                         addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
                     else:
                         addUnitWeapon(unit, form.cleaned_data['basicWeapons'], custom=form.cleaned_data['basic_Custom'] if form.cleaned_data['OR_basic'] else None)
+                    # inline squad attachments
+                    if form.cleaned_data['inlineWeapons']:
+                        addUnitWeapon(unit, form.cleaned_data['inlineWeapons'], mountType=2, custom=form.cleaned_data['inline_Custom'] if form.cleaned_data['OR_inline'] else None)
+                    if form.cleaned_data['inlineWeapons2']:
+                        addUnitWeapon(unit, form.cleaned_data['inlineWeapons2'], mountType=2, custom=form.cleaned_data['inline2_Custom'] if form.cleaned_data['OR_inline2'] else None)
                 elif unit.unitType == 2 or unit.unitType == 4: # SA or Commander
                     addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
                 elif unit.unitType == 3:
@@ -437,7 +449,7 @@ def unitSave(request, unit_id=0):
                 if form.cleaned_data['grenades']:
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
                 if form.cleaned_data['perks']:
-                    if form.cleaned_data['perks2'] and unit.canHaveTwoPerks():
+                    if form.cleaned_data['perks2']:
                         unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
                     else:
                         unit.perks=form.cleaned_data['perks'],
@@ -467,6 +479,10 @@ def unitSave(request, unit_id=0):
                 unit.cmdTek=form.cleaned_data['cmdTek']
             else:
                 unit.cmdTek = False
+            if form.cleaned_data['publish']:
+                unit.publish=form.cleaned_data['publish']
+            else:
+                unit.publish = False
             if unit.unitType == 12:
                 print 'Setting mecha mobility'
                 unit.mobility = 1 # Walk - it's a mecha
@@ -632,6 +648,26 @@ def list(request):
         except Exception ,e:
             print 'user_profile access exception:', e
     if filterDict:
+        print filterDict
+        try:
+            print filterDict['publish']
+            if filterDict['publish'] == 1 or filterDict['publish'] == '1':
+                # All units
+                pass
+            elif filterDict['publish'] == 2 or filterDict['publish'] == '2':
+                units = units.filter(publish=True)
+            elif filterDict['publish'] == 3 or filterDict['publish'] == '3':
+                units = units.filter(publish=False)
+            else:
+                if request.user.is_authenticated():
+                    units = units.exclude(~Q(owner=request.user),publish=False)
+                else:
+                    units = units.filter(publish=True)
+        except KeyError:
+            if request.user.is_authenticated():
+                units = units.exclude(~Q(owner=request.user),publish=False)
+            else:
+                units = units.filter(publish=True)
         try:
             if filterDict['owner']:
                 units = units.filter(owner=filterDict['owner'])
@@ -662,13 +698,6 @@ def list(request):
                 units=units.filter(rating__gte=filterDict['rating_min'])
         except KeyError:
             pass
-        #elif filterType == '5' and filterValue2:
-        #    if filterValue == '1':
-        #        units=units.filter(name__icontains=filterValue2)
-        #    elif filterValue == '2':
-        #        units=units.filter(name__istartswith=filterValue2)
-        #    elif filterValue == '3':
-        #        units=units.filter(name__iendswith=filterValue2)
         try:
             # int(1) if via profile, u'1' if via ajax
             if filterDict['image'] == 1 or filterDict['image'] == '1':
@@ -677,6 +706,12 @@ def list(request):
                 units=units.filter(image="")
         except KeyError:
             pass
+    else:
+        # Filtering to be performed by default
+        if request.user.is_authenticated():
+            units = units.exclude(~Q(owner=request.user),publish=False)
+        else:
+            units = units.filter(publish=True)
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
@@ -686,8 +721,6 @@ def list(request):
             'filter_set':filterSet,
         }, \
         RequestContext(request))
-
-
 
 def filterOwner(request, who=None):
     print 'filterOwner'
