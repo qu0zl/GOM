@@ -3,7 +3,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from math import ceil
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 import profiles.models
 import django.contrib.auth.models
 import traceback
@@ -143,7 +143,7 @@ class ForceEntry(models.Model):
     ordering = models.IntegerField(default=0, blank=True)
 
     @property
-    def order(self):
+    def order(self): # Shouldn't be needed due to post_save but will leave enabled
         if self.ordering == 0:
             self.ordering == self.id
             self.save()
@@ -160,10 +160,10 @@ class Force(models.Model):
     def reorder(self, entry, direction):
         try:
             if direction == False: # down
-                entries = ForceEntry.objects.filter(force=self, ordering__gt=entry.ordering).order_by('ordering')
+                entries = ForceEntry.objects.filter(force=self, ordering__gt=entry.order).order_by('ordering')
                 swap = entries[0]
             else:
-                entries = ForceEntry.objects.filter(force=self, ordering__lt=entry.ordering).order_by('ordering')
+                entries = ForceEntry.objects.filter(force=self, ordering__lt=entry.order).order_by('ordering')
                 swap = entries[entries.count()-1]
         except IndexError:
             pass
@@ -825,6 +825,12 @@ def unitDump():
         u.dumpObject(f)
     f.close()
 
+def force_entry_postsave(sender, **kwargs):
+    obj = kwargs['instance']
+    if obj.ordering == 0:
+        obj.ordering = obj.id
+        obj.save()
+
 def force_predelete(sender, **kwargs):
     # the object which is about to be deleted can be accessed via the kwargs 'instance' key.
     obj = kwargs['instance']
@@ -871,3 +877,5 @@ def unit_predelete(sender, **kwargs):
 pre_delete.connect(unit_predelete, sender=Unit)
 # pre-delete method to remove any relevant force entry objects when a force is deleted
 pre_delete.connect(force_predelete, sender=Force)
+# Use to set initial ForceEntry ordering value to be equal to id, which is only available after saving
+post_save.connect(force_entry_postsave, sender=ForceEntry)
