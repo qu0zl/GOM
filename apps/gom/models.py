@@ -140,10 +140,6 @@ class ForceEntry(models.Model):
     # How many of these units to put in the force
     count = models.SmallIntegerField(default=1, blank=False)
 
-    def getInfantry():
-        #infantry = models.ForceEntry.objects.filter(force=this, unit.type)
-        print 'force infantry is', infantry
-
 class Force(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ManyToManyField(User, related_name='Force Owner Table', default=None, blank=False)
