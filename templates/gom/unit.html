@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/unit_1.0.0.css">
 <script src="{{ STATIC_URL }}js/view.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
 
@@ -553,23 +554,23 @@ function weaponOR(event) {
 {% block head_title %}{% trans "Edit Unit" %}{% endblock %}
 
 {% block body %}
-<table><tr><td>
-{% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
-    <h1>{% trans "Edit Unit"%}</h1>
-    {% else %}
-    <h1>{% trans "Other User's Unit - View Only"%}</h1>
-    {% endif %}
-    </td><td><div id="star"></div></td></tr></table>
-    
-    <dl class="what_next">
+<div style="white-space:nowrap; height:50px;">
+    <div style="display:inline; float:left;">
+        {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+        <h1>{% trans "Edit Unit"%}</h1>
+        {% else %}
+        <h1>{% trans "Other User's Unit - View Only"%}</h1>
+        {% endif %}
+    </div>
+    <div style="display:inline; float:right;" id="star"></div>
+    <div style="float:right;white-space:nowrap;">
+        <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{{unit.cost}}</span></h1>
+    </div>
+</div>
         <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
             {{ formset.management_form }}
-            <table>
-                <tbody>
-                    <tr><td>
-                        <table>
-                            <tbody>
-                                <tr><td>
+            <div style="width:100%; clear:both;">
+                <div class="leftColumn">
                             <table>
                                 <tbody>
                                     <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
@@ -579,27 +580,24 @@ function weaponOR(event) {
                                     <tr id="id_assault_tr"><td>{{formObject.assault.label}}</td><td>{{formObject.assault}}</td></tr>
                                     <tr><td>{{formObject.guard.label}}</td><td>{{formObject.guard}}</td></tr>
                                     <tr><td>{{formObject.soak.label}}</td><td>{{formObject.soak}}</td></tr>
-                                    <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
                                     <tr id="id_mental_tr"><td>{{formObject.mental.label}}</td><td>{{formObject.mental}}</td></tr>
                                     <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
-                                    <tbody id="id_AIWeapons_tb">
-                                        <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
-                                        <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
-                                    </tbody>
-                                    <tbody id="id_AIWeapons2_tb">
-                                        <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
-                                        <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
-                                    </tbody>
+                                    <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
+                                    <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
+                                    <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
+                                    <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
                                 </tbody>
                             </table>
-                            </td><td>
+                        </div>
+                        <div class="centreColumn">
                             <table>
+                                <tbody id="id_mobility_tr">
+                                    <tr><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                                </tbody>
+                                <tbody id="id_air_mobility_tr">
+                                    <tr><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
+                                </tbody>
                                 <tbody>
-                                    <tr><td>{% trans 'Cost' %}</td><td id="id_cost">{{unit.cost}}</td></tr>
-                                    {% if filename %}
-                                    <tr><td><img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
-                                    {% endif %}
-                                    <tr><td>{{formObject.image.label}}</td><td>{{formObject.image}}</td></tr>
                                     <tbody id="id_basicWeapons_tb">
                                         <tr><td>{% trans "Grunt Weapons" %}</td><td>{{formObject.basicWeapons}}</td><td>{{formObject.OR_basic}}</td></tr>
                                         <tr id="tr_OR_basic"><td>{{formObject.basic_Custom.label}}</td><td>{{formObject.basic_Custom}}</td></tr>
@@ -643,38 +641,38 @@ function weaponOR(event) {
                                     <tr><td></td><td>{{formObject.mainWeapons4}}</td><td>{{formObject.OR_MW4}}</td></tr>
                                     <tr id="tr_OR_MW4"><td>{{formObject.MW4_Custom.label}}</td><td>{{formObject.MW4_Custom}}</td></tr>
                                 </tbody>
+                                <tbody id="id_AIWeapons_tb">
+                                    <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
+                                    <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
+                                </tbody>
+                                <tbody id="id_AIWeapons2_tb">
+                                    <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
+                                    <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
+                                </tbody>
                                 <tbody>
-                                    <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
-                                    <tr id="id_spec_abilities"><td>{%trans "Engineer"%}</td><td>{{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}</td><td>{{formObject.medicSpecialist}}</td></tr>
-                                    <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
-                                    <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
+                                    <tr id="id_spec_abilities"><td>{%trans "Engineer "%} {{formObject.engineerSpecialist}}</td><td>{%trans "Medic "%}{{formObject.medicSpecialist}}</td></tr>
                                 </tbody>
                             </table>
-                    </td></tr>
-                    </tbody>
-                    </table>
-            </td>
-            <td>
+                        </div>
+                    <div class="leftColumn">
                 <table> <!-- Description table -->
-                    <tbody id="id_mobility_tr">
-                        <tr><td>{{formObject.mobility.label}}</td></tr><tr><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
-                    </tbody>
-                    <tbody id="id_air_mobility_tr">
-                        <tr><td>{{formObject.air_mobility.label}}</td></tr>
-                        <tr><td>{{formObject.air_mobility}}</td></tr>
-                    </tbody>
+                    <tr><td>{{formObject.image.label}}</td><td>
+                    {% if filename and filename.strip  %}
+                        <img style="max-width:128px; max-height:128px;" src='{{ STATIC_URL }}/user_media/{{filename}}'/>
+                    {% else %}
+                        {% trans 'None' %}
+                    {% endif %}
+                    </td></tr>
+                    <tr><td colspan=3>{{formObject.image}}</td></tr>
                     <tbody>
-                        <tr><td>{% trans "Description:" %}</td></tr>
-                        <tr><td>{{formObject.desc}}</td></tr>
-                        <tr><td>{% trans "Manufacturer:"%}</td></tr>
-                        <tr><td>{{formObject.manu}}</td></tr>
+                        <tr><td>{% trans "Description:" %}</td><td>{{formObject.desc}}</td></tr>
+                        <tr><td>{% trans "Manufacturer:"%}</td><td>{{formObject.manu}}</td></tr>
                     </tbody>
                 </table>
-            </td>
-    </tr>
-            </tbody>
-            </table>
+            </div>
+        </div>
+        <div style="width=100%; display:block; clear:both;">
             <table>
                 <tbody>
                     <tr>
@@ -690,6 +688,7 @@ function weaponOR(event) {
                     </tr>
                 </tbody>
             </table>
+        </div>
 
         </form>
 {% endblock %}

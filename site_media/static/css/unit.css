@@ -1,0 +1,14 @@
+input[type=text]{height:26px;}
+input, select, textarea {
+    width:150px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+input[type=file]{width:200px;}
+textarea {
+    width:200px;
+    height:170px;
+}
+.leftColumn { width:298px; display:inline-block;float:left;margin:1px;}
+.centreColumn { width:338px; display:inline-block;float:left;margin:1px;}

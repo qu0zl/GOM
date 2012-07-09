@@ -483,11 +483,6 @@ class Unit(models.Model):
             except Exception, e:
                 pass
         return 0
-    # Only commanders and specialists currently can have 2 perks
-    def canHaveTwoPerks(self):
-        if self.unitType in [3,4]:
-            return True
-        return False
     def getSpeed(self):
         if self.unitType in (1,2,4):
             return 4 # any modifiers?

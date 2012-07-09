@@ -442,7 +442,7 @@ def unitSave(request, unit_id=0):
                 if form.cleaned_data['grenades']:
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
                 if form.cleaned_data['perks']:
-                    if form.cleaned_data['perks2'] and unit.canHaveTwoPerks():
+                    if form.cleaned_data['perks2']:
                         unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
                     else:
                         unit.perks=form.cleaned_data['perks'],
