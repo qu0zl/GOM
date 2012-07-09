@@ -460,13 +460,25 @@ class Unit(models.Model):
         return mountCosts
     def perkCost(self):
         if self.isVehicle():
+            cost=0
+            try:
+                cost = cost+self.modz.all()[0].perkCost
+                print 'First modz cost %d' % cost
+                try:
+                    cost = cost + 5 + self.modz.all()[1].perkCost
+                    print 'Second perk found, cost:%d' % cost
+                except Exception, e:
+                    print e
+                    pass
+                print 'perkCost returning %d' % cost
+            except Exception, e:
+                pass
             try:
                 if (self.unitType == 13 or self.unitType == 14) and self.cmdTek: # ASV or GSV
-                    return self.modz.get().perkCost + 6
-                else:
-                    return self.modz.get().perkCost
+                    cost=cost+6
             except:
-                return 0
+                pass
+            return cost
         # Infantry
         if self.unitType != 2: # Not a SA
             try:
@@ -625,6 +637,7 @@ class UnitForm(forms.ModelForm):
     perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk"))
     perks2 = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk 2"))
     modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
+    modz2 = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
@@ -737,7 +750,12 @@ class UnitForm(forms.ModelForm):
                 print e
                 pass
             try:
-                self.fields['modz'].initial=kwargs['instance'].modz.get()
+                self.fields['modz'].initial=kwargs['instance'].modz.all()[0]
+            except Exception, e:
+                print e
+                pass
+            try:
+                self.fields['modz2'].initial=kwargs['instance'].modz.all()[1]
             except Exception, e:
                 print e
                 pass

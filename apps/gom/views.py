@@ -418,7 +418,12 @@ def unitSave(request, unit_id=0):
             if unit.isVehicle():
                 saveVehicleWeapons(unit, form)
                 if form.cleaned_data['modz']:
-                    unit.modz=form.cleaned_data['modz'],
+                    if form.cleaned_data['modz2']:
+                        unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
+                    else:
+                        unit.modz=form.cleaned_data['modz'],
+                elif form.cleaned_data['modz2']:
+                    unit.modz=form.cleaned_data['modz2'],
                 else:
                     unit.modz.clear()
             else: # infantry

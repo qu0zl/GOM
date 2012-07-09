@@ -103,11 +103,11 @@
         return 0;
     }
     function perkCost(utype, size) {
+        var cmdTekCost = 0;
         switch (utype) {
-            case(1):
-                return PERK_COST[$('#id_perks').val()];
             case(2):
                 return 0;
+            case(1):
             case(3):
             case(4):
                 if ($('#id_perks').val() != '' && $('#id_perks2').val() != '') {
@@ -117,12 +117,15 @@
             case(13):
             case(14):
                 if ( $('#id_cmdTek').prop('checked') )
-                    return 6 + MODZ_COST[$('#id_modz').val()];
-                return MODZ_COST[$('#id_modz').val()];
+                    cmdTekCost = 6;
+                // deliberately fall through
             case(11):
             case(12):
-            case(15):
-                return MODZ_COST[$('#id_modz').val()];
+            case(15): // change to support 2 modz greg
+                if ($('#id_modz').val() != '' && $('#id_modz2').val() != '') {
+                    return cmdTekCost + 5 + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+                }
+                return cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
         }
     }
     function weaponCost(utype, size) {
@@ -237,7 +240,7 @@ function showWeapons(utype) {
             $('#id_mainWeapons4_tb').hide();
             $('#id_AIWeapons_tb').hide();
             $('#id_AIWeapons2_tb').hide();
-            $('#id_modz_tr').hide();
+            $('#id_modz_tb').hide();
             $('#id_cmdTek_tr').hide();
             $('#id_grenades_tb').show();
             $('#id_CCW_tb').show();
@@ -285,7 +288,7 @@ function showWeapons(utype) {
             $('#id_basicWeapons_tb').hide();
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
-            $('#id_modz_tr').show();
+            $('#id_modz_tb').show();
             $('#id_AIWeapons_tb').show();
             switch (utype) {
                 case 11:
@@ -461,18 +464,13 @@ function showWeapons(utype) {
 
         // Hide perks
         switch (utype) {
+            case(1):
             case(3):
             case(4):
-                $('#id_perks_tr').show();
-                $('#id_perks2_tr').show();
-                break;
-            case(1):
-                $('#id_perks_tr').show();
-                $('#id_perks2_tr').hide();
+                $('#id_perks_tb').show();
                 break;
             default:
-                $('#id_perks_tr').hide();
-                $('#id_perks2_tr').hide();
+                $('#id_perks_tb').hide();
         }
         showWeapons(utype, size);
     }
@@ -583,9 +581,14 @@ function weaponOR(event) {
                                     <tr id="id_mental_tr"><td>{{formObject.mental.label}}</td><td>{{formObject.mental}}</td></tr>
                                     <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
                                     <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
-                                    <tr id="id_modz_tr"><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
-                                    <tr id="id_perks_tr"><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
-                                    <tr id="id_perks2_tr"><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
+                                    <tbody id="id_modz_tb">
+                                        <tr><td>{% trans "Modz" %}</td><td>{{formObject.modz}}</td></tr>
+                                        <tr><td>{% trans "Modz 2" %}</td><td>{{formObject.modz2}}</td></tr>
+                                    </tbody>
+                                    <tbody id="id_perks_tb">
+                                        <tr><td>{{formObject.perks.label}}</td><td>{{formObject.perks}}</td></tr>
+                                        <tr><td>{{formObject.perks2.label}}</td><td>{{formObject.perks2}}</td></tr>
+                                    </tbody>
                                 </tbody>
                             </table>
                         </div>
