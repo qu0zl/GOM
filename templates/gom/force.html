@@ -87,8 +87,6 @@ function reorder(which, direction) {
     {% else %}
     <h1>{% trans "Other User's Force - View Only"%}</h1>
     {% endif %}
-    
-    <dl class="what_next">
         <form method="post" id="forceForm" action="/gom/force/{{force_id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
             {{ formset.management_form }}
             <table>
@@ -111,11 +109,17 @@ function reorder(which, direction) {
                                         {% if force_id != '0' and user.is_authenticated and request.user == force_owner %}
                                         <a href='/gom/list/all'>{% trans 'Add units' %}</a>
                                         {% endif %}
-                                        {%else %}
-                                        <tr><th>{%trans 'Unit Name' %}</th><th>{% trans 'Count *' %}</th></tr>
+                                    {%else %}
+                                        <tr>
+                                        {% if force_id != '0' and user.is_authenticated and request.user == force_owner %}
+                                            <th>{% trans 're-order' %}</th>
+                                        {% endif %}
+                                        <th>{%trans 'Unit Name' %}</th><th>{% trans 'Count *' %}</th></tr>
                                         {% for item in force.units %}
                                         <tr class="MoveableRow" id="id_entry_{{item.id}}">
+                                            {% if force_id != '0' and user.is_authenticated and request.user == force_owner %}
                                             <td><span class="down_button" style="cursor:pointer;"><img src="{{ STATIC_URL }}/images/arrow-3D-green-down.jpg" alt="{% trans 'down' %}" style="max-width:24px; max-height:24px;"/></span><span class="up_button"><img src="{{ STATIC_URL }}/images/arrow-3D-green-up.jpg" alt="{% trans 'up' %}" style="max-width:24px; max-height:24px;"/></span></td>
+                                            {% endif %}
                                             <td><a href="/gom/unit/{{item.unit.id}}/">{{item.unit.name}}</a></td>
                                             <td>
                                                 <select name="entry_{{item.id}}">
