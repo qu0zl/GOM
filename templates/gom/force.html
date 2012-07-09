@@ -12,6 +12,17 @@
     {
     $('select').change(onSelect);
     $('select').each(cacheData);
+    $('.down_button').click( function () {
+        var rowToMove = $(this).parents('tr.MoveableRow:first');
+        var next = rowToMove.next('tr.MoveableRow')
+        if (next.length == 1) { next.after(rowToMove); }
+    });
+
+    $('.up_button').click( function () {
+        var rowToMove = $(this).parents('tr.MoveableRow:first');
+        var prev = rowToMove.prev('tr.MoveableRow')
+        if (prev.length == 1) { prev.before(rowToMove); }
+    });
 
     } );
     function onSelect (e) {
@@ -22,6 +33,7 @@
                 return false;
             }
         }
+
         $.ajax({
             type: "POST",
             url: "/gom/force/forceEntryCount/",
@@ -91,7 +103,8 @@
                                         {%else %}
                                         <tr><th>{%trans 'Unit Name' %}</th><th>{% trans 'Count *' %}</th></tr>
                                         {% for item in force.units %}
-                                        <tr id="id_entry_{{item.id}}">
+                                        <tr class="MoveableRow" id="id_entry_{{item.id}}">
+                                            <td><span class="down_button" style="cursor:pointer;"><img src="{{ STATIC_URL }}/images/arrow-3D-green-down.jpg" alt="{% trans 'down' %}" style="max-width:24px; max-height:24px;"/></span><span class="up_button"><img src="{{ STATIC_URL }}/images/arrow-3D-green-up.jpg" alt="{% trans 'up' %}" style="max-width:24px; max-height:24px;"/></span></td>
                                             <td><a href="/gom/unit/{{item.unit.id}}/">{{item.unit.name}}</a></td>
                                             <td>
                                                 <select name="entry_{{item.id}}">
