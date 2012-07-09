@@ -15,16 +15,27 @@
     $('.down_button').click( function () {
         var rowToMove = $(this).parents('tr.MoveableRow:first');
         var next = rowToMove.next('tr.MoveableRow')
-        if (next.length == 1) { next.after(rowToMove); }
+        if (next.length == 1) { next.after(rowToMove); reorder($(rowToMove).attr('id'), false); }
     });
 
     $('.up_button').click( function () {
         var rowToMove = $(this).parents('tr.MoveableRow:first');
         var prev = rowToMove.prev('tr.MoveableRow')
-        if (prev.length == 1) { prev.before(rowToMove); }
+        if (prev.length == 1) { prev.before(rowToMove); reorder($(rowToMove).attr('id'), true); }
     });
 
     } );
+
+function reorder(which, direction) {
+        $.ajax({
+            type: "POST",
+            url: "/gom/force/forceEntryMove/",
+            data:{'entry':which,
+            'direction':direction,
+            },
+            dataType: "json",
+        });
+    }
     function onSelect (e) {
         var count = $(this).val();
         if ( count < 1 ) {

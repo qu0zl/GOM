@@ -66,6 +66,24 @@ def unitRate(request, uid):
     except Exception, e:
         return HttpResponseBadRequest(_('Failed to rate unit.'))
 
+def updateEntryOrder(request):
+    try:
+        if request.is_ajax() and request.user.is_authenticated():
+            entry_id = request.POST['entry'][9:]
+            direction = True if request.POST['direction'] == 'true' else False
+            entry = gom.models.ForceEntry.objects.get(id=entry_id)
+            force = entry.force
+            if force.owner.get() != request.user:
+                return HttpResponseBadRequest(_('Attempt to reorder force not owned by this user'))
+            # Actual re-ordering
+            force.reorder(entry, direction)
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest(_('Only Ajax queries may use this interface'))
+    except Exception, e:
+        print e
+        return HttpResponseBadRequest(_('Failed to reorder force entry. Please try again.'))
+
 def updateEntryCount(request):
     try:
         if request.is_ajax() and request.user.is_authenticated():
@@ -544,7 +562,7 @@ def updateForce(request):
                 forceID = request.POST[item]
                 force = gom.models.Force.objects.get(id=forceID)
                 unit = gom.models.Unit.objects.get(id=unitID)
-                f = gom.models.ForceEntry(unit=unit, force=force, count=unitCount)
+                f = gom.models.ForceEntry(unit=unit, force=force, count=unitCount, ordering=0)
                 f.save()
                 force.cost = force.cost + (unit.cost*unitCount)
                 force.save()
@@ -557,7 +575,7 @@ def updateForce(request):
 def forcePDF(request, force):
     units = []
     try:
-        entries = gom.models.ForceEntry.objects.filter(force=force)
+        entries = force.units()
     except:
         return HttpResponseBadRequest(_('No units associated with this force'))
     for entry in entries:

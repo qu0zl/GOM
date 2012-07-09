@@ -139,6 +139,15 @@ class ForceEntry(models.Model):
     unit = models.ForeignKey('Unit')
     # How many of these units to put in the force
     count = models.SmallIntegerField(default=1, blank=False)
+    # Used to order entries in a force. Set to id on first access.
+    ordering = models.IntegerField(default=0, blank=True)
+
+    @property
+    def order(self):
+        if self.ordering == 0:
+            self.ordering == self.id
+            self.save()
+        return self.ordering
 
 class Force(models.Model):
     name = models.CharField(max_length=100)
@@ -147,7 +156,25 @@ class Force(models.Model):
     # Cost of army
     cost = models.PositiveIntegerField(default=0, blank=True)
     def units(self):
-        return ForceEntry.objects.filter(force=self)
+        return ForceEntry.objects.filter(force=self).order_by('ordering')
+    def reorder(self, entry, direction):
+        try:
+            if direction == False: # down
+                entries = ForceEntry.objects.filter(force=self, ordering__gt=entry.ordering).order_by('ordering')
+                swap = entries[0]
+            else:
+                entries = ForceEntry.objects.filter(force=self, ordering__lt=entry.ordering).order_by('ordering')
+                swap = entries[entries.count()-1]
+        except IndexError:
+            pass
+        except Exception, e:
+            print 'Re-order exception:', e
+        temp = swap.ordering
+        swap.ordering = entry.ordering
+        entry.ordering = temp
+        entry.save()
+        swap.save()
+
     def getCost(self, forceUpdate=False):
         if forceUpdate or self.cost == 0:
             self.updateCost()
