@@ -659,13 +659,15 @@ def list(request):
             elif filterDict['publish'] == 3 or filterDict['publish'] == '3':
                 units = units.filter(publish=False)
             else:
-                units = units.exclude(~Q(owner=request.user),publish=False)
-                print 'here1'
+                if request.user.is_authenticated():
+                    units = units.exclude(~Q(owner=request.user),publish=False)
+                else:
+                    units = units.filter(publish=True)
         except KeyError:
-            print 'here2'
-            units = units.exclude(~Q(owner=request.user),publish=False)
-        except Exception, e:
-            print '********filter publish exception', e
+            if request.user.is_authenticated():
+                units = units.exclude(~Q(owner=request.user),publish=False)
+            else:
+                units = units.filter(publish=True)
         try:
             if filterDict['owner']:
                 units = units.filter(owner=filterDict['owner'])
@@ -696,13 +698,6 @@ def list(request):
                 units=units.filter(rating__gte=filterDict['rating_min'])
         except KeyError:
             pass
-        #elif filterType == '5' and filterValue2:
-        #    if filterValue == '1':
-        #        units=units.filter(name__icontains=filterValue2)
-        #    elif filterValue == '2':
-        #        units=units.filter(name__istartswith=filterValue2)
-        #    elif filterValue == '3':
-        #        units=units.filter(name__iendswith=filterValue2)
         try:
             # int(1) if via profile, u'1' if via ajax
             if filterDict['image'] == 1 or filterDict['image'] == '1':
@@ -713,7 +708,10 @@ def list(request):
             pass
     else:
         # Filtering to be performed by default
-        units = units.exclude(~Q(owner=request.user),publish=False)
+        if request.user.is_authenticated():
+            units = units.exclude(~Q(owner=request.user),publish=False)
+        else:
+            units = units.filter(publish=True)
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
