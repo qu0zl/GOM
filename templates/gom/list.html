@@ -8,7 +8,7 @@
 <script type="text/javascript">
     function filter (e) {
         $.post( '/gom/list/filter/', 
-                { owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
+                { publish: $('#id_filter_publish').val(), owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
                 cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(),
                 rating_min: $('#id_filter_rating_min').val(),},
         function( data ) {
@@ -32,7 +32,7 @@
     function setFilters (e) {
         {% if user.is_authenticated %}
         $.post( '/gom/set/filters/', 
-                { owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
+                { publish: $('#id_filter_publish').val(), owner: $('#id_filter_owner').val(), manu:$('#id_filter_manu').val(), unit_type:$('#id_filter_unit_type').val(),
                 cost_min: $('#id_filter_cost_min').val(), cost_max: $('#id_filter_cost_max').val(), image: $('#id_filter_image').val(),
                 rating_min: $('#id_filter_rating_min').val(),},
             function( ) {
@@ -82,7 +82,6 @@
     </h4>
 </div>
 
-{% if units %}
 
 <form method="post" id="multi_PDF" action="/gom/list/handle/" enctype="multipart/form-data"> {% csrf_token %}
 <table id="id_unit_table">
@@ -102,9 +101,12 @@
 </tr> 
 </thead> 
     <tbody id="id_list_table">
-    {% include 'gom/list_table.html' %}
+        {% if units %}
+            {% include 'gom/list_table.html' %}
+        {% else %}
+            <tr><td>No</td><td>units.</td><td>Check</td><td>your</td><td>default</td><td>filter</td><td>settings.</td></tr>
+        {% endif %}
     </tbody>
 </table>
-{% endif %}
 </form>
 {% endblock %}

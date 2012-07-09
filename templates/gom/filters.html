@@ -1,4 +1,10 @@
 {% load i18n %}
+<select style="width:110px;" id="id_filter_publish" name="filter_publish">
+    <option value="">{% trans 'Published and Yours' %}</option>
+    <option value="1" {% if filter_set.publish == 1 %} selected="selected" {% endif %}>{% trans 'All' %}</option>
+    <option value="2" {% if filter_set.publish == 2 %} selected="selected" {% endif %}>{% trans 'Published Only' %}</option>
+    <option value="3" {% if filter_set.publish == 3 %} selected="selected" {% endif %}>{% trans 'Un-published Only' %}</option>
+</select>
 <select style="width:110px;" id="id_filter_owner" name="filter_owner">
     <option value="">{% trans 'Owner' %}</option>
     {% for user in owners %}
@@ -21,7 +27,7 @@
     <option value="14"{% if filter_set.unit_type == 14 %} selected="selected" {% endif %}>{% trans 'ASV' %}</option>
     <option value="15"{% if filter_set.unit_type == 15 %} selected="selected" {% endif %}>{% trans 'Artillery' %}</option>
 </select>
-<select style="width:120px;" id="id_filter_manu" name="filter_manu">
+<select style="width:115px;" id="id_filter_manu" name="filter_manu">
     <option value="">{% trans 'Manufacturer' %}</option>
     {% for manu in manufacturers %}
     {% if filter_set.manu == manu.id %}
@@ -31,7 +37,7 @@
     {% endif %}
     {% endfor %}
 </select>
-<select style="width:110px;" id="id_filter_cost_min" name="filter_cost_min">
+<select style="width:90px;" id="id_filter_cost_min" name="filter_cost_min">
     <option value="">{% trans 'Min Cost' %}</option>
     <option value="5" {% if filter_set.cost_min == 5 %} selected="selected" {% endif %}>>=5</option>
     <option value="10" {% if filter_set.cost_min == 10 %} selected="selected" {% endif %}>>=10</option>
@@ -42,7 +48,7 @@
     <option value="40" {% if filter_set.cost_min == 40 %} selected="selected" {% endif %}>>=40</option>
     <option value="50" {% if filter_set.cost_min == 50 %} selected="selected" {% endif %}>>=50</option>
 </select>
-<select style="width:110px;" id="id_filter_cost_max" name="filter_cost_max">
+<select style="width:90px;" id="id_filter_cost_max" name="filter_cost_max">
     <option value="" selected="selected">{% trans 'Max Cost' %}</option>
     <option value="5" {% if filter_set.cost_max == 5 %} selected="selected" {% endif %}><=5</option>
     <option value="10" {% if filter_set.cost_max == 10 %} selected="selected" {% endif %}><=10</option>
@@ -53,7 +59,7 @@
     <option value="40" {% if filter_set.cost_max == 40 %} selected="selected" {% endif %}><=40</option>
     <option value="50" {% if filter_set.cost_max == 50 %} selected="selected" {% endif %}><=50</option>
 </select>
-<select style="width:110px;" id="id_filter_rating_min" name="filter_rating_min">
+<select style="width:95px;" id="id_filter_rating_min" name="filter_rating_min">
     <option value="">{% trans 'Min Rating' %}</option>
     <option value="2" {% if filter_set.rating_min == 2 %} selected="selected" {% endif %}>>=2</option>
     <option value="3" {% if filter_set.rating_min == 3 %} selected="selected" {% endif %}>>=3</option>
@@ -61,7 +67,7 @@
     <option value="4" {% if filter_set.rating_min == 4 %} selected="selected" {% endif %}>>=4</option>
     <option value="4.5" {% if filter_set.rating_min|stringformat:"s" == 4.5|stringformat:"s" %} selected="selected" {% endif %}>>=4.5</option>
 </select>
-<select style="width:110px;" id="id_filter_image" name="filter_image">
+<select style="width:95px;" id="id_filter_image" name="filter_image">
     <option value="">{% trans 'Image' %}</option>
     <option value="1" {% if filter_set.image == 1 %} selected="selected" {% endif %}>{% trans 'Has Image' %}</option>
     <option value="2" {% if filter_set.image == 2 %} selected="selected" {% endif %}>{% trans 'No Image' %}</option>

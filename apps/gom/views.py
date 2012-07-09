@@ -29,6 +29,8 @@ def setFilters(request):
 
             filters = {}
             try:
+                if request.POST['publish']:
+                    filters['publish'] = int(request.POST['publish'])
                 if request.POST['owner']:
                     filters['owner']=int(request.POST['owner'])
                 if request.POST['unit_type']:
@@ -477,6 +479,10 @@ def unitSave(request, unit_id=0):
                 unit.cmdTek=form.cleaned_data['cmdTek']
             else:
                 unit.cmdTek = False
+            if form.cleaned_data['publish']:
+                unit.publish=form.cleaned_data['publish']
+            else:
+                unit.publish = False
             if unit.unitType == 12:
                 print 'Setting mecha mobility'
                 unit.mobility = 1 # Walk - it's a mecha
@@ -642,6 +648,24 @@ def list(request):
         except Exception ,e:
             print 'user_profile access exception:', e
     if filterDict:
+        print filterDict
+        try:
+            print filterDict['publish']
+            if filterDict['publish'] == 1 or filterDict['publish'] == '1':
+                # All units
+                pass
+            elif filterDict['publish'] == 2 or filterDict['publish'] == '2':
+                units = units.filter(publish=True)
+            elif filterDict['publish'] == 3 or filterDict['publish'] == '3':
+                units = units.filter(publish=False)
+            else:
+                units = units.exclude(~Q(owner=request.user),publish=False)
+                print 'here1'
+        except KeyError:
+            print 'here2'
+            units = units.exclude(~Q(owner=request.user),publish=False)
+        except Exception, e:
+            print '********filter publish exception', e
         try:
             if filterDict['owner']:
                 units = units.filter(owner=filterDict['owner'])
@@ -687,6 +711,9 @@ def list(request):
                 units=units.filter(image="")
         except KeyError:
             pass
+    else:
+        # Filtering to be performed by default
+        units = units.exclude(~Q(owner=request.user),publish=False)
     return render_to_response('gom/list_table.html' if request.is_ajax() else 'gom/list.html', \
         {
             'units':units,
@@ -696,8 +723,6 @@ def list(request):
             'filter_set':filterSet,
         }, \
         RequestContext(request))
-
-
 
 def filterOwner(request, who=None):
     print 'filterOwner'

@@ -214,6 +214,9 @@ class Unit(models.Model):
     modz = models.ManyToManyField('Modz', related_name='Modz Table', default=None)
     cmdTek = models.BooleanField(default=False, blank=False)
 
+    # Should this unit be published
+    publish = models.BooleanField(default=False, blank=False)
+
     def __unicode__(self):
         s = "Name: %s\n" % self.name
         for weapon in self.weapons.all():
@@ -645,7 +648,7 @@ class UnitForm(forms.ModelForm):
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'soak', 'mental', 'skill', 'mobility', 'desc', 'mechaSpecialist', 'engineerSpecialist', 'medicSpecialist', 'cmdTek' ]
+        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'soak', 'mental', 'skill', 'mobility', 'desc', 'mechaSpecialist', 'engineerSpecialist', 'medicSpecialist', 'cmdTek', 'publish' ]
     def __init__(self, *args, **kwargs):
         super(UnitForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:

@@ -121,7 +121,7 @@
                 // deliberately fall through
             case(11):
             case(12):
-            case(15): // change to support 2 modz greg
+            case(15):
                 if ($('#id_modz').val() != '' && $('#id_modz2').val() != '') {
                     return cmdTekCost + 5 + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
                 }
@@ -482,6 +482,14 @@ function showWeapons(utype) {
         }
         return false;
     }
+    function publishClick(event) {
+        if ($('#id_publish').prop('checked')) {
+            alert("{% trans 'Once saved, this unit will now appear in the list of published and finished units. Please ensure that the unit is complete.' %}");
+        } else {
+            alert("{% trans 'Once saved, this unit will no longer appear in the list of published and finished units. However other users may still view it if they choose to view non-published units.' %}");
+        }
+        return false;
+    }
     function sizeClick(event) {
         var size = parseInt($('#id_size').val());
         var utype = parseInt($('#id_unitType').val());
@@ -513,6 +521,7 @@ function weaponOR(event) {
         $('#id_mech_walk').hide();
         $('[type=checkbox].[name^="OR_"]').change(weaponOR);
         $('[type=checkbox].[name^="OR_"]').each(weaponOR);
+        $('#id_publish').change(publishClick);
         updateStats( parseInt($('#id_unitType').val()), parseInt($('#id_size').val()) );
         updateSave();
 
@@ -552,21 +561,22 @@ function weaponOR(event) {
 {% block head_title %}{% trans "Edit Unit" %}{% endblock %}
 
 {% block body %}
-<div style="white-space:nowrap; height:50px;">
-    <div style="display:inline; float:left;">
-        {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
-        <h1>{% trans "Edit Unit"%}</h1>
-        {% else %}
-        <h1>{% trans "Other User's Unit - View Only"%}</h1>
-        {% endif %}
-    </div>
-    <div style="display:inline; float:right;" id="star"></div>
-    <div style="float:right;white-space:nowrap;">
-        <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{{unit.cost}}</span></h1>
-    </div>
-</div>
-        <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
-            {{ formset.management_form }}
+    <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+        {{ formset.management_form }}
+        <div style="white-space:nowrap; height:50px;">
+            <div style="display:inline; float:left; white-space:nowrap;">
+                {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+                <div style="display:inline; float:left;"><h1>{% trans "Edit Unit"%}</h1></div>
+                <div style="display:inline; float:left; padding-left:10px;">{{formObject.publish.label}} {{formObject.publish}}</div>
+                {% else %}
+                <h1>{% trans "Other User's Unit - View Only"%}</h1>
+                {% endif %}
+            </div>
+            <div style="display:inline; float:right;" id="star"></div>
+            <div style="float:right;white-space:nowrap;">
+                <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{{unit.cost}}</span></h1>
+            </div>
+        </div>
             <div style="width:100%; clear:both;">
                 <div class="leftColumn">
                             <table>
