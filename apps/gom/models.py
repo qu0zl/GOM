@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from math import ceil
 from django.db.models.signals import pre_delete, post_save
 import profiles.models
@@ -682,8 +683,7 @@ class UnitForm(forms.ModelForm):
                 if basic_instance.nameOverride:
                     self.fields['basic_Custom'].initial=basic_instance.nameOverride
                     self.fields['OR_basic'].initial=True
-            except Exception, e:
-                print e
+            except ObjectDoesNotExist:
                 pass
             try:
                 SA_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4], mountType=0).get()
@@ -691,8 +691,7 @@ class UnitForm(forms.ModelForm):
                 if SA_instance.nameOverride:
                     self.fields['SA_Custom'].initial=SA_instance.nameOverride
                     self.fields['OR_SA'].initial=True
-            except Exception, e:
-                print 'SAWeapons:', e
+            except ObjectDoesNotExist:
                 pass
             try:
                 Spec_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4,5], mountType=0).get()
@@ -700,8 +699,7 @@ class UnitForm(forms.ModelForm):
                 if Spec_instance.nameOverride:
                     self.fields['Spec_Custom'].initial=Spec_instance.nameOverride
                     self.fields['OR_Spec'].initial=True
-            except Exception, e:
-                print 'SpecWeapons:', e
+            except ObjectDoesNotExist:
                 pass
             try:
                 CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0, mountType=0).get()
@@ -709,8 +707,7 @@ class UnitForm(forms.ModelForm):
                 if CCW_instance.nameOverride:
                     self.fields['CCW_Custom'].initial=CCW_instance.nameOverride
                     self.fields['OR_CCW'].initial=True
-            except Exception, e:
-                print e
+            except ObjectDoesNotExist:
                 pass
             try:
                 grenades_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=3, mountType=0).get()
@@ -718,8 +715,7 @@ class UnitForm(forms.ModelForm):
                 if grenades_instance.nameOverride:
                     self.fields['grenades_Custom'].initial=grenades_instance.nameOverride
                     self.fields['OR_grenades'].initial=True
-            except Exception, e:
-                print e
+            except ObjectDoesNotExist:
                 pass
             try:
                 mainWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=0)
@@ -739,8 +735,8 @@ class UnitForm(forms.ModelForm):
                 if mainWeapons[3].nameOverride:
                     self.fields['MW4_Custom'].initial=mainWeapons[3].nameOverride
                     self.fields['OR_MW4'].initial=True
-            except Exception, e:
-                print e
+            except IndexError:
+                pass
             try:
                 AIWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=1)
                 self.fields['AIWeapons'].initial=AIWeapons[0].weapon
@@ -751,8 +747,8 @@ class UnitForm(forms.ModelForm):
                 if AIWeapons[1].nameOverride:
                     self.fields['AI2_Custom'].initial=AIWeapons[1].nameOverride
                     self.fields['OR_AI2'].initial=True
-            except Exception, e:
-                print e
+            except IndexError:
+                pass
             try:
                 inlineWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=2)
                 self.fields['inlineWeapons'].initial=inlineWeapons[0].weapon
@@ -763,53 +759,48 @@ class UnitForm(forms.ModelForm):
                 if inlineWeapons[1].nameOverride:
                     self.fields['inline2_Custom'].initial=inlineWeapons[1].nameOverride
                     self.fields['OR_inline2'].initial=True
-            except Exception, e:
-                print e
+            except IndexError:
+                pass
             try:
                 self.fields['perks'].initial=kwargs['instance'].perks.all()[0]
-            except Exception, e:
-                print e
+            except IndexError:
                 pass
             try:
                 self.fields['perks2'].initial=kwargs['instance'].perks.all()[1]
-            except Exception, e:
-                print e
+            except IndexError:
                 pass
             try:
                 self.fields['modz'].initial=kwargs['instance'].modz.all()[0]
-            except Exception, e:
-                print e
+            except IndexError:
                 pass
             try:
                 self.fields['modz2'].initial=kwargs['instance'].modz.all()[1]
-            except Exception, e:
-                print e
+            except IndexError:
                 pass
             try:
                 self.fields['manu'].initial=kwargs['instance'].manu.get()
-            except Exception, e:
-                print e
+            except ObjectDoesNotExist:
                 pass
             try:
                 self.fields['medicSpecialist'].initial=kwargs['instance'].medicSpecialist
             except Exception, e:
-                print e
+                print 'MedicSpecialist exception:', e
                 pass
             try:
                 self.fields['guard'].initial=kwargs['instance'].getGuard()
             except Exception, e:
-                print e
+                print "guard exception", e
                 pass
             try:
                 self.fields['engineerSpecialist'].initial=kwargs['instance'].engineerSpecialist
             except Exception, e:
-                print e
+                print "engineer exception", e
                 pass
             try:
                 if kwargs['instance'].unitType == 14: #ASV
                     self.fields['air_mobility'].initial = kwargs['instance'].mobility
             except Exception, e:
-                print e
+                print "air mobility exception", e
                 pass
         else:
             print 'no unit instance'
