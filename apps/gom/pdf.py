@@ -152,6 +152,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
         if (i+1)%interval == 0 and grunt.isVehicle():
             if (i+1)/interval <= 3:
                 p.setFillColor(colors.black)
+                # Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
                 p.drawCentredString( boxX+(boxWidth/2), boxY+.01*HEIGHT , _('C'))
                 p.setFillColor(colors.white)
     p.setFillColor(colors.black)
@@ -162,7 +163,9 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     p.circle( .9*WIDTH, .24*HEIGHT, .04*WIDTH, fill=0, stroke=1)
     # Draw Critical boxes if this is a vehicle
     if grunt.isVehicle():
-        strings=(_('Armour'), _('Engine'), _('Tek'))
+        strings=(_('Armour'), _('Engine'),
+                # Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
+                _('Tek'))
         for i in range(0,3):
             dy = y-(.03*HEIGHT)-((boxWidth+boxGap)*i)
             p.setStrokeColor(colors.black)
@@ -202,6 +205,7 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
                 p.setFillColor(colors.white)
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
                 p.setFillColor(colors.black)
+                # Translators: Abbreviation of Engineer
                 p.drawCentredString((.80*WIDTH) + 1.5*boxWidth, dy+(boxWidth/4), _('Eng.'))
     except Exception, e:
         print 'drawMedicEngineer exception:', e
@@ -306,8 +310,11 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
     textYOffset = (BOX_HEIGHT/MAX_HEIGHT) * (.01*HEIGHT) 
     p.drawString( x+.02*WIDTH, dys[0]+textYOffset, _('WEAPON'))
     p.drawCentredString( dxs[0]+((.11*WIDTH)/2), dys[0]+textYOffset, _('Range'))
+    # Translators: Abbreviation of 'Damage'
     p.drawCentredString( dxs[1]+((.11*WIDTH)/2), dys[0]+textYOffset, _('Dam'))
+    # Translators: Abbreviation of 'Armour Piercing'
     p.drawCentredString( dxs[2]+((.11*WIDTH)/2), dys[0]+textYOffset, _('AP'))
+    # Translators: Abbreviation of 'Area of Effect'
     p.drawCentredString( dxs[3]+((.11*WIDTH)/2), dys[0]+textYOffset, _('AE'))
 
     i = 0
@@ -448,6 +455,7 @@ def drawManu(p, unit, WIDTH, HEIGHT):
     p.setFont("Helvetica", 4)
     try:
         manu = unit.manu.get()
+        # Translators: Abbreviation of 'Miniature:', i.e. who makes the pictured miniature.
         p.drawString(.45*WIDTH,.01*HEIGHT, _('Mini: %s') % manu)
     except:
         pass
@@ -497,6 +505,7 @@ def drawForceUnits(p, force, WIDTH, HEIGHT):
     # Make sure only to shift box text proportionally to how much we have shrunk boxes
     textYOffset = (BOX_HEIGHT/MAX_HEIGHT) * (.01*HEIGHT) 
     p.drawString( x+.02*WIDTH, dys[0]+textYOffset, _('Unit'))
+    # Translators: How-many of this unit are included in this army.
     p.drawCentredString( dxs[0]+((.11*WIDTH)/2), dys[0]+textYOffset, _('Count'))
     p.drawCentredString( dxs[1]+((.11*WIDTH)/2), dys[0]+textYOffset, _('Cost'))
 

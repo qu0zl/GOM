@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-10 04:43-0400\n"
+"POT-Creation-Date: 2012-07-10 12:39-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,318 +17,334 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: apps/gom/models.py:18 apps/gom/pdf.py:364
+#. Translators: Scout size class
+#: apps/gom/models.py:20 apps/gom/pdf.py:371
 msgid "Scout"
 msgstr ""
 
-#: apps/gom/models.py:19 apps/gom/pdf.py:364
+#: apps/gom/models.py:21 apps/gom/pdf.py:371
 msgid "Light"
 msgstr ""
 
-#: apps/gom/models.py:20 apps/gom/models.py:104 apps/gom/pdf.py:364
+#: apps/gom/models.py:22 apps/gom/models.py:125 apps/gom/pdf.py:371
 msgid "Medium"
 msgstr ""
 
-#: apps/gom/models.py:21 apps/gom/models.py:105 apps/gom/pdf.py:364
+#: apps/gom/models.py:23 apps/gom/models.py:126 apps/gom/pdf.py:371
 msgid "Heavy"
 msgstr ""
 
-#: apps/gom/models.py:22 apps/gom/models.py:106 apps/gom/pdf.py:39
-#: apps/gom/pdf.py:364
+#. Translators: Assault size class
+#: apps/gom/models.py:25 apps/gom/models.py:127 apps/gom/pdf.py:39
+#: apps/gom/pdf.py:371
 msgid "Assault"
 msgstr ""
 
-#: apps/gom/models.py:25
+#. Translators: 1/5 star card rating
+#: apps/gom/models.py:29
 msgid "Bad"
 msgstr ""
 
-#: apps/gom/models.py:26
+#. Translators: 2/5 star card rating
+#: apps/gom/models.py:31
 msgid "Poor"
 msgstr ""
 
-#: apps/gom/models.py:27
+#. Translators: 3/5 star card rating
+#: apps/gom/models.py:33
 msgid "OK"
 msgstr ""
 
-#: apps/gom/models.py:28
+#. Translators: 4/5 star card rating
+#: apps/gom/models.py:35
 msgid "Good"
 msgstr ""
 
-#: apps/gom/models.py:29
+#. Translators: 5/5 star card rating
+#: apps/gom/models.py:37
 msgid "Great"
 msgstr ""
 
-#: apps/gom/models.py:32 templates/gom/filters.html:20
+#: apps/gom/models.py:40 templates/gom/filters.html:21
 msgid "Grunt Squad"
 msgstr ""
 
-#: apps/gom/models.py:33 apps/gom/pdf.py:391 templates/gom/filters.html:21
+#: apps/gom/models.py:41 apps/gom/pdf.py:398 templates/gom/filters.html:22
 msgid "Squad Attachment"
 msgstr ""
 
-#: apps/gom/models.py:34 apps/gom/models.py:101 apps/gom/pdf.py:393
-#: templates/gom/filters.html:22
+#: apps/gom/models.py:42 apps/gom/models.py:121 apps/gom/pdf.py:400
+#: templates/gom/filters.html:23
 msgid "Specialist"
 msgstr ""
 
-#: apps/gom/models.py:35 apps/gom/pdf.py:395 templates/gom/filters.html:23
+#: apps/gom/models.py:43 apps/gom/pdf.py:402 templates/gom/filters.html:24
 msgid "Commander"
 msgstr ""
 
-#: apps/gom/models.py:38 apps/gom/pdf.py:397 templates/gom/filters.html:24
+#: apps/gom/models.py:46 apps/gom/pdf.py:404 templates/gom/filters.html:25
 msgid "Tank"
 msgstr ""
 
-#: apps/gom/models.py:39 apps/gom/models.py:118 apps/gom/pdf.py:399
-#: templates/gom/filters.html:25
+#. Translators: Mecha vehicle, such as a battle-mech.
+#: apps/gom/models.py:48 apps/gom/models.py:139 apps/gom/pdf.py:406
+#: templates/gom/filters.html:26
 msgid "Mecha"
 msgstr ""
 
-#: apps/gom/models.py:40 templates/gom/filters.html:26
+#. Translators: Ground Support Vehicle
+#: apps/gom/models.py:50 templates/gom/filters.html:27
 msgid "GSV"
 msgstr ""
 
-#: apps/gom/models.py:41 apps/gom/pdf.py:403 templates/gom/filters.html:27
+#. Translators: AIR Support Vehicle
+#: apps/gom/models.py:52 apps/gom/pdf.py:410 templates/gom/filters.html:28
 msgid "ASV"
 msgstr ""
 
-#: apps/gom/models.py:42 apps/gom/models.py:107 apps/gom/pdf.py:405
-#: templates/gom/filters.html:28
+#: apps/gom/models.py:53 apps/gom/models.py:128 apps/gom/pdf.py:412
+#: templates/gom/filters.html:29
 msgid "Artillery"
 msgstr ""
 
-#: apps/gom/models.py:46 apps/gom/pdf.py:360
+#. Translators: Walking mobility type
+#: apps/gom/models.py:58 apps/gom/pdf.py:367
 msgid "Walk"
 msgstr ""
 
-#: apps/gom/models.py:47 apps/gom/pdf.py:360
+#. Translators: Tracked mobility type
+#: apps/gom/models.py:60 apps/gom/pdf.py:367
 msgid "Track"
 msgstr ""
 
-#: apps/gom/models.py:48 apps/gom/pdf.py:360
+#. Translators: Wheeled mobility type
+#: apps/gom/models.py:62 apps/gom/pdf.py:367
 msgid "Wheels"
 msgstr ""
 
-#: apps/gom/models.py:49 apps/gom/pdf.py:360
+#. Translators: Hover mobility type
+#: apps/gom/models.py:64 apps/gom/pdf.py:367
 msgid "Hover"
 msgstr ""
 
-#: apps/gom/models.py:50 apps/gom/models.py:56 apps/gom/pdf.py:358
-#: apps/gom/pdf.py:360
+#. Translators: Gravity based mobility type
+#: apps/gom/models.py:66 apps/gom/models.py:74 apps/gom/pdf.py:365
+#: apps/gom/pdf.py:367
 msgid "Grav"
 msgstr ""
 
-#: apps/gom/models.py:53 apps/gom/pdf.py:358
+#: apps/gom/models.py:69 apps/gom/pdf.py:365
 msgid "Helicopter"
 msgstr ""
 
-#: apps/gom/models.py:54 apps/gom/pdf.py:358
+#. Translators: Propeller vertical take off & landing mobility type
+#: apps/gom/models.py:71 apps/gom/pdf.py:365
 msgid "Prop VTOL"
 msgstr ""
 
-#: apps/gom/models.py:55 apps/gom/pdf.py:358
+#. Translators: Jet vertical take off & landing mobility type.
+#: apps/gom/models.py:73 apps/gom/pdf.py:365
 msgid "Jet VTOL"
 msgstr ""
 
-#: apps/gom/models.py:59
+#: apps/gom/models.py:77
 msgid "Green (2)"
 msgstr ""
 
-#: apps/gom/models.py:60
+#: apps/gom/models.py:78
 msgid "Trained (3)"
 msgstr ""
 
-#: apps/gom/models.py:61
+#: apps/gom/models.py:79
 msgid "Seasoned (4)"
 msgstr ""
 
-#: apps/gom/models.py:62
+#: apps/gom/models.py:80
 msgid "Veteran (5)"
 msgstr ""
 
-#: apps/gom/models.py:63
+#: apps/gom/models.py:81
 msgid "Expert (6)"
 msgstr ""
 
-#: apps/gom/models.py:64
+#: apps/gom/models.py:82
 msgid "Elite (7)"
 msgstr ""
 
-#: apps/gom/models.py:67
+#: apps/gom/models.py:85
 msgid "Green (4)"
 msgstr ""
 
-#: apps/gom/models.py:68
+#: apps/gom/models.py:86
 msgid "Trained (5)"
 msgstr ""
 
-#: apps/gom/models.py:69
+#: apps/gom/models.py:87
 msgid "Seasoned (6)"
 msgstr ""
 
-#: apps/gom/models.py:70
+#: apps/gom/models.py:88
 msgid "Veteran (7)"
 msgstr ""
 
-#: apps/gom/models.py:71
+#: apps/gom/models.py:89
 msgid "Expert (8)"
 msgstr ""
 
-#: apps/gom/models.py:72
+#: apps/gom/models.py:90
 msgid "Elite (9)"
 msgstr ""
 
-#: apps/gom/models.py:75
+#: apps/gom/models.py:93
 msgid "Slow (10)"
 msgstr ""
 
-#: apps/gom/models.py:76
+#: apps/gom/models.py:94
 msgid "Average (11)"
 msgstr ""
 
-#: apps/gom/models.py:77
+#: apps/gom/models.py:95
 msgid "Medium (12)"
 msgstr ""
 
-#: apps/gom/models.py:78
+#: apps/gom/models.py:96
 msgid "Quick (13)"
 msgstr ""
 
-#: apps/gom/models.py:79
+#: apps/gom/models.py:97
 msgid "Superfast (14)"
 msgstr ""
 
-#: apps/gom/models.py:82
+#: apps/gom/models.py:100
 msgid "None (10)"
 msgstr ""
 
-#: apps/gom/models.py:83
+#: apps/gom/models.py:101
 msgid "Scout (11)"
 msgstr ""
 
-#: apps/gom/models.py:84
+#: apps/gom/models.py:102
 msgid "Light (12)"
 msgstr ""
 
-#: apps/gom/models.py:85
+#: apps/gom/models.py:103
 msgid "Medium (13)"
 msgstr ""
 
-#: apps/gom/models.py:86
+#: apps/gom/models.py:104
 msgid "Heavy (14)"
 msgstr ""
 
-#: apps/gom/models.py:87
+#: apps/gom/models.py:105
 msgid "Assault (15)"
 msgstr ""
 
-#: apps/gom/models.py:88
+#: apps/gom/models.py:106
 msgid "Vehicle (16)"
 msgstr ""
 
-#: apps/gom/models.py:89
+#: apps/gom/models.py:107
 msgid "Vehicle (17)"
 msgstr ""
 
-#: apps/gom/models.py:90
+#: apps/gom/models.py:108
 msgid "Vehicle (18)"
 msgstr ""
 
-#: apps/gom/models.py:91
+#: apps/gom/models.py:109
 msgid "Vehicle (19)"
 msgstr ""
 
-#: apps/gom/models.py:95 apps/gom/pdf.py:358 apps/gom/pdf.py:360
-#: apps/gom/pdf.py:364 templates/gom/unit.html:678
+#: apps/gom/models.py:113 apps/gom/pdf.py:365 apps/gom/pdf.py:367
+#: apps/gom/pdf.py:371 templates/gom/unit.html:678
 msgid "None"
 msgstr ""
 
-#: apps/gom/models.py:96 templates/gom/grunt.html:162
-#: templates/gom/unit.html:628
+#. Translators: Close Combat Weapon
+#: apps/gom/models.py:115 templates/gom/unit.html:628
 msgid "CCW"
 msgstr ""
 
-#: apps/gom/models.py:97
+#: apps/gom/models.py:116
 msgid "Pistol"
 msgstr ""
 
-#: apps/gom/models.py:98
+#: apps/gom/models.py:117
 msgid "Rifle"
 msgstr ""
 
-#: apps/gom/models.py:99 templates/gom/grunt.html:163
+#: apps/gom/models.py:118
 msgid "Grenade"
 msgstr ""
 
-#: apps/gom/models.py:100
+#. Translators: Squad Attachment Weapon
+#: apps/gom/models.py:120
 msgid "SA"
 msgstr ""
 
-#: apps/gom/models.py:102
+#. Translators: Anti-Infantry weapon
+#: apps/gom/models.py:123
 msgid "AI"
 msgstr ""
 
-#: apps/gom/models.py:103
+#: apps/gom/models.py:124
 msgid "Generic Vehicle"
 msgstr ""
 
-#: apps/gom/models.py:111
+#: apps/gom/models.py:132
 msgid "Main Weapon"
 msgstr ""
 
-#: apps/gom/models.py:112
+#: apps/gom/models.py:133
 msgid "Anti-Infantry"
 msgstr ""
 
-#: apps/gom/models.py:113
-msgid "Inline"
-msgstr ""
-
-#: apps/gom/models.py:117 templates/gom/filters.html:4
+#: apps/gom/models.py:138 templates/gom/filters.html:5
 msgid "All"
 msgstr ""
 
-#: apps/gom/models.py:122
+#: apps/gom/models.py:143
 msgid "Signature"
 msgstr ""
 
-#: apps/gom/models.py:123
+#: apps/gom/models.py:144
 msgid "Targeting"
 msgstr ""
 
-#: apps/gom/models.py:124
+#: apps/gom/models.py:145
 msgid "Mobility"
 msgstr ""
 
-#: apps/gom/models.py:125 apps/gom/pdf.py:165
+#: apps/gom/models.py:146 apps/gom/pdf.py:166
 msgid "Armour"
 msgstr ""
 
-#: apps/gom/models.py:126
+#: apps/gom/models.py:147
 msgid "Repair"
 msgstr ""
 
-#: apps/gom/models.py:127 apps/gom/models.py:629
+#: apps/gom/models.py:148 apps/gom/models.py:650
 msgid "Anti Infantry"
 msgstr ""
 
-#: apps/gom/models.py:625
+#: apps/gom/models.py:646
 msgid "Main Weapons"
 msgstr ""
 
-#: apps/gom/models.py:637 apps/gom/models.py:638 apps/gom/models.py:639
-#: apps/gom/models.py:640 apps/gom/models.py:641 apps/gom/models.py:642
-#: apps/gom/models.py:643 apps/gom/models.py:644 apps/gom/models.py:645
-#: apps/gom/models.py:646 apps/gom/models.py:647 apps/gom/models.py:648
-#: apps/gom/models.py:649
+#. Translators: Label for User customisable weapon name box.
+#: apps/gom/models.py:659 apps/gom/models.py:660 apps/gom/models.py:661
+#: apps/gom/models.py:662 apps/gom/models.py:663 apps/gom/models.py:664
+#: apps/gom/models.py:665 apps/gom/models.py:666 apps/gom/models.py:667
+#: apps/gom/models.py:668 apps/gom/models.py:669 apps/gom/models.py:670
+#: apps/gom/models.py:671
 msgid "Custom Name"
 msgstr ""
 
-#: apps/gom/models.py:663 templates/gom/grunt.html:166
+#: apps/gom/models.py:685
 msgid "Perk"
 msgstr ""
 
-#: apps/gom/models.py:664
+#: apps/gom/models.py:686
 msgid "Perk 2"
 msgstr ""
 
@@ -360,102 +376,109 @@ msgstr ""
 msgid "No Modz"
 msgstr ""
 
-#: apps/gom/pdf.py:155
+#. Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
+#: apps/gom/pdf.py:156
 msgid "C"
 msgstr ""
 
-#: apps/gom/pdf.py:158
+#: apps/gom/pdf.py:159
 msgid "Damage:"
 msgstr ""
 
-#: apps/gom/pdf.py:165
+#: apps/gom/pdf.py:166
 msgid "Engine"
 msgstr ""
 
-#: apps/gom/pdf.py:165
+#. Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
+#: apps/gom/pdf.py:168
 msgid "Tek"
 msgstr ""
 
-#: apps/gom/pdf.py:185
+#: apps/gom/pdf.py:188
 msgid "Transport Slots:"
 msgstr ""
 
-#: apps/gom/pdf.py:198
+#: apps/gom/pdf.py:201 templates/gom/unit.html:668
 msgid "Medic"
 msgstr ""
 
-#: apps/gom/pdf.py:205
+#. Translators: Abbreviation of Engineer
+#: apps/gom/pdf.py:209
 msgid "Eng."
 msgstr ""
 
-#: apps/gom/pdf.py:282
+#: apps/gom/pdf.py:286
 msgid "Ram"
 msgstr ""
 
-#: apps/gom/pdf.py:291
+#: apps/gom/pdf.py:295
 msgid "Attacks:"
 msgstr ""
 
-#: apps/gom/pdf.py:307
+#: apps/gom/pdf.py:311
 msgid "WEAPON"
 msgstr ""
 
-#: apps/gom/pdf.py:308
+#: apps/gom/pdf.py:312
 msgid "Range"
 msgstr ""
 
-#: apps/gom/pdf.py:309
+#. Translators: Abbreviation of 'Damage'
+#: apps/gom/pdf.py:314
 msgid "Dam"
 msgstr ""
 
-#: apps/gom/pdf.py:310
+#. Translators: Abbreviation of 'Armour Piercing'
+#: apps/gom/pdf.py:316
 msgid "AP"
 msgstr ""
 
-#: apps/gom/pdf.py:311
+#. Translators: Abbreviation of 'Area of Effect'
+#: apps/gom/pdf.py:318
 msgid "AE"
 msgstr ""
 
-#: apps/gom/pdf.py:358
+#: apps/gom/pdf.py:365
 msgid "Error"
 msgstr ""
 
-#: apps/gom/pdf.py:374
+#: apps/gom/pdf.py:381
 msgid "Mobility:"
 msgstr ""
 
-#: apps/gom/pdf.py:376
+#: apps/gom/pdf.py:383
 msgid "Size:"
 msgstr ""
 
-#: apps/gom/pdf.py:389
+#: apps/gom/pdf.py:396
 msgid "Gruntz Squad"
 msgstr ""
 
-#: apps/gom/pdf.py:401
+#: apps/gom/pdf.py:408
 msgid "Support Vehicle"
 msgstr ""
 
-#: apps/gom/pdf.py:451
+#. Translators: Abbreviation of 'Miniature:', i.e. who makes the pictured miniature.
+#: apps/gom/pdf.py:459
 #, python-format
 msgid "Mini: %s"
 msgstr ""
 
-#: apps/gom/pdf.py:454
+#: apps/gom/pdf.py:462
 msgid "See Gruntz @ http://www.gruntz.biz"
 msgstr ""
 
-#: apps/gom/pdf.py:499
+#: apps/gom/pdf.py:507
 msgid "Unit"
 msgstr ""
 
-#: apps/gom/pdf.py:500
+#. Translators: How-many of this unit are included in this army.
+#: apps/gom/pdf.py:509
 msgid "Count"
 msgstr ""
 
-#: apps/gom/pdf.py:501 templates/gom/force_add.html:28
+#: apps/gom/pdf.py:510 templates/gom/force_add.html:28
 #: templates/gom/force_list.html:28 templates/gom/list.html:92
-#: templates/gom/vehicle.html:190
 msgid "Cost"
 msgstr ""
 
@@ -475,8 +498,8 @@ msgstr ""
 msgid "Attempt to reorder force not owned by this user"
 msgstr ""
 
-#: apps/gom/views.py:82 apps/gom/views.py:115
-msgid "Only Ajax queries may use this interface"
+#: apps/gom/views.py:82
+msgid "Only AJAX queries may use this interface"
 msgstr ""
 
 #: apps/gom/views.py:85
@@ -485,6 +508,10 @@ msgstr ""
 
 #: apps/gom/views.py:98
 msgid "Attempt to modify force not owned by this user"
+msgstr ""
+
+#: apps/gom/views.py:115
+msgid "Only Ajax queries may use this interface"
 msgstr ""
 
 #: apps/gom/views.py:118
@@ -638,52 +665,56 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: templates/gom/filters.html:3
+#. Translators: selection choice to display all Published units as well as all belonging to the logged in user.
+#: templates/gom/filters.html:4
 msgid "Published and Yours"
 msgstr ""
 
-#: templates/gom/filters.html:5
+#: templates/gom/filters.html:6
 msgid "Published Only"
 msgstr ""
 
-#: templates/gom/filters.html:6
+#: templates/gom/filters.html:7
 msgid "Un-published Only"
 msgstr ""
 
-#: templates/gom/filters.html:9 templates/gom/force_add.html:27
+#: templates/gom/filters.html:10 templates/gom/force_add.html:27
 #: templates/gom/force_list.html:27 templates/gom/list.html:91
 msgid "Owner"
 msgstr ""
 
-#: templates/gom/filters.html:19 templates/gom/unit.html:586
+#: templates/gom/filters.html:20 templates/gom/unit.html:586
 msgid "Unit Type"
 msgstr ""
 
-#: templates/gom/filters.html:31 templates/gom/list.html:93
+#: templates/gom/filters.html:32 templates/gom/list.html:93
 msgid "Manufacturer"
 msgstr ""
 
-#: templates/gom/filters.html:41
+#. Translators: Minimum cost
+#: templates/gom/filters.html:43
 msgid "Min Cost"
 msgstr ""
 
-#: templates/gom/filters.html:52
+#. Translators: Maximum cost
+#: templates/gom/filters.html:55
 msgid "Max Cost"
 msgstr ""
 
-#: templates/gom/filters.html:63
+#. Translators: Minimum rating
+#: templates/gom/filters.html:67
 msgid "Min Rating"
 msgstr ""
 
-#: templates/gom/filters.html:71
+#: templates/gom/filters.html:75
 msgid "Image"
 msgstr ""
 
-#: templates/gom/filters.html:72
+#: templates/gom/filters.html:76
 msgid "Has Image"
 msgstr ""
 
-#: templates/gom/filters.html:73
+#: templates/gom/filters.html:77
 msgid "No Image"
 msgstr ""
 
@@ -723,20 +754,16 @@ msgstr ""
 msgid "up"
 msgstr ""
 
-#: templates/gom/force.html:151 templates/gom/grunt.html:11
-#: templates/gom/grunt.html.py:190 templates/gom/unit.html:222
-#: templates/gom/unit.html.py:694 templates/gom/vehicle.html:11
-#: templates/gom/vehicle.html.py:232
+#: templates/gom/force.html:151 templates/gom/unit.html:222
+#: templates/gom/unit.html.py:694
 msgid "Save"
 msgstr ""
 
-#: templates/gom/force.html:154 templates/gom/grunt.html:193
-#: templates/gom/unit.html:698 templates/gom/vehicle.html:235
+#: templates/gom/force.html:154 templates/gom/unit.html:698
 msgid "delete"
 msgstr ""
 
-#: templates/gom/force.html:158 templates/gom/grunt.html:197
-#: templates/gom/unit.html:701 templates/gom/vehicle.html:239
+#: templates/gom/force.html:158 templates/gom/unit.html:701
 msgid "PDF"
 msgstr ""
 
@@ -775,70 +802,6 @@ msgstr ""
 
 #: templates/gom/force_list.html:42
 msgid "Empty forces that do not belong to you have been excluded."
-msgstr ""
-
-#: templates/gom/grunt.html:10 templates/gom/unit.html:221
-#: templates/gom/vehicle.html:10
-msgid "Saved"
-msgstr ""
-
-#: templates/gom/grunt.html:43 templates/gom/unit.html:387
-msgid "Spec. Assault(16)"
-msgstr ""
-
-#: templates/gom/grunt.html:68 templates/gom/unit.html:261
-msgid "SA Weapons"
-msgstr ""
-
-#: templates/gom/grunt.html:79 templates/gom/unit.html:272
-msgid "Commander Weapons"
-msgstr ""
-
-#: templates/gom/grunt.html:120 templates/gom/grunt.html.py:124
-msgid "Edit Grunt"
-msgstr ""
-
-#: templates/gom/grunt.html:126
-msgid "Other User's Grunt - View Only"
-msgstr ""
-
-#: templates/gom/grunt.html:141
-msgid "Grunt Type"
-msgstr ""
-
-#: templates/gom/grunt.html:147 templates/gom/unit.html:594
-#: templates/gom/vehicle.html:189
-msgid "Damage"
-msgstr ""
-
-#: templates/gom/grunt.html:160 templates/gom/unit.html:620
-msgid "SA/Commander weapons"
-msgstr ""
-
-#: templates/gom/grunt.html:161 templates/gom/unit.html:624
-msgid "Specialist Weapons"
-msgstr ""
-
-#: templates/gom/grunt.html:164 templates/gom/unit.html:609
-msgid "Mecha?"
-msgstr ""
-
-#: templates/gom/grunt.html:165
-msgid "Engineer"
-msgstr ""
-
-#: templates/gom/grunt.html:165 templates/gom/unit.html:668
-msgid "Medic "
-msgstr ""
-
-#: templates/gom/grunt.html:176 templates/gom/unit.html:683
-#: templates/gom/vehicle.html:218
-msgid "Description:"
-msgstr ""
-
-#: templates/gom/grunt.html:178 templates/gom/unit.html:684
-#: templates/gom/vehicle.html:220
-msgid "Manufacturer:"
 msgstr ""
 
 #: templates/gom/help.html:4
@@ -892,10 +855,6 @@ msgstr ""
 msgid "Create Multi Card PDF"
 msgstr ""
 
-#: templates/gom/list_table.html:10
-msgid "0"
-msgstr ""
-
 #: templates/gom/list_table.html:30
 msgid "Requires login"
 msgstr ""
@@ -924,8 +883,24 @@ msgid ""
 "creation."
 msgstr ""
 
+#: templates/gom/unit.html:221
+msgid "Saved"
+msgstr ""
+
 #: templates/gom/unit.html:252
 msgid "Power Armour Weapons"
+msgstr ""
+
+#: templates/gom/unit.html:261
+msgid "SA Weapons"
+msgstr ""
+
+#: templates/gom/unit.html:272
+msgid "Commander Weapons"
+msgstr ""
+
+#: templates/gom/unit.html:387
+msgid "Spec. Assault(16)"
 msgstr ""
 
 #: templates/gom/unit.html:397
@@ -957,16 +932,24 @@ msgstr ""
 msgid "Cost: "
 msgstr ""
 
-#: templates/gom/unit.html:596 templates/gom/vehicle.html:206
-msgid "Modz"
+#: templates/gom/unit.html:594
+msgid "Damage"
 msgstr ""
 
-#: templates/gom/unit.html:597
-msgid "Modz 2"
+#: templates/gom/unit.html:609
+msgid "Mecha?"
 msgstr ""
 
 #: templates/gom/unit.html:616
 msgid "Grunt Weapons"
+msgstr ""
+
+#: templates/gom/unit.html:620
+msgid "SA/Commander weapons"
+msgstr ""
+
+#: templates/gom/unit.html:624
+msgid "Specialist Weapons"
 msgstr ""
 
 #: templates/gom/unit.html:636
@@ -981,24 +964,20 @@ msgstr ""
 msgid "Engineer "
 msgstr ""
 
+#: templates/gom/unit.html:683
+msgid "Description:"
+msgstr ""
+
+#: templates/gom/unit.html:684
+msgid "Manufacturer:"
+msgstr ""
+
 #: templates/gom/unit_help.html:9
 msgid "Unit Creation"
 msgstr ""
 
 #: templates/gom/unit_help.html:12
 msgid "Unit Creation Guide"
-msgstr ""
-
-#: templates/gom/vehicle.html:156 templates/gom/vehicle.html.py:160
-msgid "Edit Vehicle"
-msgstr ""
-
-#: templates/gom/vehicle.html:162
-msgid "Other User's Vehicle - View Only"
-msgstr ""
-
-#: templates/gom/vehicle.html:177
-msgid "Vehicle Type"
 msgstr ""
 
 #: templates/gom/what_next.html:6 templates/gom/what_next.html.py:9

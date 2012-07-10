@@ -79,7 +79,7 @@ def updateEntryOrder(request):
             force.reorder(entry, direction)
             return HttpResponse()
         else:
-            return HttpResponseBadRequest(_('Only Ajax queries may use this interface'))
+            return HttpResponseBadRequest(_('Only AJAX queries may use this interface'))
     except Exception, e:
         print e
         return HttpResponseBadRequest(_('Failed to reorder force entry. Please try again.'))

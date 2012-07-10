@@ -16,17 +16,24 @@ User.profile = property(lambda u: profiles.models.Profile.objects.get_or_create(
 # Create your models here.
 
 SIZE_CHOICES = (
+    # Translators: Scout size class
     (1,  _('Scout')),
     (2,  _('Light')),
     (3,  _('Medium')),
     (4,  _('Heavy')),
+    # Translators: Assault size class
     (5,  _('Assault'))
 )
 RATING_CHOICES = (
+    # Translators: 1/5 star card rating
     (1,  _('Bad')),
+    # Translators: 2/5 star card rating
     (2,  _('Poor')),
+    # Translators: 3/5 star card rating
     (3,  _('OK')),
+    # Translators: 4/5 star card rating
     (4,  _('Good')),
+    # Translators: 5/5 star card rating
     (5,  _('Great'))
 )
 INFANTRY_TYPE_CHOICES = (
@@ -37,22 +44,32 @@ INFANTRY_TYPE_CHOICES = (
 )
 VEHICLE_TYPE_CHOICES = (
     (11,  _('Tank')),
+    # Translators: Mecha vehicle, such as a battle-mech.
     (12,  _('Mecha')),
+    # Translators: Ground Support Vehicle
     (13,  _('GSV')),
+    # Translators: AIR Support Vehicle
     (14,  _('ASV')),
     (15,  _('Artillery'))
 )
 GRUNTZ_TYPE_CHOICES = INFANTRY_TYPE_CHOICES + VEHICLE_TYPE_CHOICES
 MOBILITY_CHOICES = (
+    # Translators: Walking mobility type
     (1,  _('Walk')),
+    # Translators: Tracked mobility type
     (2,  _('Track')),
+    # Translators: Wheeled mobility type
     (3,  _('Wheels')),
+    # Translators: Hover mobility type
     (4,  _('Hover')),
+    # Translators: Gravity based mobility type
     (5,  _('Grav'))
 )
 AIR_MOBILITY_CHOICES = (
     (1,  _('Helicopter')),
+    # Translators: Propeller vertical take off & landing mobility type
     (2,  _('Prop VTOL')),
+    # Translators: Jet vertical take off & landing mobility type.
     (3,  _('Jet VTOL')),
     (4,  _('Grav')),
 )
@@ -94,12 +111,15 @@ SOAK_CHOICES = (
 
 WEAPON_TYPE_CHOICES = (
     (-1, _('None')),
+    # Translators: Close Combat Weapon
     (0, _('CCW')),
     (1, _('Pistol')),
     (2, _('Rifle')),
     (3, _('Grenade')),
+    # Translators: Squad Attachment Weapon
     (4, _('SA')),
     (5, _('Specialist')),
+    # Translators: Anti-Infantry weapon
     (6, _('AI')),
     (7, _('Generic Vehicle')),
     (8, _('Medium')),
@@ -111,7 +131,7 @@ WEAPON_TYPE_CHOICES = (
 MOUNT_TYPE_CHOICES = (
         (0, _('Main Weapon')),
         (1, _('Anti-Infantry')),
-        (2, _('Inline'))
+        (2, 'Inline')
 )
 
 MODZ_AVAILABILITY_CHOICES = (
@@ -635,6 +655,7 @@ class UnitForm(forms.ModelForm):
     CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None)
     # Grunt grenades only
     grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False)
+    # Translators: Label for User customisable weapon name box.
     MW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW3_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
