@@ -677,7 +677,7 @@ class UnitForm(forms.ModelForm):
         if 'instance' in kwargs:
             print kwargs['instance'].weapons.all()
             try:
-                basic_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__gte=1, weapon__weaponType__lte=2).get()
+                basic_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__gte=1, weapon__weaponType__lte=2, mountType=0).get()
                 self.fields['basicWeapons'].initial=basic_instance.weapon
                 if basic_instance.nameOverride:
                     self.fields['basic_Custom'].initial=basic_instance.nameOverride
@@ -686,7 +686,7 @@ class UnitForm(forms.ModelForm):
                 print e
                 pass
             try:
-                SA_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4]).get()
+                SA_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4], mountType=0).get()
                 self.fields['SAWeapons'].initial=SA_instance.weapon
                 if SA_instance.nameOverride:
                     self.fields['SA_Custom'].initial=SA_instance.nameOverride
@@ -695,7 +695,7 @@ class UnitForm(forms.ModelForm):
                 print 'SAWeapons:', e
                 pass
             try:
-                Spec_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4,5]).get()
+                Spec_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4,5], mountType=0).get()
                 self.fields['SpecWeapons'].initial=Spec_instance.weapon
                 if Spec_instance.nameOverride:
                     self.fields['Spec_Custom'].initial=Spec_instance.nameOverride
@@ -704,7 +704,7 @@ class UnitForm(forms.ModelForm):
                 print 'SpecWeapons:', e
                 pass
             try:
-                CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0).get()
+                CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0, mountType=0).get()
                 self.fields['CCW'].initial=CCW_instance.weapon
                 if CCW_instance.nameOverride:
                     self.fields['CCW_Custom'].initial=CCW_instance.nameOverride
@@ -713,7 +713,7 @@ class UnitForm(forms.ModelForm):
                 print e
                 pass
             try:
-                grenades_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=3).get()
+                grenades_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=3, mountType=0).get()
                 self.fields['grenades'].initial=grenades_instance.weapon
                 if grenades_instance.nameOverride:
                     self.fields['grenades_Custom'].initial=grenades_instance.nameOverride
