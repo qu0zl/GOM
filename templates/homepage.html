@@ -36,12 +36,7 @@
         {% endblocktrans %}
     </p>
     
-    {% if user.is_authenticated %}
-        {% if user.is_authenticated == False %}
-        {% url what_next as what_next_url %}
-        <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}" class="btn primary large">What Next</a>?{% endblocktrans %}</p>
-        {% endif %}
-    {% else %}
+    {% if not user.is_authenticated %}
         {% url acct_login as login_url %}
         {% ifsetting ACCOUNT_OPEN_SIGNUP %}
             {% url acct_signup as signup_url %}
