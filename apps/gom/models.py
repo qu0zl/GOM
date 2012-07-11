@@ -152,11 +152,11 @@ MODZ_TYPE_CHOICES = (
 )
 
 # Over-ride ModelChoiceField to return weaponSize as well as name, rather than just unicode name
-class MainWeaponChoiceField(forms.ModelChoiceField):
+class WeaponChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.weaponSize, obj.weaponType, obj.weaponName)
 
-class MainWeaponSelect(forms.Select):
+class WeaponSelect(forms.Select):
     def render_option(self, selected_choices, option_value, option):
         option_value = force_unicode(option_value)
         selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
@@ -677,12 +677,12 @@ class UnitForm(forms.ModelForm):
     basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False)
     SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     SpecWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4,5]), required=False)
-    mainWeapons = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, label=_('Main Weapons'), widget=MainWeaponSelect)
-    mainWeapons2 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
-    mainWeapons3 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
-    mainWeapons4 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
-    AIWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False, label=_("Anti Infantry"))
-    AIWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False)
+    mainWeapons = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, label=_('Main Weapons'), widget=WeaponSelect)
+    mainWeapons2 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
+    mainWeapons3 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
+    mainWeapons4 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
+    AIWeapons = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=6).order_by('weaponSize'), required=False, label=_("Anti Infantry"), widget=WeaponSelect)
+    AIWeapons2 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=6).order_by('weaponSize'), required=False, widget=WeaponSelect)
     inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     inlineWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     # Grunt CCWs only
