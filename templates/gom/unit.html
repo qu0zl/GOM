@@ -224,6 +224,20 @@
         }
     }
 
+function vehicleWeapon(which, utype, size)
+{
+    $(which+'_tb').show();
+    $("option", $(which)).each(function(i) {
+            if ($(this).attr("weaponSize")>size || (utype != 15 && $(this).attr("weaponType") == 11) ) {
+                $(this).attr("disabled", "disabled");
+                if ($(this).attr("selected"))
+                    $(this).removeAttr("selected");
+            }
+            else
+                $(this).removeAttr("disabled");
+            });
+}
+
 function showWeapons(utype) {
         if ( utype == 1 )
             $('#id_inlineWeapons_tb').show()
@@ -293,19 +307,19 @@ function showWeapons(utype) {
             switch (utype) {
                 case 11:
                 case 12:
-                    $('#id_mainWeapons_tb').show();
+                    vehicleWeapon('#id_mainWeapons', utype, size);
                     if ( size == 5 ) {
-                        $('#id_mainWeapons2_tb').show();
-                        $('#id_mainWeapons3_tb').show();
-                        $('#id_mainWeapons4_tb').show();
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
                         $('#id_AIWeapons2_tb').show();
                     } else if ( size >=3 ) {
-                        $('#id_mainWeapons2_tb').show();
-                        $('#id_mainWeapons3_tb').show();
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
                         $('#id_mainWeapons4_tb').hide();
                         $('#id_AIWeapons2_tb').show();
                     } else if ( size == 2 ) {
-                        $('#id_mainWeapons2_tb').show();
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
                         $('#id_mainWeapons3_tb').hide();
                         $('#id_mainWeapons4_tb').hide();
                         $('#id_AIWeapons2_tb').hide();
@@ -330,12 +344,12 @@ function showWeapons(utype) {
                     $('#id_cmdTek_tr').show();
                     break;
                 case 15:
-                    $('#id_mainWeapons_tb').show();
+                    vehicleWeapon('#id_mainWeapons', utype, size);
                     $('#id_mainWeapons3_tb').hide();
                     $('#id_mainWeapons4_tb').hide();
                     if ( size >= 3 ) {
                         $('#id_AIWeapons2_tb').show();
-                        $('#id_mainWeapons2_tb').show();
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
                     } else {
                         $('#id_AIWeapons2_tb').hide();
                         $('#id_mainWeapons2_tb').hide();

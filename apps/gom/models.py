@@ -7,9 +7,12 @@ from math import ceil
 from django.db.models.signals import pre_delete, post_save
 import profiles.models
 import django.contrib.auth.models
-import traceback
 import os
-import sys # needed for stdout
+
+# Needed to over-ride ModelChoiceField class
+from django.utils.encoding import StrAndUnicode, force_unicode
+from django.utils.html import escape, conditional_escape
+from itertools import chain
 
 User.profile = property(lambda u: profiles.models.Profile.objects.get_or_create(user=u)[0])
 
@@ -147,6 +150,36 @@ MODZ_TYPE_CHOICES = (
     (4, _('Repair')),
     (5, _('Anti Infantry'))
 )
+
+# Over-ride ModelChoiceField to return weaponSize as well as name, rather than just unicode name
+class MainWeaponChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return (obj.weaponSize, obj.weaponType, obj.weaponName)
+
+class MainWeaponSelect(forms.Select):
+    def render_option(self, selected_choices, option_value, option):
+        option_value = force_unicode(option_value)
+        selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
+        # May not be a tuple if it's the empty value
+        if isinstance(option, (list, tuple)):
+            weaponSize = option[0]
+            weaponType = option[1]
+            option_label = option[2]
+        else:
+            weaponSize = 1
+            weaponType = 1
+            option_label = option
+        return u'<option value="%s" weaponSize="%s" weaponType="%s" %s>%s</option>' % (
+            escape(option_value), weaponSize, weaponType, selected_html,
+            conditional_escape(force_unicode(option_label)))
+
+    def render_options(self, choices, selected_choices):
+        # Normalize to strings.
+        selected_choices = set([force_unicode(v) for v in selected_choices])
+        output = []
+        for option_value, option_label in chain(self.choices, choices):
+            output.append(self.render_option(selected_choices, option_value, option_label))
+        return u'\n'.join(output)
 
 class DynamicChoiceField(forms.ChoiceField):
     # Over-ride the validate function so that we can return values that are not in the original choices.
@@ -608,6 +641,7 @@ class Weapons(models.Model):
         return self.weaponName
     weaponName = models.CharField(max_length=100)
     weaponType = models.SmallIntegerField(choices=WEAPON_TYPE_CHOICES)
+    weaponSize = models.SmallIntegerField(choices=SIZE_CHOICES, default=1)
     weaponRange = models.SmallIntegerField(default=10)
     weaponDamage = models.SmallIntegerField(default=10)
     weaponAE = models.SmallIntegerField(default=0)
@@ -643,10 +677,10 @@ class UnitForm(forms.ModelForm):
     basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False)
     SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     SpecWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4,5]), required=False)
-    mainWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False, label=_('Main Weapons'))
-    mainWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
-    mainWeapons3 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
-    mainWeapons4 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=6, weaponType__lte=10), required=False)
+    mainWeapons = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, label=_('Main Weapons'), widget=MainWeaponSelect)
+    mainWeapons2 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
+    mainWeapons3 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
+    mainWeapons4 = MainWeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=MainWeaponSelect)
     AIWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False, label=_("Anti Infantry"))
     AIWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=5), required=False)
     inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
