@@ -75,7 +75,7 @@
 {% block body %}
 <h1>{% trans "Units" %}</h1>
 <div>
-    <h4>Filter by:
+    <h4>{% trans "Filter by:" %}
         {%include 'gom/filters.html' %}
         <button name="set_filters" id="id_set_filters" type="button">{% trans "Make Defaults" %}</button>
         <button name="reset_filters" id="id_reset_filters" type="button">{% trans "Reset Saved Defaults" %}</button>

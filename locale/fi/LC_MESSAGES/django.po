@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 05:46-0400\n"
+"POT-Creation-Date: 2012-07-13 05:58-0400\n"
 "PO-Revision-Date: 2012-07-12 10:13+0200\n"
 "Last-Translator: MM <mikama@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -896,6 +896,10 @@ msgstr "Listaa yksiköt"
 #: templates/gom/list.html:76
 msgid "Units"
 msgstr "Yksiköt"
+
+#: templates/gom/list.html:78
+msgid "Filter by:"
+msgstr ""
 
 #: templates/gom/list.html:80
 msgid "Make Defaults"
