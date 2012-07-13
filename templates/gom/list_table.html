@@ -11,7 +11,7 @@
             {% endif %}</td>
         <td>
             <select style="width:110px;" name="pdf_{{item.id}}">
-                <option value="" selected="selected">None</option>
+                <option value="" selected="selected">{% trans "None" %}</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -22,7 +22,7 @@
         <td>
             <select name="force_{{item.id}}">
             {% if user.is_authenticated %}
-                <option value="" selected="selected">None</option>
+                <option value="" selected="selected">{% trans "None" %}</option>
                 {% for force in forces %}
                     <option value="{{force.id}}">{{force.name}}</option>
                 {% endfor %}

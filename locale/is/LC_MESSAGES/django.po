@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 05:02-0400\n"
+"POT-Creation-Date: 2012-07-13 05:46-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -257,7 +257,8 @@ msgid "Vehicle (19)"
 msgstr ""
 
 #: apps/gom/models.py:116 apps/gom/pdf.py:365 apps/gom/pdf.py:367
-#: apps/gom/pdf.py:371 templates/gom/unit.html:694
+#: apps/gom/pdf.py:371 templates/gom/list_table.html:14
+#: templates/gom/list_table.html.py:25 templates/gom/unit.html:694
 msgid "None"
 msgstr ""
 
