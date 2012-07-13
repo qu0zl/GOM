@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 05:58-0400\n"
+"POT-Creation-Date: 2012-07-13 10:52-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -314,7 +314,7 @@ msgstr ""
 msgid "Targeting"
 msgstr ""
 
-#: apps/gom/models.py:148
+#: apps/gom/models.py:148 templates/gom/unit.html:625
 msgid "Mobility"
 msgstr ""
 
@@ -353,6 +353,10 @@ msgstr ""
 
 #: apps/gom/models.py:720
 msgid "Perk 2"
+msgstr ""
+
+#: apps/gom/models.py:726
+msgid "Air Mobility"
 msgstr ""
 
 #: apps/gom/pdf.py:37 templates/gom/unit.html:604
@@ -628,7 +632,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/homepage.html:32
+#: templates/homepage.html:38
 msgid ""
 "\n"
 "        Javascript is required for the Grunt-o-matic GUI to function fully, "
@@ -639,14 +643,14 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/homepage.html:43
+#: templates/homepage.html:49
 #, python-format
 msgid ""
 "You can <a href=\"%(login_url)s\" class=\"btn\">Log In</a> or <a href="
 "\"%(signup_url)s\" class=\"btn primary\">Sign Up</a> to try out the site."
 msgstr ""
 
-#: templates/homepage.html:45
+#: templates/homepage.html:51
 #, python-format
 msgid ""
 "You can <a href=\"%(login_url)s\" class=\"btn primary large\">Log In</a> to "
@@ -951,6 +955,10 @@ msgstr ""
 
 #: templates/gom/unit.html:578 templates/gom/unit.html.py:586
 msgid "Edit Unit"
+msgstr ""
+
+#: templates/gom/unit.html:587
+msgid "Publish"
 msgstr ""
 
 #: templates/gom/unit.html:589

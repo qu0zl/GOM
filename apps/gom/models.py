@@ -723,7 +723,7 @@ class UnitForm(forms.ModelForm):
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
-    air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False)
+    air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"))
 
     class Meta:
         model = Unit

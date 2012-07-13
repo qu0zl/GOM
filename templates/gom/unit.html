@@ -584,7 +584,7 @@ function weaponOR(event) {
             <div style="display:inline; float:left; white-space:nowrap;">
                 {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
                 <div style="display:inline; float:left;"><h1>{% trans "Edit Unit"%}</h1></div>
-                <div style="display:inline; float:left; padding-left:10px;">{{formObject.publish.label}} {{formObject.publish}}</div>
+                <div style="display:inline; float:left; padding-left:10px;">{% trans "Publish" %} {{formObject.publish}}</div>
                 {% else %}
                 <h1>{% trans "Other User's Unit - View Only"%}</h1>
                 {% endif %}
@@ -622,7 +622,7 @@ function weaponOR(event) {
                         <div class="centreColumn">
                             <table>
                                 <tbody id="id_mobility_tr">
-                                    <tr><td>{{formObject.mobility.label}}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
+                                    <tr><td>{% trans "Mobility" %}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
                                 </tbody>
                                 <tbody id="id_air_mobility_tr">
                                     <tr><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>

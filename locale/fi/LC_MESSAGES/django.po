@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 05:58-0400\n"
+"POT-Creation-Date: 2012-07-13 10:52-0400\n"
 "PO-Revision-Date: 2012-07-12 10:13+0200\n"
 "Last-Translator: MM <mikama@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -312,7 +312,7 @@ msgstr "Allekirjoitus"
 msgid "Targeting"
 msgstr "Tähtäys"
 
-#: apps/gom/models.py:148
+#: apps/gom/models.py:148 templates/gom/unit.html:625
 msgid "Mobility"
 msgstr "Liikkuvuus"
 
@@ -352,6 +352,11 @@ msgstr "Etu"
 #: apps/gom/models.py:720
 msgid "Perk 2"
 msgstr "Etu 2"
+
+#: apps/gom/models.py:726
+#, fuzzy
+msgid "Air Mobility"
+msgstr "Liikkuvuus"
 
 #: apps/gom/pdf.py:37 templates/gom/unit.html:604
 msgid "Shoot"
@@ -642,7 +647,7 @@ msgstr ""
 "Rekisteröinti on maksuton. \n"
 "        "
 
-#: templates/homepage.html:32
+#: templates/homepage.html:38
 msgid ""
 "\n"
 "        Javascript is required for the Grunt-o-matic GUI to function fully, "
@@ -661,7 +666,7 @@ msgstr ""
 "eikä ole testattu.\n"
 "        "
 
-#: templates/homepage.html:43
+#: templates/homepage.html:49
 #, python-format
 msgid ""
 "You can <a href=\"%(login_url)s\" class=\"btn\">Log In</a> or <a href="
@@ -671,7 +676,7 @@ msgstr ""
 "\"%(signup_url)s\" class=\"btn primary\">Rekisteröityä</a> kokeillaksesi "
 "sivustoa"
 
-#: templates/homepage.html:45
+#: templates/homepage.html:51
 #, python-format
 msgid ""
 "You can <a href=\"%(login_url)s\" class=\"btn primary large\">Log In</a> to "
@@ -764,9 +769,9 @@ msgid ""
 "than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> "
 "instead."
 msgstr ""
-"Huom: Tällä sivulla voit luoda uuden joukko-osaston joka voi sisältää useita yksiköitä jotka "
-"luot erikseen.<br>Jos haluat luoda vain yksikön tai ajoneuvon armeijan sijaan, "
-"siirry: <a href=/gom/unit/0>Luo uusi yksikkö</a> "
+"Huom: Tällä sivulla voit luoda uuden joukko-osaston joka voi sisältää useita "
+"yksiköitä jotka luot erikseen.<br>Jos haluat luoda vain yksikön tai "
+"ajoneuvon armeijan sijaan, siirry: <a href=/gom/unit/0>Luo uusi yksikkö</a> "
 
 #: templates/gom/force.html:88
 msgid "Other User's Force - View Only"
@@ -1001,6 +1006,11 @@ msgstr ""
 #: templates/gom/unit.html:578 templates/gom/unit.html.py:586
 msgid "Edit Unit"
 msgstr "Muokkaa yksikköä"
+
+#: templates/gom/unit.html:587
+#, fuzzy
+msgid "Publish"
+msgstr "Vain julkaistut"
 
 #: templates/gom/unit.html:589
 msgid "Other User's Unit - View Only"
