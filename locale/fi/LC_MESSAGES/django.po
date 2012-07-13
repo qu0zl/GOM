@@ -775,9 +775,8 @@ msgid "Name"
 msgstr "Nimi"
 
 #: templates/gom/force.html:102
-#, fuzzy
 msgid "Description"
-msgstr "Kuvaus:"
+msgstr "Kuvaus"
 
 #: templates/gom/force.html:110
 msgid "Add units"
