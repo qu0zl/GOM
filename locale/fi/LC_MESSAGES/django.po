@@ -764,6 +764,9 @@ msgid ""
 "than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> "
 "instead."
 msgstr ""
+"Huom: Tällä sivulla voit luoda uuden joukko-osaston joka voi sisältää useita yksiköitä jotka "
+"luot erikseen.<br>Jos haluat luoda vain yksikön tai ajoneuvon armeijan sijaan, "
+"siirry: <a href=/gom/unit/0>Luo uusi yksikkö</a> "
 
 #: templates/gom/force.html:88
 msgid "Other User's Force - View Only"
