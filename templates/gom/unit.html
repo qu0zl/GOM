@@ -598,15 +598,15 @@ function weaponOR(event) {
                 <div class="leftColumn">
                             <table>
                                 <tbody>
-                                    <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
-                                    <tr><td>{% trans "Unit Type" %}</td><td>{{formObject.unitType}}</td>
-                                    <tr id="id_size_tr"><td>{{formObject.size.label}}</td><td>{{formObject.size}}</td>
-                                    <tr id="id_shoot_tr"><td>{{formObject.shoot.label}}</td><td>{{formObject.shoot}}</td></tr>
-                                    <tr id="id_assault_tr"><td>{{formObject.assault.label}}</td><td>{{formObject.assault}}</td></tr>
-                                    <tr><td>{{formObject.guard.label}}</td><td>{{formObject.guard}}</td></tr>
-                                    <tr><td>{{formObject.soak.label}}</td><td>{{formObject.soak}}</td></tr>
-                                    <tr id="id_mental_tr"><td>{{formObject.mental.label}}</td><td>{{formObject.mental}}</td></tr>
-                                    <tr><td>{{formObject.skill.label}}</td><td>{{formObject.skill}}</td></tr>
+                                    <tr><td>{% trans 'Name' %}</td><td>{{formObject.name}}</td></tr>
+                                    <tr><td>{% trans "Unit Type" %}</td><td>{{formObject.unitType}}</td></tr>
+                                    <tr id="id_size_tr"><td>{% trans 'Size' %}</td><td>{{formObject.size}}</td></tr>
+                                    <tr id="id_shoot_tr"><td>{% trans 'Shoot' %}</td><td>{{formObject.shoot}}</td></tr>
+                                    <tr id="id_assault_tr"><td>{% trans 'Assault' %}</td><td>{{formObject.assault}}</td></tr>
+                                    <tr><td>{% trans 'Guard' %}</td><td>{{formObject.guard}}</td></tr>
+                                    <tr><td>{% trans 'Soak' %}</td><td>{{formObject.soak}}</td></tr>
+                                    <tr id="id_mental_tr"><td>{% trans 'Mental' %}</td><td>{{formObject.mental}}</td></tr>
+                                    <tr><td>{% trans 'Skill' %}</td><td>{{formObject.skill}}</td></tr>
                                     <tr id="id_damage_tr"><td>{% trans "Damage" %}</td><td id="id_dam_text">{{unit.getDam}}</td></tr>
                                     <tbody id="id_modz_tb">
                                         <tr><td>Modz</td><td>{{formObject.modz}}</td></tr>

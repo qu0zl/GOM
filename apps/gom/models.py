@@ -686,9 +686,9 @@ class UnitForm(forms.ModelForm):
     inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     inlineWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     # Grunt CCWs only
-    CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None)
+    CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None, label=_('CCW'))
     # Grunt grenades only
-    grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False)
+    grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False, label=_('Grenade'))
     # Translators: Label for User customisable weapon name box.
     MW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
