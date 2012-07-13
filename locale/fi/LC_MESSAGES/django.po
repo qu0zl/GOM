@@ -860,7 +860,6 @@ msgid "Unit Creation"
 msgstr "Yksikön luominen"
 
 #: templates/gom/help.html:8
-#, fuzzy
 msgid "Multi Card PDF"
 msgstr "Luo usean kortin PDF"
 
@@ -1001,12 +1000,11 @@ msgstr "Toisen käyttäjän yksikkö - Vain katselu tila"
 
 #: templates/gom/unit.html:594
 msgid "Cost: "
-msgstr "Hinta:"
+msgstr "Hinta: "
 
 #: templates/gom/unit.html:603
-#, fuzzy
 msgid "Size"
-msgstr "Koko:"
+msgstr "Koko"
 
 #: templates/gom/unit.html:610
 msgid "Damage"
