@@ -82,7 +82,7 @@ function reorder(which, direction) {
     {% if force_id == '0' or user.is_authenticated and request.user == force_owner %}
     <h1>{% trans "Edit Force"%}</h1>
     {% if force_id == '0'%}
-    <h4>Note: This page is to create a new force, containing multiple units that you create seperately.<br>If you only wish to create a unit or vehicle rather than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> instead.</h4>
+    <h4>{% trans "Note: This page is to create a new force, containing multiple units that you create seperately.<br>If you only wish to create a unit or vehicle rather than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> instead." %}</h4>
     {% endif %}
     {% else %}
     <h1>{% trans "Other User's Force - View Only"%}</h1>
@@ -97,9 +97,9 @@ function reorder(which, direction) {
                                 <tr><td>
                             <table>
                                 <tbody>
-                                    <tr><td>{{formObject.name.label}}</td><td>{{formObject.name}}</td></tr>
-                                    <tr><td>{{formObject.cost.label}}</td><td id="id_cost">{{force.getCost}}</td></tr>
-                                    <tr><td>{{formObject.description.label}}</td><td>{{formObject.description}}</td></tr>
+                                    <tr><td>{% trans 'Name' %}</td><td>{{formObject.name}}</td></tr>
+                                    <tr><td>{% trans 'Cost' %}</td><td id="id_cost">{{force.getCost}}</td></tr>
+                                    <tr><td>{% trans 'Description' %}</td><td>{{formObject.description}}</td></tr>
                                 </tbody>
                             </table>
                             </td><td>

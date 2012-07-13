@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 04:34-0400\n"
+"POT-Creation-Date: 2012-07-13 05:02-0400\n"
 "PO-Revision-Date: 2012-07-12 10:13+0200\n"
 "Last-Translator: MM <mikama@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr "Raskas"
 
 #. Translators: Assault size class
 #: apps/gom/models.py:28 apps/gom/models.py:130 apps/gom/pdf.py:39
-#: apps/gom/pdf.py:371
+#: apps/gom/pdf.py:371 templates/gom/unit.html:605
 msgid "Assault"
 msgstr "Rynnäkkö"
 
@@ -261,7 +261,7 @@ msgid "None"
 msgstr "Tyhjä"
 
 #. Translators: Close Combat Weapon
-#: apps/gom/models.py:118 templates/gom/unit.html:644
+#: apps/gom/models.py:118 apps/gom/models.py:689 templates/gom/unit.html:644
 msgid "CCW"
 msgstr "CCW"
 
@@ -273,7 +273,7 @@ msgstr "Pistooli"
 msgid "Rifle"
 msgstr "Kivääri"
 
-#: apps/gom/models.py:121
+#: apps/gom/models.py:121 apps/gom/models.py:691
 msgid "Grenade"
 msgstr "Kranaatti"
 
@@ -352,23 +352,23 @@ msgstr "Etu"
 msgid "Perk 2"
 msgstr "Etu 2"
 
-#: apps/gom/pdf.py:37
+#: apps/gom/pdf.py:37 templates/gom/unit.html:604
 msgid "Shoot"
 msgstr "Ampua"
 
-#: apps/gom/pdf.py:38
+#: apps/gom/pdf.py:38 templates/gom/unit.html:606
 msgid "Guard"
 msgstr "Vartioida"
 
-#: apps/gom/pdf.py:40
+#: apps/gom/pdf.py:40 templates/gom/unit.html:607
 msgid "Soak"
 msgstr "Uittaminen"
 
-#: apps/gom/pdf.py:41
+#: apps/gom/pdf.py:41 templates/gom/unit.html:608
 msgid "Mental"
 msgstr "Psyyke"
 
-#: apps/gom/pdf.py:42
+#: apps/gom/pdf.py:42 templates/gom/unit.html:609
 msgid "Skill"
 msgstr "Kyky"
 
@@ -481,8 +481,9 @@ msgstr "Yksikkö"
 msgid "Count"
 msgstr "Määrä"
 
-#: apps/gom/pdf.py:510 templates/gom/force_add.html:28
-#: templates/gom/force_list.html:28 templates/gom/list.html:92
+#: apps/gom/pdf.py:510 templates/gom/force.html:101
+#: templates/gom/force_add.html:28 templates/gom/force_list.html:28
+#: templates/gom/list.html:92
 msgid "Cost"
 msgstr "Hinta"
 
@@ -755,9 +756,28 @@ msgstr "Haluatko todella poistaa?"
 msgid "Edit Force"
 msgstr "Muokkaa joukko-osastoa"
 
+#: templates/gom/force.html:85
+msgid ""
+"Note: This page is to create a new force, containing multiple units that you "
+"create seperately.<br>If you only wish to create a unit or vehicle rather "
+"than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> "
+"instead."
+msgstr ""
+
 #: templates/gom/force.html:88
 msgid "Other User's Force - View Only"
 msgstr "Toisen käyttäjän joukko-osasto - Vain katselu"
+
+#: templates/gom/force.html:100 templates/gom/force_add.html:26
+#: templates/gom/force_list.html:26 templates/gom/list.html:90
+#: templates/gom/unit.html:601 templates/profiles/_profile_info.html:3
+msgid "Name"
+msgstr "Nimi"
+
+#: templates/gom/force.html:102
+#, fuzzy
+msgid "Description"
+msgstr "Kuvaus:"
 
 #: templates/gom/force.html:110
 msgid "Add units"
@@ -816,12 +836,7 @@ msgstr "Lisää jalkaväkeä joukko-osastoon"
 msgid "Forces"
 msgstr "Joukko-osastot"
 
-#: templates/gom/force_add.html:26 templates/gom/force_list.html:26
-#: templates/gom/list.html:90 templates/profiles/_profile_info.html:3
-msgid "Name"
-msgstr "Nimi"
-
-#: templates/gom/force_help.html:9
+#: templates/gom/force_help.html:9 templates/gom/help.html:7
 msgid "Force Creation"
 msgstr "Joukko-osaston luonti"
 
@@ -840,6 +855,15 @@ msgstr "Tyhjät joukko-osastot jotka eivät ole sinun, ei näytetä"
 #: templates/gom/help.html:4
 msgid "Help"
 msgstr "Ohje"
+
+#: templates/gom/help.html:6 templates/gom/unit_help.html:9
+msgid "Unit Creation"
+msgstr "Yksikön luominen"
+
+#: templates/gom/help.html:8
+#, fuzzy
+msgid "Multi Card PDF"
+msgstr "Luo usean kortin PDF"
 
 #: templates/gom/list.html:25
 msgid "User profile default filters reset to Grunt"
@@ -980,6 +1004,11 @@ msgstr "Toisen käyttäjän yksikkö - Vain katselu tila"
 msgid "Cost: "
 msgstr "Hinta:"
 
+#: templates/gom/unit.html:603
+#, fuzzy
+msgid "Size"
+msgstr "Koko:"
+
 #: templates/gom/unit.html:610
 msgid "Damage"
 msgstr "Vaurio"
@@ -1019,10 +1048,6 @@ msgstr "Kuvaus:"
 #: templates/gom/unit.html:700
 msgid "Manufacturer:"
 msgstr "Valmistaja:"
-
-#: templates/gom/unit_help.html:9
-msgid "Unit Creation"
-msgstr "Yksikön luominen"
 
 #: templates/gom/unit_help.html:12
 msgid "Unit Creation Guide"

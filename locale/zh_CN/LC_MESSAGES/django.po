@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 04:35-0400\n"
+"POT-Creation-Date: 2012-07-13 05:03-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 
 #. Translators: Assault size class
 #: apps/gom/models.py:28 apps/gom/models.py:130 apps/gom/pdf.py:39
-#: apps/gom/pdf.py:371
+#: apps/gom/pdf.py:371 templates/gom/unit.html:605
 msgid "Assault"
 msgstr ""
 
@@ -262,7 +262,7 @@ msgid "None"
 msgstr ""
 
 #. Translators: Close Combat Weapon
-#: apps/gom/models.py:118 templates/gom/unit.html:644
+#: apps/gom/models.py:118 apps/gom/models.py:689 templates/gom/unit.html:644
 msgid "CCW"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Rifle"
 msgstr ""
 
-#: apps/gom/models.py:121
+#: apps/gom/models.py:121 apps/gom/models.py:691
 msgid "Grenade"
 msgstr ""
 
@@ -353,23 +353,23 @@ msgstr ""
 msgid "Perk 2"
 msgstr ""
 
-#: apps/gom/pdf.py:37
+#: apps/gom/pdf.py:37 templates/gom/unit.html:604
 msgid "Shoot"
 msgstr ""
 
-#: apps/gom/pdf.py:38
+#: apps/gom/pdf.py:38 templates/gom/unit.html:606
 msgid "Guard"
 msgstr ""
 
-#: apps/gom/pdf.py:40
+#: apps/gom/pdf.py:40 templates/gom/unit.html:607
 msgid "Soak"
 msgstr ""
 
-#: apps/gom/pdf.py:41
+#: apps/gom/pdf.py:41 templates/gom/unit.html:608
 msgid "Mental"
 msgstr ""
 
-#: apps/gom/pdf.py:42
+#: apps/gom/pdf.py:42 templates/gom/unit.html:609
 msgid "Skill"
 msgstr ""
 
@@ -482,8 +482,9 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: apps/gom/pdf.py:510 templates/gom/force_add.html:28
-#: templates/gom/force_list.html:28 templates/gom/list.html:92
+#: apps/gom/pdf.py:510 templates/gom/force.html:101
+#: templates/gom/force_add.html:28 templates/gom/force_list.html:28
+#: templates/gom/list.html:92
 msgid "Cost"
 msgstr ""
 
@@ -727,8 +728,26 @@ msgstr ""
 msgid "Edit Force"
 msgstr ""
 
+#: templates/gom/force.html:85
+msgid ""
+"Note: This page is to create a new force, containing multiple units that you "
+"create seperately.<br>If you only wish to create a unit or vehicle rather "
+"than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> "
+"instead."
+msgstr ""
+
 #: templates/gom/force.html:88
 msgid "Other User's Force - View Only"
+msgstr ""
+
+#: templates/gom/force.html:100 templates/gom/force_add.html:26
+#: templates/gom/force_list.html:26 templates/gom/list.html:90
+#: templates/gom/unit.html:601 templates/profiles/_profile_info.html:3
+msgid "Name"
+msgstr ""
+
+#: templates/gom/force.html:102
+msgid "Description"
 msgstr ""
 
 #: templates/gom/force.html:110
@@ -784,12 +803,7 @@ msgstr ""
 msgid "Forces"
 msgstr ""
 
-#: templates/gom/force_add.html:26 templates/gom/force_list.html:26
-#: templates/gom/list.html:90 templates/profiles/_profile_info.html:3
-msgid "Name"
-msgstr ""
-
-#: templates/gom/force_help.html:9
+#: templates/gom/force_help.html:9 templates/gom/help.html:7
 msgid "Force Creation"
 msgstr ""
 
@@ -807,6 +821,14 @@ msgstr ""
 
 #: templates/gom/help.html:4
 msgid "Help"
+msgstr ""
+
+#: templates/gom/help.html:6 templates/gom/unit_help.html:9
+msgid "Unit Creation"
+msgstr ""
+
+#: templates/gom/help.html:8
+msgid "Multi Card PDF"
 msgstr ""
 
 #: templates/gom/list.html:25
@@ -933,6 +955,10 @@ msgstr ""
 msgid "Cost: "
 msgstr ""
 
+#: templates/gom/unit.html:603
+msgid "Size"
+msgstr ""
+
 #: templates/gom/unit.html:610
 msgid "Damage"
 msgstr ""
@@ -971,10 +997,6 @@ msgstr ""
 
 #: templates/gom/unit.html:700
 msgid "Manufacturer:"
-msgstr ""
-
-#: templates/gom/unit_help.html:9
-msgid "Unit Creation"
 msgstr ""
 
 #: templates/gom/unit_help.html:12
