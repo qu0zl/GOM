@@ -672,7 +672,7 @@ class Manufacturer(models.Model):
     manuWeb = models.CharField(max_length=100)
 
 class UnitForm(forms.ModelForm):
-    image = forms.ImageField(required=False)
+    image = forms.ImageField(required=False, label=_('Image'))
     # Grunt Rifles and Pistols only
     basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False)
     SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
