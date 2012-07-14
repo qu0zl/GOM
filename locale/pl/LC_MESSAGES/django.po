@@ -3,1044 +3,1104 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 10:53-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-07-14 12:28+0100\n"
+"Last-Translator: Bogusław Kubacki <b.a.kubacki@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #. Translators: Scout size class
-#: apps/gom/models.py:23 apps/gom/pdf.py:371
+#: apps/gom/models.py:23
+#: apps/gom/pdf.py:371
 msgid "Scout"
-msgstr ""
+msgstr "Zwiadowczy"
 
-#: apps/gom/models.py:24 apps/gom/pdf.py:371
+#: apps/gom/models.py:24
+#: apps/gom/pdf.py:371
 msgid "Light"
-msgstr ""
+msgstr "Lekki"
 
-#: apps/gom/models.py:25 apps/gom/models.py:128 apps/gom/pdf.py:371
+#: apps/gom/models.py:25
+#: apps/gom/models.py:128
+#: apps/gom/pdf.py:371
 msgid "Medium"
-msgstr ""
+msgstr "Średni"
 
-#: apps/gom/models.py:26 apps/gom/models.py:129 apps/gom/pdf.py:371
+#: apps/gom/models.py:26
+#: apps/gom/models.py:129
+#: apps/gom/pdf.py:371
 msgid "Heavy"
-msgstr ""
+msgstr "Ciężki"
 
 #. Translators: Assault size class
-#: apps/gom/models.py:28 apps/gom/models.py:130 apps/gom/pdf.py:39
-#: apps/gom/pdf.py:371 templates/gom/unit.html:605
+#: apps/gom/models.py:28
+#: apps/gom/models.py:130
+#: apps/gom/pdf.py:39
+#: apps/gom/pdf.py:371
+#: templates/gom/unit.html:605
 msgid "Assault"
-msgstr ""
+msgstr "Szturmowy"
 
 #. Translators: 1/5 star card rating
 #: apps/gom/models.py:32
 msgid "Bad"
-msgstr ""
+msgstr "Zły"
 
 #. Translators: 2/5 star card rating
 #: apps/gom/models.py:34
 msgid "Poor"
-msgstr ""
+msgstr "Słaby"
 
 #. Translators: 3/5 star card rating
 #: apps/gom/models.py:36
 msgid "OK"
-msgstr ""
+msgstr "Przeciętny"
 
 #. Translators: 4/5 star card rating
 #: apps/gom/models.py:38
 msgid "Good"
-msgstr ""
+msgstr "Dobry"
 
 #. Translators: 5/5 star card rating
 #: apps/gom/models.py:40
 msgid "Great"
-msgstr ""
+msgstr "Wspaniały"
 
-#: apps/gom/models.py:43 templates/gom/filters.html:21
+#: apps/gom/models.py:43
+#: templates/gom/filters.html:21
 msgid "Grunt Squad"
-msgstr ""
+msgstr "Drużyna"
 
-#: apps/gom/models.py:44 apps/gom/pdf.py:398 templates/gom/filters.html:22
+#: apps/gom/models.py:44
+#: apps/gom/pdf.py:398
+#: templates/gom/filters.html:22
 msgid "Squad Attachment"
-msgstr ""
+msgstr "Sekcja Wsparcia"
 
-#: apps/gom/models.py:45 apps/gom/models.py:124 apps/gom/pdf.py:400
+#: apps/gom/models.py:45
+#: apps/gom/models.py:124
+#: apps/gom/pdf.py:400
 #: templates/gom/filters.html:23
 msgid "Specialist"
-msgstr ""
+msgstr "Specjalista"
 
-#: apps/gom/models.py:46 apps/gom/pdf.py:402 templates/gom/filters.html:24
+#: apps/gom/models.py:46
+#: apps/gom/pdf.py:402
+#: templates/gom/filters.html:24
 msgid "Commander"
-msgstr ""
+msgstr "Dowódca"
 
-#: apps/gom/models.py:49 apps/gom/pdf.py:404 templates/gom/filters.html:25
+#: apps/gom/models.py:49
+#: apps/gom/pdf.py:404
+#: templates/gom/filters.html:25
 msgid "Tank"
-msgstr ""
+msgstr "Czołg"
 
 #. Translators: Mecha vehicle, such as a battle-mech.
-#: apps/gom/models.py:51 apps/gom/models.py:142 apps/gom/pdf.py:406
+#: apps/gom/models.py:51
+#: apps/gom/models.py:142
+#: apps/gom/pdf.py:406
 #: templates/gom/filters.html:26
 msgid "Mecha"
-msgstr ""
+msgstr "Mech"
 
 #. Translators: Ground Support Vehicle
-#: apps/gom/models.py:53 templates/gom/filters.html:27
+#: apps/gom/models.py:53
+#: templates/gom/filters.html:27
 msgid "GSV"
-msgstr ""
+msgstr "Pojazd Wsparcia"
 
 #. Translators: AIR Support Vehicle
-#: apps/gom/models.py:55 apps/gom/pdf.py:410 templates/gom/filters.html:28
+#: apps/gom/models.py:55
+#: apps/gom/pdf.py:410
+#: templates/gom/filters.html:28
 msgid "ASV"
-msgstr ""
+msgstr "Aerolot Wsparcia"
 
-#: apps/gom/models.py:56 apps/gom/models.py:131 apps/gom/pdf.py:412
+#: apps/gom/models.py:56
+#: apps/gom/models.py:131
+#: apps/gom/pdf.py:412
 #: templates/gom/filters.html:29
 msgid "Artillery"
-msgstr ""
+msgstr "Artyleria"
 
 #. Translators: Walking mobility type
-#: apps/gom/models.py:61 apps/gom/pdf.py:367
+#: apps/gom/models.py:61
+#: apps/gom/pdf.py:367
 msgid "Walk"
-msgstr ""
+msgstr "Kroczący"
 
 #. Translators: Tracked mobility type
-#: apps/gom/models.py:63 apps/gom/pdf.py:367
+#: apps/gom/models.py:63
+#: apps/gom/pdf.py:367
 msgid "Track"
-msgstr ""
+msgstr "Gąsienicowy"
 
 #. Translators: Wheeled mobility type
-#: apps/gom/models.py:65 apps/gom/pdf.py:367
+#: apps/gom/models.py:65
+#: apps/gom/pdf.py:367
 msgid "Wheels"
-msgstr ""
+msgstr "Kołowy"
 
 #. Translators: Hover mobility type
-#: apps/gom/models.py:67 apps/gom/pdf.py:367
+#: apps/gom/models.py:67
+#: apps/gom/pdf.py:367
 msgid "Hover"
-msgstr ""
+msgstr "Poduszkowiec"
 
 #. Translators: Gravity based mobility type
-#: apps/gom/models.py:69 apps/gom/models.py:77 apps/gom/pdf.py:365
+#: apps/gom/models.py:69
+#: apps/gom/models.py:77
+#: apps/gom/pdf.py:365
 #: apps/gom/pdf.py:367
 msgid "Grav"
-msgstr ""
+msgstr "Grawitacyjny"
 
-#: apps/gom/models.py:72 apps/gom/pdf.py:365
+#: apps/gom/models.py:72
+#: apps/gom/pdf.py:365
 msgid "Helicopter"
-msgstr ""
+msgstr "Śmigłowiec"
 
 #. Translators: Propeller vertical take off & landing mobility type
-#: apps/gom/models.py:74 apps/gom/pdf.py:365
+#: apps/gom/models.py:74
+#: apps/gom/pdf.py:365
 msgid "Prop VTOL"
-msgstr ""
+msgstr "VTOL śmigłowy"
 
 #. Translators: Jet vertical take off & landing mobility type.
-#: apps/gom/models.py:76 apps/gom/pdf.py:365
+#: apps/gom/models.py:76
+#: apps/gom/pdf.py:365
 msgid "Jet VTOL"
-msgstr ""
+msgstr "VTOL odrzutowy"
 
 #: apps/gom/models.py:80
 msgid "Green (2)"
-msgstr ""
+msgstr "Zieloni (2)"
 
 #: apps/gom/models.py:81
 msgid "Trained (3)"
-msgstr ""
+msgstr "Przeszkoleni (3)"
 
 #: apps/gom/models.py:82
 msgid "Seasoned (4)"
-msgstr ""
+msgstr "Doświadczeni (4)"
 
 #: apps/gom/models.py:83
 msgid "Veteran (5)"
-msgstr ""
+msgstr "Weterani (5)"
 
 #: apps/gom/models.py:84
 msgid "Expert (6)"
-msgstr ""
+msgstr "Eksperci (6)"
 
 #: apps/gom/models.py:85
 msgid "Elite (7)"
-msgstr ""
+msgstr "Elita (7)"
 
 #: apps/gom/models.py:88
 msgid "Green (4)"
-msgstr ""
+msgstr "Zieloni (4)"
 
 #: apps/gom/models.py:89
 msgid "Trained (5)"
-msgstr ""
+msgstr "Przeszkoleni (5)"
 
 #: apps/gom/models.py:90
 msgid "Seasoned (6)"
-msgstr ""
+msgstr "Doświadczeni (6)"
 
 #: apps/gom/models.py:91
 msgid "Veteran (7)"
-msgstr ""
+msgstr "Weterani (7)"
 
 #: apps/gom/models.py:92
 msgid "Expert (8)"
-msgstr ""
+msgstr "Eksperci (8)"
 
 #: apps/gom/models.py:93
 msgid "Elite (9)"
-msgstr ""
+msgstr "Elita (9)"
 
 #: apps/gom/models.py:96
 msgid "Slow (10)"
-msgstr ""
+msgstr "Powolny (10)"
 
 #: apps/gom/models.py:97
 msgid "Average (11)"
-msgstr ""
+msgstr "Spowolniały (11)"
 
 #: apps/gom/models.py:98
 msgid "Medium (12)"
-msgstr ""
+msgstr "Średnioszybki (12)"
 
 #: apps/gom/models.py:99
 msgid "Quick (13)"
-msgstr ""
+msgstr "Szybki (13)"
 
 #: apps/gom/models.py:100
 msgid "Superfast (14)"
-msgstr ""
+msgstr "Superszybki (14)"
 
 #: apps/gom/models.py:103
 msgid "None (10)"
-msgstr ""
+msgstr "Żaden (10)"
 
 #: apps/gom/models.py:104
 msgid "Scout (11)"
-msgstr ""
+msgstr "Zwiadowczy (11)"
 
 #: apps/gom/models.py:105
 msgid "Light (12)"
-msgstr ""
+msgstr "Lekki (12)"
 
 #: apps/gom/models.py:106
 msgid "Medium (13)"
-msgstr ""
+msgstr "Średniociężki (13)"
 
 #: apps/gom/models.py:107
 msgid "Heavy (14)"
-msgstr ""
+msgstr "Ciężki (14)"
 
 #: apps/gom/models.py:108
 msgid "Assault (15)"
-msgstr ""
+msgstr "Szturmowy (15)"
 
 #: apps/gom/models.py:109
 msgid "Vehicle (16)"
-msgstr ""
+msgstr "Pojazd (16)"
 
 #: apps/gom/models.py:110
 msgid "Vehicle (17)"
-msgstr ""
+msgstr "Pojazd (17)"
 
 #: apps/gom/models.py:111
 msgid "Vehicle (18)"
-msgstr ""
+msgstr "Pojazd (18)"
 
 #: apps/gom/models.py:112
 msgid "Vehicle (19)"
-msgstr ""
+msgstr "Pojazd (19)"
 
-#: apps/gom/models.py:116 apps/gom/pdf.py:365 apps/gom/pdf.py:367
-#: apps/gom/pdf.py:371 templates/gom/list_table.html:14
-#: templates/gom/list_table.html.py:25 templates/gom/unit.html:694
+#: apps/gom/models.py:116
+#: apps/gom/pdf.py:365
+#: apps/gom/pdf.py:367
+#: apps/gom/pdf.py:371
+#: templates/gom/list_table.html:14
+#: templates/gom/list_table.html.py:25
+#: templates/gom/unit.html:694
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #. Translators: Close Combat Weapon
-#: apps/gom/models.py:118 apps/gom/models.py:689 templates/gom/unit.html:644
+#: apps/gom/models.py:118
+#: apps/gom/models.py:689
+#: templates/gom/unit.html:644
 msgid "CCW"
-msgstr ""
+msgstr "Broń Walki Wręcz"
 
 #: apps/gom/models.py:119
 msgid "Pistol"
-msgstr ""
+msgstr "Pistolet"
 
 #: apps/gom/models.py:120
 msgid "Rifle"
-msgstr ""
+msgstr "Karabin"
 
-#: apps/gom/models.py:121 apps/gom/models.py:691
+#: apps/gom/models.py:121
+#: apps/gom/models.py:691
 msgid "Grenade"
-msgstr ""
+msgstr "Granat"
 
 #. Translators: Squad Attachment Weapon
 #: apps/gom/models.py:123
 msgid "SA"
-msgstr ""
+msgstr "Sekcji Wsparcia"
 
 #. Translators: Anti-Infantry weapon
 #: apps/gom/models.py:126
 msgid "AI"
-msgstr ""
+msgstr "P/piech"
 
 #: apps/gom/models.py:127
 msgid "Generic Vehicle"
-msgstr ""
+msgstr "Pojazd Standardowy"
 
 #: apps/gom/models.py:135
 msgid "Main Weapon"
-msgstr ""
+msgstr "Broń Główna"
 
 #: apps/gom/models.py:136
 msgid "Anti-Infantry"
-msgstr ""
+msgstr "Przeciwpiechotny"
 
-#: apps/gom/models.py:141 templates/gom/filters.html:5
+#: apps/gom/models.py:141
+#: templates/gom/filters.html:5
 msgid "All"
-msgstr ""
+msgstr "Wszystkie"
 
 #: apps/gom/models.py:146
 msgid "Signature"
-msgstr ""
+msgstr "Podpis"
 
 #: apps/gom/models.py:147
 msgid "Targeting"
-msgstr ""
+msgstr "Namierzanie"
 
-#: apps/gom/models.py:148 templates/gom/unit.html:625
+#: apps/gom/models.py:148
+#: templates/gom/unit.html:625
 msgid "Mobility"
-msgstr ""
+msgstr "Ruchliwość"
 
-#: apps/gom/models.py:149 apps/gom/pdf.py:166
+#: apps/gom/models.py:149
+#: apps/gom/pdf.py:166
 msgid "Armour"
-msgstr ""
+msgstr "Pancerz"
 
 #: apps/gom/models.py:150
 msgid "Repair"
-msgstr ""
+msgstr "Naprawy"
 
-#: apps/gom/models.py:151 apps/gom/models.py:684
+#: apps/gom/models.py:151
+#: apps/gom/models.py:684
 msgid "Anti Infantry"
-msgstr ""
+msgstr "Przeciwpiechotny"
 
-#: apps/gom/models.py:675 templates/gom/filters.html:75
+#: apps/gom/models.py:675
+#: templates/gom/filters.html:75
 msgid "Image"
-msgstr ""
+msgstr "Obraz"
 
 #: apps/gom/models.py:680
 msgid "Main Weapons"
-msgstr ""
+msgstr "Główna Broń"
 
 #. Translators: Label for User customisable weapon name box.
-#: apps/gom/models.py:693 apps/gom/models.py:694 apps/gom/models.py:695
-#: apps/gom/models.py:696 apps/gom/models.py:697 apps/gom/models.py:698
-#: apps/gom/models.py:699 apps/gom/models.py:700 apps/gom/models.py:701
-#: apps/gom/models.py:702 apps/gom/models.py:703 apps/gom/models.py:704
+#: apps/gom/models.py:693
+#: apps/gom/models.py:694
+#: apps/gom/models.py:695
+#: apps/gom/models.py:696
+#: apps/gom/models.py:697
+#: apps/gom/models.py:698
+#: apps/gom/models.py:699
+#: apps/gom/models.py:700
+#: apps/gom/models.py:701
+#: apps/gom/models.py:702
+#: apps/gom/models.py:703
+#: apps/gom/models.py:704
 #: apps/gom/models.py:705
 msgid "Custom Name"
-msgstr ""
+msgstr "Nazwa Własna"
 
 #: apps/gom/models.py:719
 msgid "Perk"
-msgstr ""
+msgstr "Zaleta"
 
 #: apps/gom/models.py:720
 msgid "Perk 2"
-msgstr ""
+msgstr "Zaleta Nr2"
 
 #: apps/gom/models.py:726
 msgid "Air Mobility"
-msgstr ""
+msgstr "Lotność"
 
-#: apps/gom/pdf.py:37 templates/gom/unit.html:604
+#: apps/gom/pdf.py:37
+#: templates/gom/unit.html:604
 msgid "Shoot"
-msgstr ""
+msgstr "Strzał"
 
-#: apps/gom/pdf.py:38 templates/gom/unit.html:606
+#: apps/gom/pdf.py:38
+#: templates/gom/unit.html:606
 msgid "Guard"
-msgstr ""
+msgstr "Unik"
 
-#: apps/gom/pdf.py:40 templates/gom/unit.html:607
+#: apps/gom/pdf.py:40
+#: templates/gom/unit.html:607
 msgid "Soak"
-msgstr ""
+msgstr "Odporność"
 
-#: apps/gom/pdf.py:41 templates/gom/unit.html:608
+#: apps/gom/pdf.py:41
+#: templates/gom/unit.html:608
 msgid "Mental"
-msgstr ""
+msgstr "Umysł"
 
-#: apps/gom/pdf.py:42 templates/gom/unit.html:609
+#: apps/gom/pdf.py:42
+#: templates/gom/unit.html:609
 msgid "Skill"
-msgstr ""
+msgstr "Umiejętność"
 
 #: apps/gom/pdf.py:77
 msgid "No Perks"
-msgstr ""
+msgstr "Bez Zalet"
 
 #: apps/gom/pdf.py:80
 msgid "No Modz"
-msgstr ""
+msgstr "Nie Modyfikowane"
 
 #. Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
 #: apps/gom/pdf.py:156
 msgid "C"
-msgstr ""
+msgstr "K"
 
 #: apps/gom/pdf.py:159
 msgid "Damage:"
-msgstr ""
+msgstr "Obrażenie:"
 
 #: apps/gom/pdf.py:166
 msgid "Engine"
-msgstr ""
+msgstr "Silnik"
 
 #. Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
 #: apps/gom/pdf.py:168
 msgid "Tek"
-msgstr ""
+msgstr "Dowodzenia"
 
 #: apps/gom/pdf.py:188
 msgid "Transport Slots:"
-msgstr ""
+msgstr "Miejsca Transportowe:"
 
-#: apps/gom/pdf.py:201 templates/gom/unit.html:684
+#: apps/gom/pdf.py:201
+#: templates/gom/unit.html:684
 msgid "Medic"
-msgstr ""
+msgstr "Medyk"
 
 #. Translators: Abbreviation of Engineer
 #: apps/gom/pdf.py:209
 msgid "Eng."
-msgstr ""
+msgstr "Inż."
 
 #: apps/gom/pdf.py:286
 msgid "Ram"
-msgstr ""
+msgstr "Taran"
 
 #: apps/gom/pdf.py:295
 msgid "Attacks:"
-msgstr ""
+msgstr "Ataki:"
 
 #: apps/gom/pdf.py:311
 msgid "WEAPON"
-msgstr ""
+msgstr "BROŃ"
 
 #: apps/gom/pdf.py:312
 msgid "Range"
-msgstr ""
+msgstr "Zasięg"
 
 #. Translators: Abbreviation of 'Damage'
 #: apps/gom/pdf.py:314
 msgid "Dam"
-msgstr ""
+msgstr "Obr"
 
 #. Translators: Abbreviation of 'Armour Piercing'
 #: apps/gom/pdf.py:316
 msgid "AP"
-msgstr ""
+msgstr "PPanc"
 
 #. Translators: Abbreviation of 'Area of Effect'
 #: apps/gom/pdf.py:318
 msgid "AE"
-msgstr ""
+msgstr "Obszar Efektu"
 
 #: apps/gom/pdf.py:365
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #: apps/gom/pdf.py:381
 msgid "Mobility:"
-msgstr ""
+msgstr "Ruchliwość:"
 
 #: apps/gom/pdf.py:383
 msgid "Size:"
-msgstr ""
+msgstr "Wielkość:"
 
 #: apps/gom/pdf.py:396
 msgid "Gruntz Squad"
-msgstr ""
+msgstr "Drużyna Żołnierzy"
 
 #: apps/gom/pdf.py:408
 msgid "Support Vehicle"
-msgstr ""
+msgstr "Pojaazd Wsparcia"
 
 #. Translators: Abbreviation of 'Miniature:', i.e. who makes the pictured miniature.
 #: apps/gom/pdf.py:459
-#, python-format
 msgid "Mini: %s"
-msgstr ""
+msgstr "Figurki: %s"
 
 #: apps/gom/pdf.py:462
 msgid "See Gruntz @ http://www.gruntz.biz"
-msgstr ""
+msgstr "Zajrzyj http://www.gruntz.biz"
 
 #: apps/gom/pdf.py:507
 msgid "Unit"
-msgstr ""
+msgstr "Jednostka"
 
 #. Translators: How-many of this unit are included in this army.
 #: apps/gom/pdf.py:509
 msgid "Count"
-msgstr ""
+msgstr "Liczba"
 
-#: apps/gom/pdf.py:510 templates/gom/force.html:101
-#: templates/gom/force_add.html:28 templates/gom/force_list.html:28
+#: apps/gom/pdf.py:510
+#: templates/gom/force.html:101
+#: templates/gom/force_add.html:28
+#: templates/gom/force_list.html:28
 #: templates/gom/list.html:92
 msgid "Cost"
-msgstr ""
+msgstr "Koszt"
 
-#: apps/gom/views.py:54 apps/gom/views.py:65
+#: apps/gom/views.py:54
+#: apps/gom/views.py:65
 msgid "User unauthorised."
-msgstr ""
+msgstr "Użykownik bez autoryzacji."
 
 #: apps/gom/views.py:56
 msgid "Failed to update user filters."
-msgstr ""
+msgstr "Nie udało się zastosować filtrów użytkownika."
 
 #: apps/gom/views.py:67
 msgid "Failed to rate unit."
-msgstr ""
+msgstr "Nie udało się ocenić jednostki."
 
 #: apps/gom/views.py:77
 msgid "Attempt to reorder force not owned by this user"
-msgstr ""
+msgstr "Próba reorganizacji Armii innego użytkownika."
 
 #: apps/gom/views.py:82
 msgid "Only AJAX queries may use this interface"
-msgstr ""
+msgstr "Ten interfejs może wykonywać tylko zapytania AJAX"
 
 #: apps/gom/views.py:85
 msgid "Failed to reorder force entry. Please try again."
-msgstr ""
+msgstr "Nie udała się reorganizacja Armii. Spróbuj jeszcze raz."
 
 #: apps/gom/views.py:98
 msgid "Attempt to modify force not owned by this user"
-msgstr ""
+msgstr "Próba modyfikacji Armii innego użytkownika."
 
 #: apps/gom/views.py:115
 msgid "Only Ajax queries may use this interface"
-msgstr ""
+msgstr "Ten interfejs może wykonywać tylko zapytania AJAX"
 
 #: apps/gom/views.py:118
 msgid "Failed to update force entry. Please try again."
-msgstr ""
+msgstr "Nie udała się zmiana Armii. Spróbuj jeszcze raz."
 
 #: apps/gom/views.py:128
 msgid "No such force id. It may have been deleted."
-msgstr ""
+msgstr "Tak oznaczona Armia nie istnieje. Możliwe, że została usunięta."
 
 #: apps/gom/views.py:172
 msgid "You must be logged in to create a new unit."
-msgstr ""
+msgstr "Aby tworzyć nowe jednostki musisz być zalogowany."
 
 #: apps/gom/views.py:320
 msgid "Invalid Force data. Please sanity check data values"
-msgstr ""
+msgstr "Nieprawidłowe dane Armii. Sprawdź sumy kontrolne."
 
 #: apps/gom/views.py:330
 msgid "Unable to produce PDF for this force."
-msgstr ""
+msgstr "Nie udało się stworzyć PDF dla tej Armii."
 
 #: apps/gom/views.py:333
 msgid "Attempt to modify force that does not belong to your account."
-msgstr ""
+msgstr "Próba modyfikacji Armii nienależącej do Twojego konta."
 
 #: apps/gom/views.py:335
 msgid "You must login to modify forces."
-msgstr ""
+msgstr "Aby modyfikować jednostki musisz być zalogowany."
 
 #: apps/gom/views.py:359
 msgid "Unable to produce PDF for this unit."
-msgstr ""
+msgstr "Nie udało się stworzyć PDF dla tej jednostki."
 
 #: apps/gom/views.py:362
-msgid ""
-"Failed to modify unit. Does your account have edit permissions for this unit?"
-msgstr ""
+msgid "Failed to modify unit. Does your account have edit permissions for this unit?"
+msgstr "Nie udała się zmiana Jednostki. Czy Twoje konto ma uprawnienia do edytowania tej jednostki?"
 
 #: apps/gom/views.py:364
 msgid "You must login to modify units."
-msgstr ""
+msgstr "Aby modyfikować jednostki musisz być zalogowany."
 
 #: apps/gom/views.py:525
-msgid ""
-"Invalid unit data. Unable to create PDF. Please sanity check data values"
-msgstr ""
+msgid "Invalid unit data. Unable to create PDF. Please sanity check data values"
+msgstr "Nieprawidłowe dane Jednostki. Nie udało się stworzyć PDF. Sprawdź sumy kontrolne."
 
 #: apps/gom/views.py:580
 msgid "No units associated with this force"
-msgstr ""
+msgstr "Brak jednostek powiązanych z tą Armią."
 
 #: apps/gom/views.py:616
 msgid "Invalid request to multi card PDF. Please sanity check data."
-msgstr ""
+msgstr "Nieprawidłowe żadanie dostępu do WieloKartowego PDF. Sprawdź sumy kontrolne."
 
 #: apps/profiles/models.py:9
 msgid "name"
-msgstr ""
+msgstr "nazwa"
 
 #: apps/profiles/models.py:10
 msgid "about"
-msgstr ""
+msgstr "o"
 
 #: apps/profiles/models.py:11
 msgid "location"
-msgstr ""
+msgstr "lokacja"
 
 #: apps/profiles/models.py:12
 msgid "website"
-msgstr ""
+msgstr "website"
 
 #: templates/homepage.html:6
 msgid "Welcome"
-msgstr ""
+msgstr "Witamy"
 
 #: templates/homepage.html:11
 msgid "Welcome to the<br>Grunt-o-matic"
-msgstr ""
+msgstr "Witamy w the<br>Grunt-o-matic"
 
 #: templates/homepage.html:14
 msgid ""
 "\n"
 "        <br>\n"
-"        The <b>Grunt-o-matic</b> is a tool for creating cards for the 15mm "
-"Sci-Fi game <a href=\"http://www.gruntz.biz/\">Gruntz</a>.\n"
+"        The <b>Grunt-o-matic</b> is a tool for creating cards for the 15mm Sci-Fi game <a href=\"http://www.gruntz.biz/\">Gruntz</a>.\n"
 "        <br>\n"
 "        "
 msgstr ""
+"\n"
+"        <br>\n"
+"        <b>Grunt-o-matic</b>to narzędzie do tworzenia kart do gry bitewnej science-fiction w skali 15mm<a href=\"http://www.gruntz.biz/\">Gruntz</a>.\n"
+"        <br>\n"
+"        "
 
 #: templates/homepage.html:21
 msgid ""
 "\n"
-"        Cards can be individually created or multiple cards may be placed on "
-"the same PDF for printing as a single page.\n"
+"        Cards can be individually created or multiple cards may be placed on the same PDF for printing as a single page.\n"
 "    "
 msgstr ""
+"\n"
+"        Karty mogą być tworzone indywidualnie albo jako zestaw umieszczony razem na jednej stronie PDF do wydruku.\n"
+"    "
 
 #: templates/homepage.html:26
 msgid ""
 "\n"
-"        You may view other user's Gruntz units, and download PDF cards for "
-"them without registering.\n"
-"        If you wish to make your own Gruntz units then you need to create a "
-"free user account\n"
+"        You may view other user's Gruntz units, and download PDF cards for them without registering.\n"
+"        If you wish to make your own Gruntz units then you need to create a free user account\n"
 "        "
 msgstr ""
+"\n"
+"        Bez rejestracji możesz używać jednostek innych uzytkowników i ściągać ich PDF do wydruku.\n"
+"        Aby tworzyć własne jednostki musisz utworzyć darmowe konto użytkownika.\n"
+"        "
 
 #: templates/homepage.html:38
 msgid ""
 "\n"
-"        Javascript is required for the Grunt-o-matic GUI to function fully, "
-"although you can still produce all cards without it.\n"
-"        Development is aimed at Google Chrome, Mozilla Firefox and Apple "
-"Safari.\n"
+"        Javascript is required for the Grunt-o-matic GUI to function fully, although you can still produce all cards without it.\n"
+"        Development is aimed at Google Chrome, Mozilla Firefox and Apple Safari.\n"
 "        Recent versions of IE should work but are un-tested.\n"
 "        "
 msgstr ""
+"\n"
+"        Aby Grunt-o-matic GUI działał w pełni, wymagany jest Javascript.Nawet bez spełnienia tego warunku można stworzyć wszystkie karty.\n"
+"        Rozwijane dla Google Chrome, Mozilla Firefox i Apple Safari.\n"
+"        Ostatnia wersja powinna działać w IE, ale nie była testowana.\n"
+"        "
 
 #: templates/homepage.html:49
 #, python-format
-msgid ""
-"You can <a href=\"%(login_url)s\" class=\"btn\">Log In</a> or <a href="
-"\"%(signup_url)s\" class=\"btn primary\">Sign Up</a> to try out the site."
-msgstr ""
+msgid "You can <a href=\"%(login_url)s\" class=\"btn\">Log In</a> or <a href=\"%(signup_url)s\" class=\"btn primary\">Sign Up</a> to try out the site."
+msgstr "Możesz <a href=\"%(login_url)s\" class=\"btn\">sie zalogować</a> lub <a href=\"%(signup_url)s\" class=\"btn primary\">zarejestrować</a> na próbę."
 
 #: templates/homepage.html:51
 #, python-format
-msgid ""
-"You can <a href=\"%(login_url)s\" class=\"btn primary large\">Log In</a> to "
-"try out the site."
-msgstr ""
+msgid "You can <a href=\"%(login_url)s\" class=\"btn primary large\">Log In</a> to try out the site."
+msgstr "Możesz <a href=\"%(login_url)s\" class=\"btn primary large\">się zalogować</a> na próbę."
 
-#: templates/site_base.html:12 templates/gom/multi_help.html:17
+#: templates/site_base.html:12
+#: templates/gom/multi_help.html:17
 msgid "View Units"
-msgstr ""
+msgstr "Oglądaj Jednostki"
 
 #: templates/site_base.html:13
 msgid "View Forces"
-msgstr ""
+msgstr "Oglądaj Armie"
 
-#: templates/site_base.html:15 templates/gom/unit_help.html:16
+#: templates/site_base.html:15
+#: templates/gom/unit_help.html:16
 msgid "New Unit"
-msgstr ""
+msgstr "Nowa Jednostka"
 
-#: templates/site_base.html:16 templates/gom/force_help.html:16
+#: templates/site_base.html:16
+#: templates/gom/force_help.html:16
 msgid "New Force"
-msgstr ""
+msgstr "Nowa Armia"
 
 #: templates/site_base.html:17
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #. Translators: selection choice to display all Published units as well as all belonging to the logged in user.
 #: templates/gom/filters.html:4
 msgid "Published and Yours"
-msgstr ""
+msgstr "Twoje oraz Opublikowane"
 
 #: templates/gom/filters.html:6
 msgid "Published Only"
-msgstr ""
+msgstr "Tylko Opublikowane"
 
 #: templates/gom/filters.html:7
 msgid "Un-published Only"
-msgstr ""
+msgstr "Tylko Niepublikowane"
 
-#: templates/gom/filters.html:10 templates/gom/force_add.html:27
-#: templates/gom/force_list.html:27 templates/gom/list.html:91
+#: templates/gom/filters.html:10
+#: templates/gom/force_add.html:27
+#: templates/gom/force_list.html:27
+#: templates/gom/list.html:91
 msgid "Owner"
-msgstr ""
+msgstr "Właściciel"
 
-#: templates/gom/filters.html:20 templates/gom/unit.html:602
+#: templates/gom/filters.html:20
+#: templates/gom/unit.html:602
 msgid "Unit Type"
-msgstr ""
+msgstr "Typ Jednostki"
 
-#: templates/gom/filters.html:32 templates/gom/list.html:93
+#: templates/gom/filters.html:32
+#: templates/gom/list.html:93
 msgid "Manufacturer"
-msgstr ""
+msgstr "Wytwórca"
 
 #. Translators: Minimum cost
 #: templates/gom/filters.html:43
 msgid "Min Cost"
-msgstr ""
+msgstr "Koszt minim."
 
 #. Translators: Maximum cost
 #: templates/gom/filters.html:55
 msgid "Max Cost"
-msgstr ""
+msgstr "Koszt max."
 
 #. Translators: Minimum rating
 #: templates/gom/filters.html:67
 msgid "Min Rating"
-msgstr ""
+msgstr "Ocena minim."
 
 #: templates/gom/filters.html:76
 msgid "Has Image"
-msgstr ""
+msgstr "Jest obraz "
 
 #: templates/gom/filters.html:77
 msgid "No Image"
-msgstr ""
+msgstr "Brak obrazu"
 
 #: templates/gom/force.html:42
 msgid "Do you really want to remove this entry?"
-msgstr ""
+msgstr "Na pewno chcesz usunąć ten wpis?"
 
-#: templates/gom/force.html:79 templates/gom/force.html.py:83
+#: templates/gom/force.html:79
+#: templates/gom/force.html.py:83
 msgid "Edit Force"
-msgstr ""
+msgstr "Edytuj Armię"
 
 #: templates/gom/force.html:85
-msgid ""
-"Note: This page is to create a new force, containing multiple units that you "
-"create seperately.<br>If you only wish to create a unit or vehicle rather "
-"than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> "
-"instead."
-msgstr ""
+msgid "Note: This page is to create a new force, containing multiple units that you create seperately.<br>If you only wish to create a unit or vehicle rather than an army, then you want to <a href=/gom/unit/0>Create a new unit</a> instead."
+msgstr "Uwaga: Na tej stronie możesz organizować nową Armię, złożoną z wielu jednostek tworzonych osobno.<br>Jeśli chcesz stworzyć nową jednostkę albo pojazd, wybierz <a href=/gom/unit/0>Stwórz nową jednostkę</a>."
 
 #: templates/gom/force.html:88
 msgid "Other User's Force - View Only"
-msgstr ""
+msgstr "Armie innych Użytkowników - tylko do oglądania"
 
-#: templates/gom/force.html:100 templates/gom/force_add.html:26
-#: templates/gom/force_list.html:26 templates/gom/list.html:90
-#: templates/gom/unit.html:601 templates/profiles/_profile_info.html:3
+#: templates/gom/force.html:100
+#: templates/gom/force_add.html:26
+#: templates/gom/force_list.html:26
+#: templates/gom/list.html:90
+#: templates/gom/unit.html:601
+#: templates/profiles/_profile_info.html:3
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: templates/gom/force.html:102
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: templates/gom/force.html:110
 msgid "Add units"
-msgstr ""
+msgstr "Dodaj Jednostki"
 
 #: templates/gom/force.html:115
 msgid "re-order"
-msgstr ""
+msgstr "ponów"
 
 #: templates/gom/force.html:117
 msgid "Unit Name"
-msgstr ""
+msgstr "Nazwa Jednostki"
 
 #: templates/gom/force.html:117
 msgid "Count *"
-msgstr ""
+msgstr "Liczba*"
 
 #: templates/gom/force.html:121
 msgid "down"
-msgstr ""
+msgstr "w dół"
 
 #: templates/gom/force.html:121
 msgid "up"
-msgstr ""
+msgstr "do góry"
 
-#: templates/gom/force.html:151 templates/gom/unit.html:222
+#: templates/gom/force.html:151
+#: templates/gom/unit.html:222
 #: templates/gom/unit.html.py:710
 msgid "Save"
-msgstr ""
+msgstr "Zapisz"
 
-#: templates/gom/force.html:154 templates/gom/unit.html:714
+#: templates/gom/force.html:154
+#: templates/gom/unit.html:714
 msgid "delete"
-msgstr ""
+msgstr "Usuń"
 
-#: templates/gom/force.html:158 templates/gom/unit.html:717
+#: templates/gom/force.html:158
+#: templates/gom/unit.html:717
 msgid "PDF"
-msgstr ""
+msgstr "PDF"
 
 #: templates/gom/force.html:164
-msgid ""
-"*Note: by design only one card is outputed for each Unit Entry. The count "
-"value is used in calculating force point cost.<br> If you wish to have "
-"multiple duplicate cards included in a force then add one entry for each "
-"card that you require."
-msgstr ""
+msgid "*Note: by design only one card is outputed for each Unit Entry. The count value is used in calculating force point cost.<br> If you wish to have multiple duplicate cards included in a force then add one entry for each card that you require."
+msgstr "*Uwaga: jeden wpis jednostki = jedna karta. Licznik wartości jest używany do obliczenia punktowego  kosztu Armii.<br> Jeśli chcesz zwielokrotnić karty w Armii musisz pojednyczo dodawać wpisy dla każdej potrzebnej karty."
 
 #: templates/gom/force_add.html:17
 msgid "Add Gruntz to Forces"
-msgstr ""
+msgstr "Dodaj Gruntz do Armii"
 
-#: templates/gom/force_add.html:21 templates/gom/force_list.html:21
+#: templates/gom/force_add.html:21
+#: templates/gom/force_list.html:21
 msgid "Forces"
-msgstr ""
+msgstr "Armie"
 
-#: templates/gom/force_help.html:9 templates/gom/help.html:7
+#: templates/gom/force_help.html:9
+#: templates/gom/help.html:7
 msgid "Force Creation"
-msgstr ""
+msgstr "Tworzenie Armii"
 
 #: templates/gom/force_help.html:12
 msgid "Force Creation Guide"
-msgstr ""
+msgstr "Przewodnik tworzenia Armii"
 
 #: templates/gom/force_list.html:17
 msgid "List Forces"
-msgstr ""
+msgstr "Lista Armii"
 
 #: templates/gom/force_list.html:42
 msgid "Empty forces that do not belong to you have been excluded."
-msgstr ""
+msgstr "Puste Armie nienależące do Ciebie zostały wykluczone."
 
 #: templates/gom/help.html:4
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
-#: templates/gom/help.html:6 templates/gom/unit_help.html:9
+#: templates/gom/help.html:6
+#: templates/gom/unit_help.html:9
 msgid "Unit Creation"
-msgstr ""
+msgstr "Tworzenie Jednostki"
 
 #: templates/gom/help.html:8
 msgid "Multi Card PDF"
-msgstr ""
+msgstr "WieloKartowy PDF"
 
 #: templates/gom/list.html:25
 msgid "User profile default filters reset to Grunt"
-msgstr ""
+msgstr "Ustawienia użykownika przestawione na Grunt"
 
-#: templates/gom/list.html:28 templates/gom/list.html.py:42
-msgid ""
-"Saving filter settings requires a free user account. Please register or "
-"login."
-msgstr ""
+#: templates/gom/list.html:28
+#: templates/gom/list.html.py:42
+msgid "Saving filter settings requires a free user account. Please register or login."
+msgstr "Filtry zapisu tylko dla zarejestrowanego użykownika. Proszę zarejestruj się (za darmo!) lub zaloguj."
 
 #: templates/gom/list.html:39
 msgid "Set."
-msgstr ""
+msgstr "Ustawione."
 
 #: templates/gom/list.html:50
 msgid "Done"
-msgstr ""
+msgstr "Zrobione!"
 
-#: templates/gom/list.html:51 templates/gom/list.html.py:97
+#: templates/gom/list.html:51
+#: templates/gom/list.html.py:97
 #: templates/gom/list.html:99
 msgid "Add to Force"
-msgstr ""
+msgstr "Dodaj do Armii"
 
 #: templates/gom/list.html:73
 msgid "List Units"
-msgstr ""
+msgstr "Lista Jednostek"
 
 #: templates/gom/list.html:76
 msgid "Units"
-msgstr ""
+msgstr "Jednostki"
 
 #: templates/gom/list.html:78
 msgid "Filter by:"
-msgstr ""
+msgstr "Filtruj przy użyciu:"
 
 #: templates/gom/list.html:80
 msgid "Make Defaults"
-msgstr ""
+msgstr "Zastosuj standardowe"
 
 #: templates/gom/list.html:81
 msgid "Reset Saved Defaults"
-msgstr ""
+msgstr "Wróc do ustawień domyślnych "
 
 #: templates/gom/list.html:94
 msgid "Rating"
-msgstr ""
+msgstr "Ocena"
 
 #: templates/gom/list.html:95
 msgid "Create Multi Card PDF"
-msgstr ""
+msgstr "Stwórz WieloKartowy PDF"
 
 #: templates/gom/list_table.html:30
 msgid "Requires login"
-msgstr ""
+msgstr "Wymagane zalogowanie się"
 
 #: templates/gom/multi_help.html:9
 msgid "Multi Card PDF Creation"
-msgstr ""
+msgstr "Tworzenie WieloKartowego PDF"
 
 #: templates/gom/multi_help.html:12
 msgid "Multi Card PDF Creation Guide"
-msgstr ""
+msgstr "Przewodnik Tworzenia WieloKartowego PDF"
 
 #: templates/gom/multi_help.html:14
-msgid ""
-"Important: If you want to create an army/force that is saved online, has a "
-"force description, total cost and total unit list, and is viewable by others "
-"online then you want to <a href=/gom/help/force>create a Force</a> instead "
-"of a Multi Card PDF."
-msgstr ""
+msgid "Important: If you want to create an army/force that is saved online, has a force description, total cost and total unit list, and is viewable by others online then you want to <a href=/gom/help/force>create a Force</a> instead of a Multi Card PDF."
+msgstr "Ważne: jeśli chcesz stworzyć Armię i zapisać ją online, dodać jej opis, koszt punktowy, listę jednostek, udostępnić ją innym wówczas chcesz raczej <a href=/gom/help/force>stworzyć Armię</a> zamiast stworzenia WieloKartowego PDF."
 
 #: templates/gom/multi_help.html:15
-msgid ""
-"Multi Card PDFs are a quick way to select 1 to 5 copies of a number of units "
-"and have up to 24 of them output on an up to 3 page long PDF. Force creation "
-"supports all of this and more and is the suggested way to manage army "
-"creation."
-msgstr ""
+msgid "Multi Card PDFs are a quick way to select 1 to 5 copies of a number of units and have up to 24 of them output on an up to 3 page long PDF. Force creation supports all of this and more and is the suggested way to manage army creation."
+msgstr "WieloKartowy PDF pozwala szybko wybrać od 1 do 5 kopii pewnej liczby jednostek i umieszczenie do 24 kart na max 3 stronach PDF. Tworzenie Armii pozwala na powyższe jak i na wiele więcej i jest sugerowanym przez nas rozwiązaniem."
 
 #: templates/gom/unit.html:221
 msgid "Saved"
-msgstr ""
+msgstr "Zapisane"
 
 #: templates/gom/unit.html:268
 msgid "Power Armour Weapons"
-msgstr ""
+msgstr "Broń Pancerzy Wspomaganych"
 
 #: templates/gom/unit.html:277
 msgid "SA Weapons"
-msgstr ""
+msgstr "Broń Sekcji Wsparcia"
 
 #: templates/gom/unit.html:288
 msgid "Commander Weapons"
-msgstr ""
+msgstr "Broń Dowódcy"
 
 #: templates/gom/unit.html:403
 msgid "Spec. Assault(16)"
-msgstr ""
+msgstr "SpecSzturmowe (16)"
 
 #: templates/gom/unit.html:413
 msgid "Super Slow"
-msgstr ""
+msgstr "Bardzo Powolny"
 
 #: templates/gom/unit.html:504
-msgid ""
-"Once saved, this unit will now appear in the list of published and finished "
-"units. Please ensure that the unit is complete."
-msgstr ""
+msgid "Once saved, this unit will now appear in the list of published and finished units. Please ensure that the unit is complete."
+msgstr "Upewnij się, jednostka jest ukończona. Zapisana zostanie opublikowana."
 
 #: templates/gom/unit.html:506
-msgid ""
-"Once saved, this unit will no longer appear in the list of published and "
-"finished units. However other users may still view it if they choose to view "
-"non-published units."
-msgstr ""
+msgid "Once saved, this unit will no longer appear in the list of published and finished units. However other users may still view it if they choose to view non-published units."
+msgstr "Jeśli zapisana, ta jednostka nie pojawi się na liście opublikowanych i skończonych jednostek.  Jednakże inni użytkownicy będą mogli oglądać tę jednostkę, o ile zechcą oglądać nieopublikowane jednostki."
 
-#: templates/gom/unit.html:578 templates/gom/unit.html.py:586
+#: templates/gom/unit.html:578
+#: templates/gom/unit.html.py:586
 msgid "Edit Unit"
-msgstr ""
+msgstr "Edytuj Jednostki"
 
 #: templates/gom/unit.html:587
 msgid "Publish"
-msgstr ""
+msgstr "Opublikuj"
 
 #: templates/gom/unit.html:589
 msgid "Other User's Unit - View Only"
-msgstr ""
+msgstr "Jednostki innych Użytkowników (niemodyfikowalne)"
 
 #: templates/gom/unit.html:594
 msgid "Cost: "
-msgstr ""
+msgstr "Koszt:"
 
 #: templates/gom/unit.html:603
 msgid "Size"
-msgstr ""
+msgstr "Wielkość"
 
 #: templates/gom/unit.html:610
 msgid "Damage"
-msgstr ""
+msgstr "Obrażenie"
 
 #: templates/gom/unit.html:625
 msgid "Mecha?"
-msgstr ""
+msgstr "Mech?"
 
 #: templates/gom/unit.html:632
 msgid "Grunt Weapons"
-msgstr ""
+msgstr "Broń Żołnierzy"
 
 #: templates/gom/unit.html:636
 msgid "SA/Commander weapons"
-msgstr ""
+msgstr "Broń Sekcji Wsparcia/Dowódcy"
 
 #: templates/gom/unit.html:640
 msgid "Specialist Weapons"
-msgstr ""
+msgstr "Broń Specjalisty"
 
 #: templates/gom/unit.html:652
 msgid "Same-card SA"
-msgstr ""
+msgstr "Ta sama karta Sekcji Wsparcia"
 
 #: templates/gom/unit.html:654
 msgid "Same-card SA 2"
-msgstr ""
+msgstr "Ta sama karta Sekcji Wsparcia 2"
 
 #: templates/gom/unit.html:684
 msgid "Engineer "
-msgstr ""
+msgstr "Inżynieryjny"
 
 #: templates/gom/unit.html:699
 msgid "Description:"
-msgstr ""
+msgstr "Opis:"
 
 #: templates/gom/unit.html:700
 msgid "Manufacturer:"
-msgstr ""
+msgstr "Producent:"
 
 #: templates/gom/unit_help.html:12
 msgid "Unit Creation Guide"
-msgstr ""
+msgstr "Przewodnik Tworzenia Jednostek"
 
-#: templates/gom/what_next.html:6 templates/gom/what_next.html.py:9
+#: templates/gom/what_next.html:6
+#: templates/gom/what_next.html.py:9
 msgid "What Next?"
-msgstr ""
+msgstr "Co dalej?"
 
 #: templates/gom/what_next.html:32
-#, python-format
-msgid ""
-"Start by <a href=\"%(signup_url)s\">signing up</a> and <a href="
-"\"%(login_url)s\">logging in</a>."
-msgstr ""
+msgid "Start by <a href=\"%(signup_url)s\">signing up</a> and <a href=\"%(login_url)s\">logging in</a>."
+msgstr "Rozpocznij od <a href=\"%(signup_url)s\">zarejestrowania się</a> i <a href=\"%(login_url)s\">zalogowania się</a>."
 
 #: templates/gom/what_next.html:34
-#, python-format
 msgid "Start by <a href=\"%(login_url)s\">logging in</a>."
-msgstr ""
+msgstr "Rozpocznij od <a href=\"%(login_url)s\">zalogowania się</a>."
 
 #: templates/profiles/_profile_info.html:4
 msgid "About"
-msgstr ""
+msgstr "O"
 
 #: templates/profiles/_profile_info.html:5
 msgid "Location"
-msgstr ""
+msgstr "Lokacja"
 
 #: templates/profiles/_profile_info.html:6
 msgid "Website"
-msgstr ""
+msgstr "Website"
+
