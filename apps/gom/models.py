@@ -733,28 +733,28 @@ class UnitForm(forms.ModelForm):
         if 'instance' in kwargs:
             print kwargs['instance'].weapons.all()
             try:
-                basic_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__gte=1, weapon__weaponType__lte=2, mountType=0).get()
+                basic_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__gte=1, weapon__weaponType__lte=2, mountType=0).all()[0]
                 self.fields['basicWeapons'].initial=basic_instance.weapon
                 if basic_instance.nameOverride:
                     self.fields['basic_Custom'].initial=basic_instance.nameOverride
                     self.fields['OR_basic'].initial=True
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, IndexError):
                 pass
             try:
-                SA_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4], mountType=0).get()
+                SA_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4], mountType=0).all()[0]
                 self.fields['SAWeapons'].initial=SA_instance.weapon
                 if SA_instance.nameOverride:
                     self.fields['SA_Custom'].initial=SA_instance.nameOverride
                     self.fields['OR_SA'].initial=True
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, IndexError):
                 pass
             try:
-                Spec_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4,5], mountType=0).get()
+                Spec_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType__in=[1,2,4,5], mountType=0).all()[0]
                 self.fields['SpecWeapons'].initial=Spec_instance.weapon
                 if Spec_instance.nameOverride:
                     self.fields['Spec_Custom'].initial=Spec_instance.nameOverride
                     self.fields['OR_Spec'].initial=True
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, IndexError):
                 pass
             try:
                 CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0, mountType=0).get()
