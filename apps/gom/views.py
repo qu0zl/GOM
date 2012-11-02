@@ -341,7 +341,6 @@ def forceSave(request, force_id=0):
         return forceForm(request, force_id)
 
 def addUnitWeapon(targetUnit, newWeapon, mountType=0, custom=None):
-    print 'Adding weapon %s (%s) to unit %s with mount type %d' % (newWeapon, custom, targetUnit.name, mountType)
     if newWeapon:
         if custom != None:
             w = gom.models.UnitWeapon(weapon=newWeapon, unit=targetUnit, mountType=mountType, nameOverride=custom)
@@ -383,7 +382,6 @@ def weaponCosts():
         weapons = weapons + "%s:%s," % (a,b)
     return weapons
 def unitSave(request, unit_id=0):
-    print 'trying to save unit %s' % unit_id
     unit_id = int(unit_id)
     original_unit_id = unit_id
     unit_owner = 0
@@ -405,19 +403,16 @@ def unitSave(request, unit_id=0):
                 unit.owner.add(request.user)
                 unit.save()
                 unit_id = unit.id
-                print 'saved new unit - %d' % unit.id
             else:
 
                 unit = gom.models.Unit.objects.get(id=unit_id);
                 # If the authenticated user is not the owner of this object then don't let them edit it!
                 if (request.user != unit.owner.get()):
                     return pdfIt(request, unit_id)
-                print 'Updating unit entry %d' % unit_id
                 #test for delete
                 if 'delete' in request.POST:
                     unit.delete()
                     return HttpResponseRedirect('/gom/list/all/')
-                print form.cleaned_data
                 if unit.tempInstance: # Clear the temp object flag if set
                     print 'clearing tempInstance'
                     unit.tempInstance = False
@@ -432,7 +427,6 @@ def unitSave(request, unit_id=0):
                 unit.size=int(form.cleaned_data['size'])
                 unit.unitType=int(form.cleaned_data['unitType'])
 
-            print form.cleaned_data
             # Now add weapon groups
             unit.weapons.clear()
             if unit.isVehicle():
@@ -502,7 +496,6 @@ def unitSave(request, unit_id=0):
             else:
                 unit.publish = False
             if unit.unitType == 12:
-                print 'Setting mecha mobility'
                 unit.mobility = 1 # Walk - it's a mecha
             elif unit.unitType == 14:
                 try:
