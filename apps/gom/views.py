@@ -478,10 +478,6 @@ def unitSave(request, unit_id=0):
                     unit.engineerSpecialist=form.cleaned_data['engineerSpecialist']
                 except:
                     unit.engineerSpecialist=0
-                try:
-                    unit.mechaSpecialist=form.cleaned_data['mechaSpecialist']
-                except:
-                    unit.mechaSpecialist=0
             # General
             if form.cleaned_data['desc']:
                 unit.desc=form.cleaned_data['desc']
