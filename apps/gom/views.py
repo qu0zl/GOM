@@ -469,15 +469,6 @@ def unitSave(request, unit_id=0):
                     unit.perks=form.cleaned_data['perks2'],
                 else:
                     unit.perks.clear()
-
-                try:
-                    unit.medicSpecialist=form.cleaned_data['medicSpecialist']
-                except:
-                    unit.medicSpecialist=0
-                try:
-                    unit.engineerSpecialist=form.cleaned_data['engineerSpecialist']
-                except:
-                    unit.engineerSpecialist=0
             # General
             if form.cleaned_data['desc']:
                 unit.desc=form.cleaned_data['desc']
@@ -493,6 +484,11 @@ def unitSave(request, unit_id=0):
                 unit.publish = False
             if unit.unitType == 12:
                 unit.mobility = 1 # Walk - it's a mecha
+            elif unit.unitType == 4:
+                try:
+                    unit.mobility = int(form.cleaned_data['commander_mobility'])
+                except:
+                    unit.mobility = 1
             elif unit.unitType == 14:
                 try:
                     unit.mobility = int(form.cleaned_data['air_mobility'])

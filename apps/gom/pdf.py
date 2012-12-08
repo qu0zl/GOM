@@ -176,7 +176,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
 
 def drawSlots(p, grunt, WIDTH, HEIGHT):
     slots = grunt.getSlots()
-    if slots > 0:
+    if slots:
         x = .07*WIDTH
         boxWidth = WIDTH/19
         boxGap = WIDTH/119
@@ -185,7 +185,7 @@ def drawSlots(p, grunt, WIDTH, HEIGHT):
         p.setFillColor(colors.white)
         p.roundRect(x, y, 8*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
         p.setFillColor(colors.black)
-        p.drawCentredString(x + 4*boxWidth, y+(boxWidth/4), "%s %d" % (_('Transport Slots:'), slots) )
+        p.drawCentredString(x + 4*boxWidth, y+(boxWidth/4), "%s %s" % (_('Transport Slots:'), slots) )
 
 def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
     try: # draw engineer or medic boxes if necessary
@@ -193,14 +193,14 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
             boxWidth = WIDTH/19
             boxGap = WIDTH/119
             dy = .14*HEIGHT
-            if grunt.medicSpecialist:
+            if False and grunt.medicSpecialist:
                 p.setStrokeColor(colors.lightgrey)
                 p.setFillColor(colors.white)
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
                 p.setFillColor(colors.black)
                 p.drawCentredString((.80*WIDTH) + 1.5*boxWidth, dy+(boxWidth/4), _('Medic'))
                 dy = dy - (boxWidth+boxGap)
-            if grunt.engineerSpecialist:
+            if False and grunt.engineerSpecialist:
                 p.setStrokeColor(colors.lightgrey)
                 p.setFillColor(colors.white)
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
@@ -361,11 +361,10 @@ def drawDesc(p, unit, WIDTH, HEIGHT):
         p.translate(-descX, -descY)
 
 def mobString(unit):
-    if unit.unitType == 14: #ASV
-        mobStrings = (_('None'),_('Helicopter'),_('Prop VTOL'),_('Jet VTOL'),_('Grav'),_('Error'))
-    else:
-        mobStrings = (_('None'),_('Walk'),_('Track'),_('Wheels'),_('Hover'),_('Grav'))
-    return mobStrings[unit.mobility]
+    for i, string in gom.models.ALL_MOBILITY_CHOICES:
+        if i == unit.mobility:
+            return string
+    return _('Error')
 
 def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
     sizeString = (_('None'),_('Scout'),_('Light'),_('Medium'),_('Heavy'),_('Assault'))
@@ -596,7 +595,7 @@ def oneCard(p, WIDTH, HEIGHT, request, unit):
     drawStats(p, unit, WIDTH, HEIGHT)
     drawWeapons(p, unit, WIDTH, HEIGHT)
     drawDamage(p, unit, WIDTH, HEIGHT)
-    drawMedicEngineer(p, unit, WIDTH, HEIGHT)
+    # not currently used drawMedicEngineer(p, unit, WIDTH, HEIGHT)
     drawSlots(p, unit, WIDTH, HEIGHT)
     drawDesc(p, unit, WIDTH, HEIGHT)
     drawPerks(p, unit, WIDTH, HEIGHT)

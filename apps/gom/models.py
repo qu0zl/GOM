@@ -39,29 +39,34 @@ RATING_CHOICES = (
     # Translators: 5/5 star card rating
     (5,  _('Great'))
 )
+
+GRUNT, SA, SPEC, COMMANDER = range(1,5)
 INFANTRY_TYPE_CHOICES = (
-    (1,  _('Grunt Squad')),
-    (2,  _('Squad Attachment')),
-    (3,  _('Specialist')),
-    (4,  _('Commander'))
+    (GRUNT,  _('Grunt Squad')),
+    (SA,  _('Squad Attachment')),
+    (SPEC,  _('Specialist')),
+    (COMMANDER,  _('Commander'))
 )
+TANK, MECHA, GSV, ASV, ARTI, VSPEC, FIELD_ARTI, AAV, FIGHTER, SHT, SHAS, MONSTER = range(11,23)
 VEHICLE_TYPE_CHOICES = (
-    (11,  _('Tank')),
+    (TANK,  _('Tank')),
     # Translators: Mecha vehicle, such as a battle-mech.
-    (12,  _('Mecha')),
+    (MECHA,  _('Mecha')),
     # Translators: Ground Support Vehicle
-    (13,  _('GSV')),
+    (GSV,  _('GSV')),
     # Translators: AIR Support Vehicle
-    (14,  _('ASV')),
-    (15,  _('Artillery')),
-    (16,  _('Vehicle Specialist')),
+    (ASV,  _('ASV')),
+    (ARTI,  _('Artillery')),
+    (VSPEC,  _('Vehicle Specialist')),
     # Translators: Air Attack Vehicle
-    (17,  _('AAV')),
-    (18,  _('Fighter')),
-    (19,  _('Super Heavy Tank')),
-    (20,  _('Super Heavy Air Support')),
-    (30,  _('Monster'))
+    (FIELD_ARTI,  _('Field Artillery')),
+    (AAV,  _('AAV')),
+    (FIGHTER,  _('Fighter')),
+    (SHT,  _('Super Heavy Tank')),
+    (SHAS,  _('Super Heavy Air Support')),
+    (MONSTER,  _('Monster'))
 )
+
 GRUNTZ_TYPE_CHOICES = INFANTRY_TYPE_CHOICES + VEHICLE_TYPE_CHOICES
 
 MOBILITY_FIXED, MOBILITY_WALK, MOBILITY_WALK_MECHA, MOBILITY_TRACK, MOBILITY_WHEEL, MOBILITY_HOVER, MOBILITY_BIKE, MOBILITY_GRAV, MOBILITY_JUMP, MOBILITY_FLIGHT, MOBILITY_HYPER, MOBILITY_HELI, MOBILITY_PROP_VTOL, MOBILITY_JET_VTOL, MOBILITY_PROP, MOBILITY_JET, MOBILITY_AEROSPACE = range(0,17)
@@ -89,8 +94,9 @@ CHOICE_MOBILITY_PROP_VTOL = (MOBILITY_PROP_VTOL, _('Prop VTOL'))
 CHOICE_MOBILITY_JET_VTOL = (MOBILITY_JET_VTOL, _('Jet VTOL'))
 CHOICE_MOBILITY_PROP = (MOBILITY_PROP, _('Propeller Flight'))
 CHOICE_MOBILITY_JET = (MOBILITY_JET, _('Jet Flight'))
-CHOICE_MOBILITY_AEROSPACE (MOBILITY_AEROSPACE, _('Aerospace'))
+CHOICE_MOBILITY_AEROSPACE = (MOBILITY_AEROSPACE, _('Aerospace'))
 
+ALL_MOBILITY_CHOICES = (CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_WALK_MECHA, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_BIKE, CHOICE_MOBILITY_GRAV, CHOICE_MOBILITY_JUMP, CHOICE_MOBILITY_FLIGHT, CHOICE_MOBILITY_HYPER, CHOICE_MOBILITY_HELI, CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_PROP, CHOICE_MOBILITY_JET, CHOICE_MOBILITY_AEROSPACE)
 BASIC_MOBILITY_CHOICES = (
     CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_GRAV )
 
@@ -178,7 +184,8 @@ MODZ_TYPE_CHOICES = (
     (2, _('Mobility')),
     (3, _('Armour')),
     (4, _('Repair')),
-    (5, _('Anti Infantry'))
+    (5, _('Anti Infantry')),
+    (6, _('Assault'))
 )
 
 # Over-ride ModelChoiceField to return weaponSize as well as name, rather than just unicode name
@@ -303,7 +310,7 @@ class Unit(models.Model):
     perks = models.ManyToManyField('Perks', related_name='Perk Table', default=None, blank=True)
     desc = models.TextField(max_length=300, blank=True)
     manu = models.ManyToManyField('Manufacturer', related_name='Manu Table', default=None)
-    mobility = models.SmallIntegerField(choices=COMMANDER_MOBILITY_CHOICES, default=1, blank=False)
+    mobility = models.SmallIntegerField(choices=ALL_MOBILITY_CHOICES, default=1, blank=False)
     size = models.SmallIntegerField(choices=SIZE_CHOICES, default=1, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=True)
     tempInstance = models.BooleanField(default=False)
@@ -311,10 +318,6 @@ class Unit(models.Model):
     rating = models.DecimalField(blank=True, decimal_places=2, max_digits=4, default=0)
 
     unitType = models.SmallIntegerField(choices=GRUNTZ_TYPE_CHOICES, default=1, blank=False)
-
-    # specialist specific fields
-    engineerSpecialist = models.BooleanField(default=False, blank=False)
-    medicSpecialist = models.BooleanField(default=False, blank=False)
 
     # vehicle specific fields
     modz = models.ManyToManyField('Modz', related_name='Modz Table', default=None)
@@ -359,7 +362,7 @@ class Unit(models.Model):
         self.save()
 
     def dumpObject(self, f):
-        f.write('g = gom.models.Unit(name="%s", shoot=%d, assault=%d, guard=%d, soak=%d, mental=%d, skill=%d, desc=%s, mobility=%d, size=%d, unitType=%d, image=%s, engineerSpecialist=%s, medicSpecialist=%s, cmdTek=%s)\n' % (self.name, self.shoot, self.assault, self.guard, self.soak, self.mental, self.skill, repr(self.desc), self.mobility, self.size, self.unitType, repr(self.image), self.engineerSpecialist, self.medicSpecialist, self.cmdTek))
+        f.write('g = gom.models.Unit(name="%s", shoot=%d, assault=%d, guard=%d, soak=%d, mental=%d, skill=%d, desc=%s, mobility=%d, size=%d, unitType=%d, image=%s, cmdTek=%s)\n' % (self.name, self.shoot, self.assault, self.guard, self.soak, self.mental, self.skill, repr(self.desc), self.mobility, self.size, self.unitType, repr(self.image), self.cmdTek))
         f.write('g.save()\n') # Needed so that we can do below M2M relations
         try:
             f.write('m = gom.models.Manufacturer.objects.get(manuName="%s")\n' % self.manu.get().manuName)
@@ -425,16 +428,10 @@ class Unit(models.Model):
         elif self.unitType== 2:
             return 0
         elif self.unitType== 3:
-            # Work out if there's any extra engineer or medic cost
-            specCost = 0
-            if self.engineerSpecialist:
-                specCost = 5
-            if self.medicSpecialist:
-                specCost = specCost + 5
             t=(0,2,4,6,8,10) # includes specialist base cost of 1
-            return specCost+t[self.size]
+            return t[self.size]
         elif self.unitType == 4:
-            t=(13,15,17,19,21) # includes commander base cost of 1
+            t=(0,13,15,17,19,21) # includes commander base cost of 1
             return t[self.size]
         elif self.unitType == 11:
             t = (0, 14, 19, 24, 29, 34) # Includes base tank cost of 1
@@ -497,14 +494,14 @@ class Unit(models.Model):
             return 0
         elif self.unitType == 4:
             t = { MOBILITY_WALK:0, MOBILITY_WALK_MECHA:1, MOBILITY_TRACK:3, MOBILITY_WHEEL:5, MOBILITY_HOVER:7, MOBILITY_GRAV:9 }
-            cost=t[self.mobility]
+            return t[self.mobility]
         elif self.isVehicle():
             if self.unitType == 12: # MECHA
                 return 0
-            elif self.unitType == 14: #ASV
-                t = (0, 0, 1, 1, 2, 999)
-            elif self.unitType == 11: # Tank
-                t = { greg
+            elif self.unitType in (TANK,GSV,ARTI):
+                t = { MOBILITY_WALK:0, MOBILITY_TRACK:1, MOBILITY_WHEEL:1, MOBILITY_HOVER:2, MOBILITY_GRAV:4 }
+            elif self.unitType == 13:
+                t = { MOBILITY_HELI:0, MOBILITY_PROP_VTOL:2, MOBILITY_JET_VTOL:3, MOBILITY_GRAV:4 };
             else:
                 t = (0, 0, 1, 1, 2, 3)
             return t[self.mobility]
@@ -550,7 +547,7 @@ class Unit(models.Model):
             return 0
     def skillCost(self):
         if self.isVehicle():
-            t = {2:0, 3:1, 4:2, 5:5, 6:8, 7:12}
+            t = {2:0, 3:1, 4:3, 5:5, 6:8, 7:12}
             return t[self.skill]
         elif self.unitType != 2:
             t = {2:0, 3:1, 4:3, 5:5, 6:7, 7:9}
@@ -611,15 +608,23 @@ class Unit(models.Model):
                 pass
         return 0
     def getSpeed(self):
-        if self.unitType in (1,2,4):
+        if self.unitType in (1,2):
             return 4 # any modifiers?
         elif self.unitType == 3:
             t={1:4,2:6,3:7,4:8,5:10}
             speed=t[self.mobility]
             return speed
+        elif self.unitType == 4:
+             t = { MOBILITY_WALK:4, MOBILITY_WALK_MECHA:5, MOBILITY_TRACK:6, MOBILITY_WHEEL:7, MOBILITY_HOVER:8, MOBILITY_GRAV:10 }
+             return t[self.mobility]
         elif self.unitType in (11,13,15):
-            speedArray = ((7,6,6,5,4), (8,7,7,6,6), (9,8,8,7,7), (8,8,7,6,5), (10,9,8,8,7))
-            return speedArray[self.mobility-1][self.size-1]
+            t = {
+                MOBILITY_WALK:(7,6,6,5,4),
+                MOBILITY_TRACK:(8,7,7,6,6),
+                MOBILITY_WHEEL:(9,8,8,7,7),
+                MOBILITY_HOVER:(8,8,7,6,5),
+                MOBILITY_GRAV:(10,9,8,8,7) }
+            return t[self.mobility][self.size-1]
         elif self.unitType == 12:
             t = (0, 7, 6, 6, 5, 4)
         elif self.unitType == 14:
@@ -627,11 +632,11 @@ class Unit(models.Model):
             return speedArray[self.mobility-1][self.size-1]
         return t[self.size]
     def getSlots(self):
-        if self.unitType == 13:
-            t=[0,1,1,2,2,4]
+        if self.unitType == GSV:
+            t=[None,"1/2",1,2,2,4]
             return t[self.size]
-        elif self.unitType == 14:
-            t=[0,0,0,1,2,3]
+        elif self.unitType == ASV:
+            t=[None,None,"1/2",1,2,3]
             return t[self.size]
         else:
             return 0
@@ -648,13 +653,12 @@ class Unit(models.Model):
     def updateCost(self):
         self.oldCost = self.cost
         print 'base:%d, shoot:%d, assault:%d, guard:%d, soak:%d, mental:%d, skill:%d, weapons:%d, perks:%d, mob:%d, mount:%d' % ( self.getBaseCost(), self.shootCost(), self.assaultCost(), self.guardCost(), self.soakCost(), self.mentalCost(), self.skillCost(), self.weaponCost(), self.perkCost(), self.mobilityCost(), self.mountCost() )
-        total = self.getBaseCost() + self.shootCost() + self.assaultCost() + self.guardCost() + self.soakCost() + self.mentalCost() + self.skillCost() + self.weaponCost() + self.perkCost() + self.mobilityCost() + self.mountCost()
+        subTotal = self.getBaseCost() + self.shootCost() + self.assaultCost() + self.guardCost() + self.soakCost() + self.mentalCost() + self.skillCost() + self.mobilityCost()
         if self.isInfantry():
-            halved = int(ceil(total /float(2)))
-            print 'total %d, halved %d' % (total, halved)
-            self.cost = halved
-        else:
-            self.cost = total
+            halved = int(ceil(subTotal /float(2)))
+            print 'subTotal %d, halved %d' % (subTotal, halved)
+            subTotal = halved
+        self.cost = subTotal + self.weaponCost() + self.perkCost() + self.mountCost()
         if self.cost != self.oldCost:
             self.save()
             # Update costs of any forces that include this unit
@@ -753,13 +757,14 @@ class UnitForm(forms.ModelForm):
     modz2 = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
+    mobility = forms.ChoiceField(choices=BASIC_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_WALK)
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
-    air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"))
-    commander_mobility = forms.ChoiceField(choices=COMMANDER_MOBILITY_CHOICES, required=False, label=_("Commander Mobility"))
+    air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"), initial=MOBILITY_HELI)
+    commander_mobility = forms.ChoiceField(choices=COMMANDER_MOBILITY_CHOICES, required=False, label=_("Mobility"))
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'soak', 'mental', 'skill', 'mobility', 'desc', 'engineerSpecialist', 'medicSpecialist', 'cmdTek', 'publish' ]
+        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'soak', 'mental', 'skill', 'mobility', 'desc', 'cmdTek', 'publish' ]
     def __init__(self, *args, **kwargs):
         super(UnitForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
@@ -869,19 +874,15 @@ class UnitForm(forms.ModelForm):
             except ObjectDoesNotExist:
                 pass
             try:
-                self.fields['medicSpecialist'].initial=kwargs['instance'].medicSpecialist
-            except Exception, e:
-                print 'MedicSpecialist exception:', e
-                pass
-            try:
                 self.fields['guard'].initial=kwargs['instance'].getGuard()
             except Exception, e:
                 print "guard exception", e
                 pass
             try:
-                self.fields['engineerSpecialist'].initial=kwargs['instance'].engineerSpecialist
+                if kwargs['instance'].unitType == COMMANDER:
+                    self.fields['commander_mobility'].initial = kwargs['instance'].mobility
             except Exception, e:
-                print "engineer exception", e
+                print "commander mobility exception", e
                 pass
             try:
                 if kwargs['instance'].unitType == 14: #ASV
