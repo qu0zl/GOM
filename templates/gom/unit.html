@@ -17,20 +17,35 @@
             case (2):
                 return 0;
             case (3):
-                return [0,2,4,6,8,10][size];
+                return [5,6,7,8,9][size-1];
             case (4):
-                return [0,13,15,17,19,21][size];
+                return[13,15,17,19,21][size-1];
             case (11):
-                return [0, 14, 19, 24, 29, 34][size];
+                return[14,19,24,29,34][size-1];
             case (12):
-                return [0, 11, 14, 17, 22, 27][size];
+                return[11,14,17,22,27][size-1];
             case (13):
-                return [0, 9, 13, 20, 27, 32][size];
+                return[9,13,20,27,32][size-1];
             case (14):
-                return [0, 7, 11, 15, 20, 25][size];
+                return[7,11,15,20,25][size-1];
             case (15):
-                return [0, 3, 5, 9, 13, 16][size];
+                return[12,15,20,25,28][size-1];
+            case (16):
+                return[2,4,6,8,10][size-1];
+            case (17):
+                return[3,6,9,13,16][size-1];
+            case (18):
+                return[7,10,13,16,19][size-1];
+            case (19):
+                return[10,13,16,19,22][size-1];
+            case (20):
+                return[39,44,49,54,59][size-1];
+            case (21):
+                return[47,54,61,68,75][size-1];
+            case (22):
+                return[16,23,28,33,38][size-1];
             default:
+                alert("Unsupported baseCost unit");
                 return 0;
         }
     }
@@ -53,6 +68,10 @@
             case(15):
                 var mobi=$('#id_mobility').val();
                 var t={1:0, 3:1, 4:1, 5:2, 7:4};
+                return t[mobi];
+            case(16):
+                var mobi=$('#id_vspec_mobility').val();
+                var t={0:0, 2:1, 3:2, 4:2, 5:3, 6:5, 7:6};
                 return t[mobi];
             default:
                 var mobi=$('#id_mobility').val();
@@ -86,7 +105,7 @@
         if (utype == 1 || utype == 3 || utype == 4)
             return [0,0,1,2,3,5,8,12][$('#id_skill').val()];
         else if (utype>=11)
-            return [0,0,0,1,2,5,8,12][$('#id_skill').val()];
+            return [0,0,0,1,3,5,8,12][$('#id_skill').val()];
         return 0;
     }
     function mentalCost(utype){
@@ -103,6 +122,16 @@
         }
         return 0;
     }
+    function multiPerkCost(which) {
+        count = 0;
+        if ( which != 1 )
+            count = (($('#id_perks').val() != '' && PERK_COST[$('#id_perks').val()] > 0) + ($('#id_perks2').val() != '' && PERK_COST[$('#id_perks2').val()] > 0));
+        if ( which != 0 )
+            count = count + (($('#id_modz').val() != '' && MODZ_COST[$('#id_modz').val()] > 0)+($('#id_modz2').val() != '' && MODZ_COST[$('#id_modz2').val()] > 0));
+        if ( count > 1 )
+            return ((count - 1)*5)
+        return 0;
+    }
     function perkCost(utype, size) {
         var cmdTekCost = 0;
         switch (utype) {
@@ -111,10 +140,7 @@
             case(1):
             case(3):
             case(4):
-                if ($('#id_perks').val() != '' && $('#id_perks2').val() != '') {
-                    return 5 + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
-                }
-                return PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+                return multiPerkCost(0) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
             case(13):
             case(14):
                 if ( $('#id_cmdTek').prop('checked') )
@@ -123,10 +149,9 @@
             case(11):
             case(12):
             case(15):
-                if ($('#id_modz').val() != '' && $('#id_modz2').val() != '') {
-                    return cmdTekCost + 5 + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
-                }
-                return cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+                return multiPerkCost(1)+cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+            case (16):
+                return multiPerkCost(2) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()] + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
         }
     }
     function weaponCost(utype, size) {
@@ -153,6 +178,7 @@
             case(4):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(3):
+            case(16):
                 return WEAPON_COST[$('#id_SpecWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(11):
             case(12):
@@ -249,6 +275,7 @@ function showMobility(utype) {
             $('#id_mobility_tr').hide();
             $('#id_commander_mobility_tr').show();
             $('#id_air_mobility_tr').hide();
+            $('#id_vspec_mobility_tr').hide();
             break;
         case (1):
         case (2):
@@ -257,6 +284,7 @@ function showMobility(utype) {
             $('#id_mobility_tr').hide();
             $('#id_commander_mobility_tr').hide();
             $('#id_air_mobility_tr').hide();
+            $('#id_vspec_mobility_tr').hide();
             break;
         // vehicles
         case 11:
@@ -265,11 +293,19 @@ function showMobility(utype) {
             $('#id_mobility_tr').show();
             $('#id_commander_mobility_tr').hide();
             $('#id_air_mobility_tr').hide();
+            $('#id_vspec_mobility_tr').hide();
             break;
         case 14: //ASV
             $('#id_mobility_tr').hide();
             $('#id_commander_mobility_tr').hide();
+            $('#id_vspec_mobility_tr').hide();
             $('#id_air_mobility_tr').show();
+            break;
+        case 16: // VSPEC
+            $('#id_mobility_tr').hide();
+            $('#id_commander_mobility_tr').hide();
+            $('#id_air_mobility_tr').hide();
+            $('#id_vspec_mobility_tr').show();
             break;
         default:
             alert ('Unit type ' + utype + ' not yet supported.');
@@ -340,7 +376,8 @@ function showWeapons(utype) {
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
             $('#id_modz_tb').show();
-            vehicleWeapon('#id_AIWeapons', utype, size);
+            if ( utype != 16 )
+                vehicleWeapon('#id_AIWeapons', utype, size);
             switch (utype) {
                 case 11:
                 case 12:
@@ -393,6 +430,11 @@ function showWeapons(utype) {
                     }
                     $('#id_cmdTek_tr').hide();
                     break;
+                case 16:
+                    $('#id_basicWeapons_tb').hide();
+                    $('#id_SAWeapons_tb').hide();
+                    $('#id_SpecWeapons_tb').show();
+                    break;
                 default:
                     alert ('No weapon support for this vehicle type yet');
                     break;
@@ -408,10 +450,6 @@ function showWeapons(utype) {
             $('#id_size_tr').hide();
             $('#id_damage_tr').hide();
         }
-        if ( utype == 3)
-            $('#id_spec_abilities').show();
-        else
-            $('#id_spec_abilities').hide();
         mobiClick(); // updates mecha walk box
         $("#id_guard option[value='9']").remove();
         $("#id_soak option[value='16']").remove();
@@ -423,14 +461,19 @@ function showWeapons(utype) {
             case (4):
                 $('#id_dam_text').html([0,12,14,16,18,20][size]);
                 break;
+            case (16):
             case (3):
                 $('#id_dam_text').html([0,4,5,6,7,8][size]);
                 // calc values then lock them
-                $("#id_guard").val(15-size);
-                if ( size == 5 ) { 
+                //greg here
+                //alert ('greg here1');
+                if (utype == 16) {
+                    $("#id_soak").append("<option value='16'>{% trans 'Spec. Assault(16)'%}</option>")
+                    $("#id_guard").val(15-size);
+                    $("#id_soak").val(11+size);
+                } else {
                     $("#id_soak").append("<option value='16'>{% trans 'Spec. Assault(16)'%}</option>")
                 }
-                $("#id_soak").val(11+size);
                 break;
             // vehicles
             case 11:
@@ -486,7 +529,7 @@ function showWeapons(utype) {
         }
         showMobility(utype);
 
-        if ( utype == 1 || utype == 2 || utype == 4 ) {
+        if ( utype == 1 || utype == 2 || utype == 4 || utype == 3 ) {
             $("#id_guard option").removeAttr("disabled");
             $("#id_soak option").removeAttr("disabled");
         } else {
@@ -501,6 +544,7 @@ function showWeapons(utype) {
             case(1):
             case(3):
             case(4):
+            case(16):
                 $('#id_perks_tb').show();
                 break;
             default:
@@ -645,6 +689,9 @@ function weaponOR(event) {
                                 <tbody id="id_air_mobility_tr">
                                     <tr><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
                                 </tbody>
+                                <tbody id="id_vspec_mobility_tr">
+                                    <tr><td>{{formObject.vspec_mobility.label}}</td><td>{{formObject.vspec_mobility}}</td></tr>
+                                </tbody>
                                 <tbody>
                                     <tbody id="id_basicWeapons_tb">
                                         <tr><td>{% trans "Grunt Weapons" %}</td><td>{{formObject.basicWeapons}}</td><td>{{formObject.OR_basic}}</td></tr>
@@ -699,7 +746,6 @@ function weaponOR(event) {
                                 </tbody>
                                 <tbody>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
-                                    <tr id="id_spec_abilities"><td>{%trans "Engineer "%} {{formObject.engineerSpecialist}}</td><td>{%trans "Medic"%}{{formObject.medicSpecialist}}</td></tr>
                                 </tbody>
                             </table>
                         </div>

@@ -105,9 +105,9 @@ def drawPerks(p, grunt, WIDTH, HEIGHT):
     if grunt.isVehicle():
         para.wrapOn(p, .54*WIDTH, .14*HEIGHT)
     else:
-        if grunt.unitType == 3 and (grunt.medicSpecialist or grunt.engineerSpecialist):
-            para.wrapOn(p, .725*WIDTH, .14*HEIGHT)
-        else:
+        # may want this again if grunt.unitType == 3 and (grunt.medicSpecialist or grunt.engineerSpecialist):
+        #    para.wrapOn(p, .725*WIDTH, .14*HEIGHT)
+        #else:
             para.wrapOn(p, .9*WIDTH, .14*HEIGHT)
     para.canv = p
     p.translate(perkX, perkY)
@@ -409,6 +409,20 @@ def drawType(p, unit, WIDTH, HEIGHT):
         uString = _('ASV')
     elif unit.unitType == 15:
         uString = _('Artillery')
+    elif unit.unitType == 16:
+        uString = _('Vehicle Spec.')
+    elif unit.unitType == 17:
+        uString = _('Field Artillery')
+    elif unit.unitType == 18 :
+        uString = _('Air Attack Vehicle')
+    elif unit.unitType == 19 :
+        uString = _('Fighter')
+    elif unit.unitType == 20:
+        uString = _('Super-Heavy Tank')
+    elif unit.unitType == 21:
+        uString = _('Super-Heavy Air Support')
+    elif unit.unitType == 22:
+        uString = _('Monster')
     if unit.isVehicle():
         p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
     else:

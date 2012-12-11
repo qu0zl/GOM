@@ -381,6 +381,27 @@ def weaponCosts():
     for (a,b) in map (lambda x: (x.id, x.weaponPoints), w):
         weapons = weapons + "%s:%s," % (a,b)
     return weapons
+def saveModz(unit, form):
+    if form.cleaned_data['modz']:
+        if form.cleaned_data['modz2']:
+            unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
+        else:
+            unit.modz=form.cleaned_data['modz'],
+    elif form.cleaned_data['modz2']:
+        unit.modz=form.cleaned_data['modz2'],
+    else:
+        unit.modz.clear()
+def savePerkz(unit, form):
+    if form.cleaned_data['perks']:
+        if form.cleaned_data['perks2']:
+            unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
+        else:
+            unit.perks=form.cleaned_data['perks'],
+    elif form.cleaned_data['perks2']:
+        unit.perks=form.cleaned_data['perks2'],
+    else:
+        unit.perks.clear()
+
 def unitSave(request, unit_id=0):
     unit_id = int(unit_id)
     original_unit_id = unit_id
@@ -429,17 +450,9 @@ def unitSave(request, unit_id=0):
 
             # Now add weapon groups
             unit.weapons.clear()
-            if unit.isVehicle():
+            if unit.isVehicle() and unit.unitType != 16:
                 saveVehicleWeapons(unit, form)
-                if form.cleaned_data['modz']:
-                    if form.cleaned_data['modz2']:
-                        unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
-                    else:
-                        unit.modz=form.cleaned_data['modz'],
-                elif form.cleaned_data['modz2']:
-                    unit.modz=form.cleaned_data['modz2'],
-                else:
-                    unit.modz.clear()
+                saveModz(unit, form)
             else: # infantry
                 if unit.unitType == 1:
                     if unit.isPowerArmour():
@@ -453,22 +466,14 @@ def unitSave(request, unit_id=0):
                         addUnitWeapon(unit, form.cleaned_data['inlineWeapons2'], mountType=2, custom=form.cleaned_data['inline2_Custom'] if form.cleaned_data['OR_inline2'] else None)
                 elif unit.unitType == 2 or unit.unitType == 4: # SA or Commander
                     addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
-                elif unit.unitType == 3:
+                elif unit.unitType == 3 or unit.unitType == 16:
                     addUnitWeapon(unit, form.cleaned_data['SpecWeapons'], custom=form.cleaned_data['Spec_Custom'] if form.cleaned_data['OR_Spec'] else None)
 
-                if form.cleaned_data['CCW']:
+                if unit.unitType != 16 and form.cleaned_data['CCW']:
                     addUnitWeapon(unit, form.cleaned_data['CCW'], custom=form.cleaned_data['CCW_Custom'] if form.cleaned_data['OR_CCW'] else None)
-                if form.cleaned_data['grenades']:
+                if unit.unitType != 16 and form.cleaned_data['grenades']:
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
-                if form.cleaned_data['perks']:
-                    if form.cleaned_data['perks2']:
-                        unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
-                    else:
-                        unit.perks=form.cleaned_data['perks'],
-                elif form.cleaned_data['perks2']:
-                    unit.perks=form.cleaned_data['perks2'],
-                else:
-                    unit.perks.clear()
+                savePerkz(unit, form)
             # General
             if form.cleaned_data['desc']:
                 unit.desc=form.cleaned_data['desc']
@@ -492,6 +497,12 @@ def unitSave(request, unit_id=0):
             elif unit.unitType == 14:
                 try:
                     unit.mobility = int(form.cleaned_data['air_mobility'])
+                except:
+                    unit.mobility = 1
+            elif unit.unitType == 16: #VSPEC
+                saveModz(unit, form)
+                try:
+                    unit.mobility = int(form.cleaned_data['vspec_mobility'])
                 except:
                     unit.mobility = 1
             else:

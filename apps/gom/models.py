@@ -69,10 +69,12 @@ VEHICLE_TYPE_CHOICES = (
 
 GRUNTZ_TYPE_CHOICES = INFANTRY_TYPE_CHOICES + VEHICLE_TYPE_CHOICES
 
-MOBILITY_FIXED, MOBILITY_WALK, MOBILITY_WALK_MECHA, MOBILITY_TRACK, MOBILITY_WHEEL, MOBILITY_HOVER, MOBILITY_BIKE, MOBILITY_GRAV, MOBILITY_JUMP, MOBILITY_FLIGHT, MOBILITY_HYPER, MOBILITY_HELI, MOBILITY_PROP_VTOL, MOBILITY_JET_VTOL, MOBILITY_PROP, MOBILITY_JET, MOBILITY_AEROSPACE = range(0,17)
+MOBILITY_FIXED, MOBILITY_WALK, MOBILITY_WALK_MECHA, MOBILITY_TRACK, MOBILITY_WHEEL, MOBILITY_HOVER, MOBILITY_BIKE, MOBILITY_GRAV, MOBILITY_JUMP, MOBILITY_FLIGHT, MOBILITY_HYPER, MOBILITY_HELI, MOBILITY_PROP_VTOL, MOBILITY_JET_VTOL, MOBILITY_PROP, MOBILITY_JET, MOBILITY_AEROSPACE, MOBILITY_TOWED, MOBILITY_WALK_QUAD = range(0,19)
 CHOICE_MOBILITY_FIXED = (MOBILITY_FIXED, _('Fixed Mount'))
 # Translators: Walking mobility type
 CHOICE_MOBILITY_WALK = (MOBILITY_WALK, _('Walk'))
+# Translators: Quadrupedal walk mobility type
+CHOICE_MOBILITY_WALK_QUAD = (MOBILITY_WALK_QUAD, _('Quadruped Walk'))
 # Translators: Walking Mech mobility type
 CHOICE_MOBILITY_WALK_MECHA = (MOBILITY_WALK_MECHA, _('Mecha Walk'))
 # Translators: Tracked mobility type
@@ -104,10 +106,10 @@ COMMANDER_MOBILITY_CHOICES = (
     CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_WALK_MECHA, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_GRAV )
 
 VEHICLE_SPEC_MOBILITY_CHOICES = (
-    CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_BIKE, CHOICE_MOBILITY_GRAV )
+    CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_WALK_MECHA, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_BIKE, CHOICE_MOBILITY_GRAV )
 
 MONSTER_MOBILITY_CHOICES = (
-    CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_JUMP, CHOICE_MOBILITY_FLIGHT, CHOICE_MOBILITY_HYPER )
+    CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_WALK_QUAD, CHOICE_MOBILITY_JUMP, CHOICE_MOBILITY_FLIGHT, CHOICE_MOBILITY_HYPER )
 
 AIR_MOBILITY_CHOICES = (
     CHOICE_MOBILITY_HELI, CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_GRAV )
@@ -428,30 +430,42 @@ class Unit(models.Model):
         elif self.unitType== 2:
             return 0
         elif self.unitType== 3:
-            t=(0,2,4,6,8,10) # includes specialist base cost of 1
-            return t[self.size]
+            t = (5,6,7,8,9) # includes specialist base cost of 1
         elif self.unitType == 4:
-            t=(0,13,15,17,19,21) # includes commander base cost of 1
-            return t[self.size]
-        elif self.unitType == 11:
-            t = (0, 14, 19, 24, 29, 34) # Includes base tank cost of 1
-        elif self.unitType == 12:
-            t = (0, 11, 14, 17, 22, 27) # Includes base mecha cost of 1
-        elif self.unitType == 13:
-            t = (0, 9, 13, 20, 27, 32) # Includes base GSV cost of 1
-        elif self.unitType == 14:
-            t = (0, 7, 11, 15, 20, 25) # Includes base ASV cost of 1
-        elif self.unitType == 15:
-            t = (0, 3, 5, 9, 13, 16) # Includes base artillery cost of 1
+            t = (13,15,17,19,21) # includes commander base cost of 1
+        elif self.unitType == TANK:
+            t = (14, 19, 24, 29, 34) # Includes base tank cost of 1
+        elif self.unitType == MECHA:
+            t = (11, 14, 17, 22, 27) # Includes base mecha cost of 1
+        elif self.unitType == GSV:
+            t = (9, 13, 20, 27, 32) # Includes base GSV cost of 1
+        elif self.unitType == ASV:
+            t = (7, 11, 15, 20, 25) # Includes base ASV cost of 1
+        elif self.unitType == ARTI:
+            t = (12, 15, 20, 25, 28) # Includes base artillery cost of 1
+        elif self.unitType == VSPEC:
+            t = (2, 4, 6, 8, 10)
+        elif self.unitType == SHT:
+            t = (39, 44, 49, 54, 59)
+        elif self.unitType == SHAS:
+            t = (47, 54, 61, 68, 75)
+        elif self.unitType == MONSTER:
+            t = (16, 23, 28, 33, 38)
+        elif self.unitType == AAV:
+            t = (7, 10, 13, 16, 19)
+        elif self.unitType == FIGHTER:
+            t = (10, 13, 16, 19, 22)
+        elif self.unitType == FIELD_ARTI:
+            t = (3, 6, 9, 13, 16)
         else:
             raise Exception('getBaseCost, unsupported unit type')
-        return t[self.size]
+        return t[self.size-1]
     def getDam(self):
         if self.unitType == 1:
             return 6 + self.inlineCount()
         elif self.unitType == 2:
             return 1
-        elif self.unitType == 3:
+        elif self.unitType == 3 or self.unitType == VSPEC:
             t=(0,4,5,6,7,8)
         elif self.unitType == 4:
             t=(0,12,14,16,18,20)
@@ -500,8 +514,10 @@ class Unit(models.Model):
                 return 0
             elif self.unitType in (TANK,GSV,ARTI):
                 t = { MOBILITY_WALK:0, MOBILITY_TRACK:1, MOBILITY_WHEEL:1, MOBILITY_HOVER:2, MOBILITY_GRAV:4 }
-            elif self.unitType == 13:
+            elif self.unitType == ASV:
                 t = { MOBILITY_HELI:0, MOBILITY_PROP_VTOL:2, MOBILITY_JET_VTOL:3, MOBILITY_GRAV:4 };
+            elif self.unitType == VSPEC:
+                t = { MOBILITY_FIXED:0, MOBILITY_WALK_MECHA:1, MOBILITY_TRACK:2, MOBILITY_WHEEL:2, MOBILITY_HOVER:3, MOBILITY_BIKE:4, MOBILITY_GRAV:6 }
             else:
                 t = (0, 0, 1, 1, 2, 3)
             return t[self.mobility]
@@ -608,16 +624,15 @@ class Unit(models.Model):
                 pass
         return 0
     def getSpeed(self):
-        if self.unitType in (1,2):
+        if self.unitType in (1,2,3):
             return 4 # any modifiers?
         elif self.unitType == 3:
             t={1:4,2:6,3:7,4:8,5:10}
-            speed=t[self.mobility]
-            return speed
+            return t[self.mobility]
         elif self.unitType == 4:
              t = { MOBILITY_WALK:4, MOBILITY_WALK_MECHA:5, MOBILITY_TRACK:6, MOBILITY_WHEEL:7, MOBILITY_HOVER:8, MOBILITY_GRAV:10 }
              return t[self.mobility]
-        elif self.unitType in (11,13,15):
+        elif self.unitType in (TANK,GSV,ARTI):
             t = {
                 MOBILITY_WALK:(7,6,6,5,4),
                 MOBILITY_TRACK:(8,7,7,6,6),
@@ -627,9 +642,60 @@ class Unit(models.Model):
             return t[self.mobility][self.size-1]
         elif self.unitType == 12:
             t = (0, 7, 6, 6, 5, 4)
-        elif self.unitType == 14:
-            speedArray = ((10,10,9,8,8), (13,13,12,11,10), (14,14,13,12,11), (15,15,14,13,12))
-            return speedArray[self.mobility-1][self.size-1]
+        elif self.unitType in (ASV, AAV):
+            t = {
+                MOBILITY_HELI:(10,10,9,8,8),
+                MOBILITY_PROP_VTOL:(13,13,12,11,10),
+                MOBILITY_JET_VTOL:(14,14,13,12,11),
+                MOBILITY_GRAV:(15,15,14,13,12) }
+            return t[self.mobility][self.size-1]
+        elif self.unitType == VSPEC: 
+            t = {
+                MOBILITY_FIXED:(0,0,0,0,0),
+                MOBILITY_WALK_MECHA:(7,6,6,5,4),
+                MOBILITY_TRACK:(8,7,7,6,6),
+                MOBILITY_WHEEL:(9,8,8,7,7),
+                MOBILITY_HOVER:(9,8,8,7,6),
+                MOBILITY_BIKE:(11,10,9,8,7),
+                MOBILITY_GRAV:(16,15,14,13,12) }
+            return t[self.mobility][self.size-1]
+        elif self.unitType == SHT:
+            t = {
+                MOBILITY_WALK:(5,4,3,3,2),
+                MOBILITY_TRACK:(6,5,5,4,4),
+                MOBILITY_WHEEL:(7,6,5,5,5),
+                MOBILITY_HOVER:(6,6,5,4,3),
+                MOBILITY_GRAV:(8,7,6,6,5) }
+            return t[self.mobility][self.size-1]
+        elif self.unitType == SHAS:
+            t = {
+                MOBILITY_HELI:(9,9,8,7,7),
+                MOBILITY_PROP_VTOL:(12,12,11,10,9),
+                MOBILITY_JET_VTOL:(13,13,12,11,10),
+                MOBILITY_GRAV:(14,14,13,12,11) }
+            return t[self.mobility][self.size-1]
+        elif self.unitType == FIGHTER:
+            t = {
+                MOBILITY_PROP_VTOL:(12,12,10,10,9),
+                MOBILITY_JET_VTOL:(14,14,13,12,11),
+                MOBILITY_PROP:(16,16,15,14,13),
+                MOBILITY_JET:(18,18,17,16,15),
+                MOBILITY_AEROSPACE:(20,20,19,18,17) }
+            return t[self.mobility][self.size-1]
+        elif selt.unitType == MONSTER:
+            t = {
+                MOBILITY_WALK:(7,6,5,5,4),
+                MOBILITY_WALK_QUAD:(8,7,6,5,5),
+                MOBILITY_JUMP:(9,8,7,6,6),
+                MOBILITY_FLIGHT:(11,10,9,8,7),
+                MOBILITY_HYPER:(12,11,10,9,8) }
+            return t[self.mobility][self.size-1]
+        elif self.unitType == FIELD_ARTI:
+            t = {
+                MOBILITY_WALK:(4,4,4,4,4),
+                MOBILITY_FIXED:(0,0,0,0,0),
+                MOBILITY_TOWED:(-1,-1,-1,-1,-1) }
+            return t[self.mobility][self.size-1]
         return t[self.size]
     def getSlots(self):
         if self.unitType == GSV:
@@ -761,6 +827,7 @@ class UnitForm(forms.ModelForm):
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
     air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"), initial=MOBILITY_HELI)
     commander_mobility = forms.ChoiceField(choices=COMMANDER_MOBILITY_CHOICES, required=False, label=_("Mobility"))
+    vspec_mobility = forms.ChoiceField(choices=VEHICLE_SPEC_MOBILITY_CHOICES, required=False, label=_("Mobility"))
 
     class Meta:
         model = Unit
@@ -887,6 +954,12 @@ class UnitForm(forms.ModelForm):
             try:
                 if kwargs['instance'].unitType == 14: #ASV
                     self.fields['air_mobility'].initial = kwargs['instance'].mobility
+            except Exception, e:
+                print "air mobility exception", e
+                pass
+            try:
+                if kwargs['instance'].unitType == VSPEC:
+                    self.fields['vspec_mobility'].initial = kwargs['instance'].mobility
             except Exception, e:
                 print "air mobility exception", e
                 pass
