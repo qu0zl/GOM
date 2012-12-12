@@ -257,7 +257,7 @@ function vehicleWeapon(which, utype, size)
 {
     $(which+'_tb').show();
     $("option", $(which)).each(function(i) {
-            if ($(this).attr("weaponSize")>size || (utype != 15 && $(this).attr("weaponType") == 11) ) {
+            if ($(this).attr("weaponSize")>size || ((utype!=15 && utype!=17) && $(this).attr("weaponType") == 11) ) {
                 $(this).attr("disabled", "disabled");
                 if ($(this).attr("selected")) {
                 $(this).removeAttr("selected");
@@ -270,43 +270,37 @@ function vehicleWeapon(which, utype, size)
 }
 
 function showMobility(utype) {
+    $('#id_mobility_tr').hide();
+    $('#id_commander_mobility_tr').hide();
+    $('#id_air_mobility_tr').hide();
+    $('#id_vspec_mobility_tr').hide();
     switch (utype) {
         case (4):
-            $('#id_mobility_tr').hide();
             $('#id_commander_mobility_tr').show();
-            $('#id_air_mobility_tr').hide();
-            $('#id_vspec_mobility_tr').hide();
             break;
         case (1):
         case (2):
         case (3):
         case (12):
-            $('#id_mobility_tr').hide();
-            $('#id_commander_mobility_tr').hide();
-            $('#id_air_mobility_tr').hide();
-            $('#id_vspec_mobility_tr').hide();
             break;
         // vehicles
         case 11:
         case 13:
         case 15:
+        case 20:
             $('#id_mobility_tr').show();
-            $('#id_commander_mobility_tr').hide();
-            $('#id_air_mobility_tr').hide();
-            $('#id_vspec_mobility_tr').hide();
             break;
         case 14: //ASV
-            $('#id_mobility_tr').hide();
-            $('#id_commander_mobility_tr').hide();
-            $('#id_vspec_mobility_tr').hide();
+        case 18: // AAV
+        case 21: // SHAS
             $('#id_air_mobility_tr').show();
             break;
         case 16: // VSPEC
-            $('#id_mobility_tr').hide();
-            $('#id_commander_mobility_tr').hide();
-            $('#id_air_mobility_tr').hide();
             $('#id_vspec_mobility_tr').show();
             break;
+        case 17: //Field artillery
+            break;
+        case 19: // Fighter
         default:
             alert ('Unit type ' + utype + ' not yet supported.');
     }
@@ -316,6 +310,9 @@ function showWeapons(utype) {
             $('#id_inlineWeapons_tb').show()
         else
             $('#id_inlineWeapons_tb').hide()
+        $('#id_cmdTek_tr').hide();
+        $('#id_mainWeapons5_tb').hide();
+        $('#id_mainWeapons6_tb').hide();
         if ( utype < 10 ) {
             $('#id_shoot_tr').show();
             $('#id_assault_tr').show();
@@ -328,7 +325,6 @@ function showWeapons(utype) {
             $('#id_AIWeapons_tb').hide();
             $('#id_AIWeapons2_tb').hide();
             $('#id_modz_tb').hide();
-            $('#id_cmdTek_tr').hide();
             $('#id_grenades_tb').show();
             $('#id_CCW_tb').show();
             switch (utype) {
@@ -376,8 +372,10 @@ function showWeapons(utype) {
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
             $('#id_modz_tb').show();
-            if ( utype != 16 )
+            if ( utype != 16 && utype != 22 )
                 vehicleWeapon('#id_AIWeapons', utype, size);
+            else
+                $('#id_AIWeapons_tb').hide();
             switch (utype) {
                 case 11:
                 case 12:
@@ -403,10 +401,10 @@ function showWeapons(utype) {
                         $('#id_mainWeapons4_tb').hide();
                         $('#id_AIWeapons2_tb').hide();
                     }
-                    $('#id_cmdTek_tr').hide();
                     break;
                 case 13:
                 case 14:
+                case 18:
                     $('#id_mainWeapons_tb').hide();
                     $('#id_mainWeapons2_tb').hide();
                     $('#id_mainWeapons3_tb').hide();
@@ -418,22 +416,71 @@ function showWeapons(utype) {
                     $('#id_cmdTek_tr').show();
                     break;
                 case 15:
+                case 17:
                     vehicleWeapon('#id_mainWeapons', utype, size);
                     $('#id_mainWeapons3_tb').hide();
                     $('#id_mainWeapons4_tb').hide();
-                    if ( size >= 3 ) {
-                        $('#id_AIWeapons2_tb').show();
-                        vehicleWeapon('#id_mainWeapons2', utype, size);
+                    if ( size >= 2 ) {
+                        vehicleWeapon('#id_mainWeapons2', utype, size)
+                        if ( size >= 3 ) {
+                            $('#id_AIWeapons2_tb').show();
+                        } else {
+                            $('#id_AIWeapons2_tb').hide();
+                        }
                     } else {
-                        $('#id_AIWeapons2_tb').hide();
                         $('#id_mainWeapons2_tb').hide();
                     }
-                    $('#id_cmdTek_tr').hide();
                     break;
                 case 16:
                     $('#id_basicWeapons_tb').hide();
                     $('#id_SAWeapons_tb').hide();
                     $('#id_SpecWeapons_tb').show();
+                    break;
+                case 19: // fighter
+                    $('#id_mainWeapons_tb').hide();
+                    $('#id_mainWeapons2_tb').hide();
+                    $('#id_mainWeapons3_tb').hide();
+                    $('#id_mainWeapons4_tb').hide();
+                    if ( size >= 3 )
+                        $('#id_AIWeapons2_tb').show();
+                    else
+                        $('#id_AIWeapons2_tb').hide();
+
+                    if ( size == 5 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
+                    if ( size >= 4 )
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
+                    if ( size >= 2 )
+                        vehicleWeapon('#id_mainWeapons', utype, size);
+                    break;
+                case 21: // SHAS
+                    $('#id_cmdTek_tr').show();
+                    // deliberately fall through to use SHT weapons
+                case 20: // SHT
+                    if ( size >= 3 )
+                        $('#id_AIWeapons2_tb').show();
+                    else
+                        $('#id_AIWeapons2_tb').hide();
+                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    vehicleWeapon('#id_mainWeapons2', utype, size);
+                    vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 4 )
+                        vehicleWeapon('#id_mainWeapons6', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons5', utype, size);
+                    if ( size >= 2 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
+                    break;
+                case 22:
+                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    if ( size == 5 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 2 )
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
                     break;
                 default:
                     alert ('No weapon support for this vehicle type yet');
@@ -735,6 +782,14 @@ function weaponOR(event) {
                                 <tbody id="id_mainWeapons4_tb">
                                     <tr><td></td><td>{{formObject.mainWeapons4}}</td><td>{{formObject.OR_MW4}}</td></tr>
                                     <tr id="tr_OR_MW4"><td>{{formObject.MW4_Custom.label}}</td><td>{{formObject.MW4_Custom}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons5_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons5}}</td><td>{{formObject.OR_MW5}}</td></tr>
+                                    <tr id="tr_OR_MW5"><td>{{formObject.MW5_Custom.label}}</td><td>{{formObject.MW5_Custom}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons6_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons6}}</td><td>{{formObject.OR_MW6}}</td></tr>
+                                    <tr id="tr_OR_MW6"><td>{{formObject.MW6_Custom.label}}</td><td>{{formObject.MW6_Custom}}</td></tr>
                                 </tbody>
                                 <tbody id="id_AIWeapons_tb">
                                     <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>

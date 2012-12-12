@@ -114,6 +114,9 @@ MONSTER_MOBILITY_CHOICES = (
 AIR_MOBILITY_CHOICES = (
     CHOICE_MOBILITY_HELI, CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_GRAV )
 
+FIGHTER_MOBILITY_CHOICES = (
+        CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_PROP, CHOICE_MOBILITY_JET, CHOICE_MOBILITY_AEROSPACE)
+
 STAT_CHOICES = (
     (2,  _('Green (2)')),
     (3,  _('Trained (3)')),
@@ -782,6 +785,8 @@ class UnitForm(forms.ModelForm):
     mainWeapons2 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
     mainWeapons3 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
     mainWeapons4 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
+    mainWeapons5 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
+    mainWeapons6 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
     AIWeapons = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=6).order_by('weaponSize'), required=False, label=_("Anti Infantry"), widget=WeaponSelect)
     AIWeapons2 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=6).order_by('weaponSize'), required=False, widget=WeaponSelect)
     inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
@@ -795,6 +800,8 @@ class UnitForm(forms.ModelForm):
     MW2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW3_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW4_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    MW5_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    MW6_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     AI_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     AI2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     basic_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
@@ -808,6 +815,8 @@ class UnitForm(forms.ModelForm):
     OR_MW2 = forms.BooleanField(required=False)
     OR_MW3 = forms.BooleanField(required=False)
     OR_MW4 = forms.BooleanField(required=False)
+    OR_MW5 = forms.BooleanField(required=False)
+    OR_MW6 = forms.BooleanField(required=False)
     OR_AI = forms.BooleanField(required=False)
     OR_AI2 = forms.BooleanField(required=False)
     OR_basic = forms.BooleanField(required=False)
@@ -826,6 +835,7 @@ class UnitForm(forms.ModelForm):
     mobility = forms.ChoiceField(choices=BASIC_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_WALK)
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
     air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"), initial=MOBILITY_HELI)
+    fighter_mobility = forms.ChoiceField(choices=FIGHTER_MOBILITY_CHOICES, required=False, label=_("Fighter Mobility"), initial=MOBILITY_PROP_VTOL)
     commander_mobility = forms.ChoiceField(choices=COMMANDER_MOBILITY_CHOICES, required=False, label=_("Mobility"))
     vspec_mobility = forms.ChoiceField(choices=VEHICLE_SPEC_MOBILITY_CHOICES, required=False, label=_("Mobility"))
 
