@@ -129,7 +129,6 @@ def forceForm(request, force_id):
         force_owner = force.owner.get()
     else:
         form = gom.models.ForceForm()
-    #import pdb; pdb.set_trace()
     return render_to_response('gom/force.html', \
         {
             'force':force,
@@ -239,38 +238,81 @@ def vehicleSaveAjax(request, unit_id=0):
         pass
     return tankForm(request, unit_id)
 
-def saveVehicleWeapons(unit, form):
-    unit.weapons.clear()
-    if form.cleaned_data['AIWeapons']:
-        addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1, custom=form.cleaned_data['AI_Custom'] if form.cleaned_data['OR_AI'] else None)
-    if unit.unitType == 11 or unit.unitType == 12: # Tank or Mecha
-        if form.cleaned_data['mainWeapons']:
-            try:
+def saveOneVehicleWeapon(unit, form, which, type):
+    if type == "main":
+        if which == 1:
+            if form.cleaned_data['mainWeapons']:
                 addUnitWeapon(unit, form.cleaned_data['mainWeapons'], custom=form.cleaned_data['MW_Custom'] if form.cleaned_data['OR_MW'] else None)
-            except:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons'])
-        if unit.size > 1:
+        elif which == 2:
             if form.cleaned_data['mainWeapons2']:
                 addUnitWeapon(unit, form.cleaned_data['mainWeapons2'], custom=form.cleaned_data['MW2_Custom'] if form.cleaned_data['OR_MW2'] else None)
-            if unit.size > 2:
-                if form.cleaned_data['mainWeapons3']:
-                    addUnitWeapon(unit, form.cleaned_data['mainWeapons3'], custom=form.cleaned_data['MW3_Custom'] if form.cleaned_data['OR_MW3'] else None)
-                if unit.size > 4 and form.cleaned_data['mainWeapons4']:
-                    addUnitWeapon(unit, form.cleaned_data['mainWeapons4'], custom=form.cleaned_data['MW4_Custom'] if form.cleaned_data['OR_MW4'] else None)
-        if unit.size > 2 and form.cleaned_data['AIWeapons2']:
-            addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
-    elif unit.unitType == 13 or unit.unitType == 14:
-        # Don't save main weapons for GSV or ASV
-        if unit.size >= 3 and form.cleaned_data['AIWeapons2']:
-            addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
-    elif unit.unitType == 15: # Artillery
-        if form.cleaned_data['mainWeapons']:
-            addUnitWeapon(unit, form.cleaned_data['mainWeapons'], custom=form.cleaned_data['MW_Custom'] if form.cleaned_data['OR_MW'] else None)
-        if unit.size >= 3:
-            if form.cleaned_data['mainWeapons2']:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons2'], custom=form.cleaned_data['MW2_Custom'] if form.cleaned_data['OR_MW2'] else None)
+        elif which == 3:
+            if form.cleaned_data['mainWeapons3']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons3'], custom=form.cleaned_data['MW3_Custom'] if form.cleaned_data['OR_MW3'] else None)
+        elif which == 4:
+            if form.cleaned_data['mainWeapons4']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons4'], custom=form.cleaned_data['MW4_Custom'] if form.cleaned_data['OR_MW4'] else None)
+        elif which == 5:
+            if form.cleaned_data['mainWeapons5']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons5'], custom=form.cleaned_data['MW5_Custom'] if form.cleaned_data['OR_MW5'] else None)
+        elif which == 6:
+            if form.cleaned_data['mainWeapons6']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons6'], custom=form.cleaned_data['MW6_Custom'] if form.cleaned_data['OR_MW6'] else None)
+    elif type == "ai":
+        if which == 1:
+            if form.cleaned_data['AIWeapons']:
+                addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1, custom=form.cleaned_data['AI_Custom'] if form.cleaned_data['OR_AI'] else None)
+        elif which == 2:
             if form.cleaned_data['AIWeapons2']:
                 addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
+    else:
+        raise Exception('Unknown vehicle weapon type')
+
+
+def saveVehicleWeapons(unit, form):
+    unit.weapons.clear()
+    saveOneVehicleWeapon(unit, form, 1, "ai")
+    if unit.unitType in (11,12,22): # Tank, Mecha or Monster
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 2, "main")
+            if unit.size > 2:
+                if unit.unitType != 22: # Monster's don't get AI guns
+                    saveOneVehicleWeapon(unit, form, 2, "ai")
+                saveOneVehicleWeapon(unit, form, 3, "main")
+                if unit.size > 4:
+                    saveOneVehicleWeapon(unit, form, 4, "main")
+    elif unit.unitType in (13,14,18):
+        # Don't save main weapons for GSV, ASV or AAV
+        if unit.size >= 3:
+            saveOneVehicleWeapon(unit, form, 2, "ai")
+    elif unit.unitType in (15,17): # Artillery
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        if unit.size >= 2:
+            saveOneVehicleWeapon(unit, form, 2, "main")
+        if unit.size >= 3:
+            saveOneVehicleWeapon(unit, form, 2, "ai")
+    elif unit.unitType == 19: # Fighter
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 1, "main")
+            if unit.size > 2:
+                saveOneVehicleWeapon(unit, form, 2, "main")
+                saveOneVehicleWeapon(unit, form, 2, "ai")
+                if unit.size > 3:
+                    saveOneVehicleWeapon(unit, form, 3, "main")
+                    if unit.size > 4:
+                        saveOneVehicleWeapon(unit, form, 4, "main")
+    elif unit.unitType in (20,21):
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        saveOneVehicleWeapon(unit, form, 2, "main")
+        saveOneVehicleWeapon(unit, form, 3, "main")
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 4, "main")
+            if unit.size > 2:
+                saveOneVehicleWeapon(unit, form, 5, "main")
+                saveOneVehicleWeapon(unit, form, 2, "ai")
+                if unit.size > 3:
+                    saveOneVehicleWeapon(unit, form, 6, "main")
     else:
         print 'Unknown unit type:%d'
         raise Exception

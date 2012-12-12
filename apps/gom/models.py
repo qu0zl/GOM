@@ -97,8 +97,10 @@ CHOICE_MOBILITY_JET_VTOL = (MOBILITY_JET_VTOL, _('Jet VTOL'))
 CHOICE_MOBILITY_PROP = (MOBILITY_PROP, _('Propeller Flight'))
 CHOICE_MOBILITY_JET = (MOBILITY_JET, _('Jet Flight'))
 CHOICE_MOBILITY_AEROSPACE = (MOBILITY_AEROSPACE, _('Aerospace'))
+# Translators: Towed (eg by another vehicle)
+CHOICE_MOBILITY_TOWED = (MOBILITY_TOWED, _('Towed'))
 
-ALL_MOBILITY_CHOICES = (CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_WALK_MECHA, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_BIKE, CHOICE_MOBILITY_GRAV, CHOICE_MOBILITY_JUMP, CHOICE_MOBILITY_FLIGHT, CHOICE_MOBILITY_HYPER, CHOICE_MOBILITY_HELI, CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_PROP, CHOICE_MOBILITY_JET, CHOICE_MOBILITY_AEROSPACE)
+ALL_MOBILITY_CHOICES = (CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_WALK_MECHA, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_BIKE, CHOICE_MOBILITY_GRAV, CHOICE_MOBILITY_JUMP, CHOICE_MOBILITY_FLIGHT, CHOICE_MOBILITY_HYPER, CHOICE_MOBILITY_HELI, CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_PROP, CHOICE_MOBILITY_JET, CHOICE_MOBILITY_AEROSPACE, CHOICE_MOBILITY_WALK_QUAD, CHOICE_MOBILITY_TOWED)
 BASIC_MOBILITY_CHOICES = (
     CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_TRACK, CHOICE_MOBILITY_WHEEL, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_GRAV )
 
@@ -116,6 +118,9 @@ AIR_MOBILITY_CHOICES = (
 
 FIGHTER_MOBILITY_CHOICES = (
         CHOICE_MOBILITY_PROP_VTOL, CHOICE_MOBILITY_JET_VTOL, CHOICE_MOBILITY_PROP, CHOICE_MOBILITY_JET, CHOICE_MOBILITY_AEROSPACE)
+
+FIELD_ARTI_MOBILITY_CHOICES = (
+        CHOICE_MOBILITY_FIXED, CHOICE_MOBILITY_TOWED, CHOICE_MOBILITY_WALK, CHOICE_MOBILITY_HOVER, CHOICE_MOBILITY_GRAV )
 
 STAT_CHOICES = (
     (2,  _('Green (2)')),
@@ -469,43 +474,66 @@ class Unit(models.Model):
         elif self.unitType == 2:
             return 1
         elif self.unitType == 3 or self.unitType == VSPEC:
-            t=(0,4,5,6,7,8)
-        elif self.unitType == 4:
-            t=(0,12,14,16,18,20)
-        elif self.unitType == 11:
-            t = (0, 14, 18, 22, 26, 30)
-        elif self.unitType == 12:
-            t = (0, 12, 14, 16, 20, 24)
-        elif self.unitType == 13:
-            t = (0, 10, 12, 16, 20, 22)
-        elif self.unitType == 14:
-            t = (0, 10, 12, 14, 16, 18)
-        elif self.unitType == 15:
-            t = (0, 12, 14, 18, 22, 24)
-        return t[self.size]
+            t=(4,5,6,7,8)
+        elif self.unitType in (COMMANDER,FIGHTER):
+            t=(12,14,16,18,20)
+        elif self.unitType == TANK:
+            t = (14,18,22,26,30)
+        elif self.unitType == MECHA:
+            t = (12,14,16,20,24)
+        elif self.unitType == GSV:
+            t = (10,12,16,17,18)
+        elif self.unitType == ASV:
+            t = (10,12,14,16,18)
+        elif self.unitType == ARTI:
+            t = (12,14,18,22,24)
+        elif self.unitType == FIELD_ARTI:
+            t = (9,11,13,15,17)
+        elif self.unitType in (SHT, SHAS):
+            t = (34,38,42,46,50)
+        elif self.unitType == MONSTER:
+            t = (15,20,25,30,35)
+        elif self.unitType == AAV:
+            t = (8,10,12,14,16)
+        return t[self.size-1]
     def getSoak(self):
-        if self.unitType == 1 or self.unitType == 2 or self.unitType == 4:
+        if self.unitType in (1,2,3,4):
             return self.soak
-        elif self.unitType == 3:
+        elif self.unitType in (FIGHTER,VSPEC):
             return 11+self.size
-        elif self.unitType == 11:
+        elif self.unitType == TANK:
             return 14+self.size
-        elif self.unitType == 12 or self.unitType == 15:
+        elif self.unitType == MECHA or self.unitType == ARTI:
             return 13+self.size
-        elif self.unitType == 14:
+        elif self.unitType in (ASV, FIELD_ARTI):
             return 12+self.size
-        elif self.unitType == 13:
-            t = (0,15,15,16,17,18)
-            return t[self.size]
+        elif self.unitType == GSV:
+            t = (15,15,16,17,18)
+        elif self.unitType == AAV:
+            return 12+self.size
+        elif self.unitType == SHAS:
+            return 17+self.size
+        elif self.unitType == SHT:
+            return 19+self.size
+        elif self.unitType == MONSTER:
+            t = (14,15,18,19,20)
+        return t[self.size-1]
     def getGuard(self):
-        if self.unitType == 1 or self.unitType == 2 or self.unitType == 4:
+        if self.unitType in (1,2,3,4):
             return self.guard
-        elif self.unitType == 3:
-            return 15-self.size
-        elif self.unitType == 11 or self.unitType == 13 or self.unitType == 15:
+        elif self.unitType in (TANK, GSV, ARTI, FIELD_ARTI):
             return 14-self.size
-        elif self.unitType == 12 or self.unitType == 14:
+        elif self.unitType in (MECHA, VSPEC):
             return 15-self.size
+        elif self.unitType in (ASV,AAV):
+            t = (14,13,13,12,11)
+        elif self.unitType == SHT:
+            return 9-self.size
+        elif self.unitType == SHAS:
+            return 11-self.size
+        elif self.unitType in (MONSTER, FIGHTER):
+            return 16-self.size
+        return t[self.size-1]
     def mobilityCost(self):
         if self.unitType == 1 or self.unitType == 2 or self.unitType == 3:
             return 0
@@ -581,6 +609,8 @@ class Unit(models.Model):
             # Ensure an exception is thrown if we somehow end up with main weapons
             # on a GSV or ASV
             mainCosts = (0,)
+        elif self.unitType in (SHT,SHAS):
+            mainCosts = (0,1,4,8,12,14,16)
         else:
             mainCosts = (0, 1, 4, 8, 13)
         AICosts = (0, 2, 4)
@@ -831,17 +861,20 @@ class UnitForm(forms.ModelForm):
     modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     modz2 = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
-    # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
     mobility = forms.ChoiceField(choices=BASIC_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_WALK)
+    # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
     guard = DynamicChoiceField(required=True, choices=GUARD_CHOICES)
+    soak = DynamicChoiceField(required=True, choices=SOAK_CHOICES)
     air_mobility = forms.ChoiceField(choices=AIR_MOBILITY_CHOICES, required=False, label=_("Air Mobility"), initial=MOBILITY_HELI)
     fighter_mobility = forms.ChoiceField(choices=FIGHTER_MOBILITY_CHOICES, required=False, label=_("Fighter Mobility"), initial=MOBILITY_PROP_VTOL)
+    field_artillery_mobility = forms.ChoiceField(choices=FIELD_ARTI_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_FIXED)
+    monster_mobility = forms.ChoiceField(choices=MONSTER_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_WALK)
     commander_mobility = forms.ChoiceField(choices=COMMANDER_MOBILITY_CHOICES, required=False, label=_("Mobility"))
     vspec_mobility = forms.ChoiceField(choices=VEHICLE_SPEC_MOBILITY_CHOICES, required=False, label=_("Mobility"))
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'soak', 'mental', 'skill', 'mobility', 'desc', 'cmdTek', 'publish' ]
+        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'mental', 'skill', 'mobility', 'desc', 'cmdTek', 'publish' ]
     def __init__(self, *args, **kwargs):
         super(UnitForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
@@ -904,6 +937,14 @@ class UnitForm(forms.ModelForm):
                 if mainWeapons[3].nameOverride:
                     self.fields['MW4_Custom'].initial=mainWeapons[3].nameOverride
                     self.fields['OR_MW4'].initial=True
+                self.fields['mainWeapons5'].initial=mainWeapons[4].weapon
+                if mainWeapons[4].nameOverride:
+                    self.fields['MW5_Custom'].initial=mainWeapons[4].nameOverride
+                    self.fields['OR_MW5'].initial=True
+                self.fields['mainWeapons6'].initial=mainWeapons[5].weapon
+                if mainWeapons[5].nameOverride:
+                    self.fields['MW6_Custom'].initial=mainWeapons[5].nameOverride
+                    self.fields['OR_MW6'].initial=True
             except IndexError:
                 pass
             try:
