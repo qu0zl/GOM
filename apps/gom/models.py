@@ -543,14 +543,20 @@ class Unit(models.Model):
         elif self.isVehicle():
             if self.unitType == 12: # MECHA
                 return 0
-            elif self.unitType in (TANK,GSV,ARTI):
+            elif self.unitType in (TANK,GSV,ARTI,SHT):
                 t = { MOBILITY_WALK:0, MOBILITY_TRACK:1, MOBILITY_WHEEL:1, MOBILITY_HOVER:2, MOBILITY_GRAV:4 }
-            elif self.unitType == ASV:
+            elif self.unitType in (ASV,AAV,SHAS):
                 t = { MOBILITY_HELI:0, MOBILITY_PROP_VTOL:2, MOBILITY_JET_VTOL:3, MOBILITY_GRAV:4 };
             elif self.unitType == VSPEC:
                 t = { MOBILITY_FIXED:0, MOBILITY_WALK_MECHA:1, MOBILITY_TRACK:2, MOBILITY_WHEEL:2, MOBILITY_HOVER:3, MOBILITY_BIKE:4, MOBILITY_GRAV:6 }
+            elif self.unitType == MONSTER:
+                t = {MOBILITY_WALK:0, MOBILITY_WALK_QUAD:0, MOBILITY_JUMP:2, MOBILITY_FLIGHT:5, MOBILITY_HYPER:8}
+            elif self.unitType == FIGHTER:
+                t = {MOBILITY_PROP_VTOL:1, MOBILITY_JET_VTOL:2, MOBILITY_PROP:5, MOBILITY_JET:8, MOBILITY_AEROSPACE:12}
+            elif self.unitType == FIELD_ARTI:
+                t = {MOBILITY_FIXED:0, MOBILITY_TOWED:1, MOBILITY_WALK:3, MOBILITY_HOVER:3, MOBILITY_GRAV:3}
             else:
-                t = (0, 0, 1, 1, 2, 3)
+                raise Exception('Unsupported unit type (%d) for mobilityCost' % self.unitType)
             return t[self.mobility]
         else:
             return 0
