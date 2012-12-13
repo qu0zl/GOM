@@ -191,7 +191,7 @@
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
                 cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
                 if (cost != old_cost) { AI++; old_cost=cost;}
@@ -214,7 +214,7 @@
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
                 cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
@@ -251,7 +251,7 @@
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
                 cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
                 if (cost != old_cost) { AI++; old_cost=cost;}
@@ -274,7 +274,7 @@
             cost = Math.ceil(cost/2);
         cost = cost + weaponCost(utype,size) + perkCost(utype);
 
-        alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
+        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
         $('#id_cost').html(cost);
     }
 
@@ -361,7 +361,7 @@ function showWeapons(utype) {
             $('#id_assault_tr').show();
             $('#id_mental_tr').show();
             // Hide vehicle specific stuff
-            $('#id_mainWeapons_tb').hide();
+            $('#id_mainWeapons1_tb').hide();
             $('#id_mainWeapons2_tb').hide();
             $('#id_mainWeapons3_tb').hide();
             $('#id_mainWeapons4_tb').hide();
@@ -422,7 +422,7 @@ function showWeapons(utype) {
             switch (utype) {
                 case 11:
                 case 12:
-                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
                     if ( size == 5 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
                         vehicleWeapon('#id_mainWeapons3', utype, size);
@@ -459,7 +459,7 @@ function showWeapons(utype) {
                     break;
                 case 15:
                 case 17:
-                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
                     $('#id_mainWeapons3_tb').hide();
                     $('#id_mainWeapons4_tb').hide();
                     if ( size >= 2 ) {
@@ -482,7 +482,7 @@ function showWeapons(utype) {
                     $('#id_cmdTek_tr').show();
                     //deliberately fall through
                 case 19: // fighter
-                    $('#id_mainWeapons_tb').hide();
+                    $('#id_mainWeapons1_tb').hide();
                     $('#id_mainWeapons2_tb').hide();
                     $('#id_mainWeapons3_tb').hide();
                     $('#id_mainWeapons4_tb').hide();
@@ -498,7 +498,7 @@ function showWeapons(utype) {
                     if ( size >= 3 )
                         vehicleWeapon('#id_mainWeapons2', utype, size);
                     if ( size >= 2 )
-                        vehicleWeapon('#id_mainWeapons', utype, size);
+                        vehicleWeapon('#id_mainWeapons1', utype, size);
                     break;
                 case 21: // SHAS
                     $('#id_cmdTek_tr').show();
@@ -508,7 +508,7 @@ function showWeapons(utype) {
                         $('#id_AIWeapons2_tb').show();
                     else
                         $('#id_AIWeapons2_tb').hide();
-                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
                     vehicleWeapon('#id_mainWeapons2', utype, size);
                     vehicleWeapon('#id_mainWeapons3', utype, size);
                     if ( size >= 4 )
@@ -519,7 +519,7 @@ function showWeapons(utype) {
                         vehicleWeapon('#id_mainWeapons4', utype, size);
                     break;
                 case 22:
-                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
                     if ( size == 5 )
                         vehicleWeapon('#id_mainWeapons4', utype, size);
                     if ( size >= 3 )
@@ -868,9 +868,9 @@ function weaponOR(event) {
                                         <tr id="tr_OR_inline2"><td>{{formObject.inline2_Custom.label}}</td><td>{{formObject.inline2_Custom}}</td></tr>
                                     </tbody>
                                 </tbody>
-                                <tbody id="id_mainWeapons_tb">
-                                    <tr><td>{{formObject.mainWeapons.label}}</td><td>{{formObject.mainWeapons}}</td><td>{{formObject.OR_MW}}</td></tr>
-                                    <tr id="tr_OR_MW"><td>{{formObject.MW_Custom.label}}</td><td>{{formObject.MW_Custom}}</td></tr> 
+                                <tbody id="id_mainWeapons1_tb">
+                                    <tr><td>{{formObject.mainWeapons1.label}}</td><td>{{formObject.mainWeapons1}}</td><td>{{formObject.OR_MW1}}</td></tr>
+                                    <tr id="tr_OR_MW1"><td>{{formObject.MW1_Custom.label}}</td><td>{{formObject.MW1_Custom}}</td></tr> 
                                 </tbody>
                                 <tbody id="id_mainWeapons2_tb">
                                     <tr><td></td><td>{{formObject.mainWeapons2}}</td><td>{{formObject.OR_MW2}}</td></tr>

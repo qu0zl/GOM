@@ -811,7 +811,7 @@ class UnitForm(forms.ModelForm):
     basicWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__gte=1, weaponType__lte=2), required=False)
     SAWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     SpecWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4,5]), required=False)
-    mainWeapons = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, label=_('Main Weapons'), widget=WeaponSelect)
+    mainWeapons1 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, label=_('Main Weapons'), widget=WeaponSelect)
     mainWeapons2 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
     mainWeapons3 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
     mainWeapons4 = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType__gte=4, weaponType__lte=11).order_by('weaponSize'), required=False, widget=WeaponSelect)
@@ -826,7 +826,7 @@ class UnitForm(forms.ModelForm):
     # Grunt grenades only
     grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False, label=_('Grenade'))
     # Translators: Label for User customisable weapon name box.
-    MW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    MW1_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW3_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     MW4_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
@@ -841,7 +841,7 @@ class UnitForm(forms.ModelForm):
     inline2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     CCW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     grenades_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
-    OR_MW = forms.BooleanField(required=False)
+    OR_MW1 = forms.BooleanField(required=False)
     OR_MW2 = forms.BooleanField(required=False)
     OR_MW3 = forms.BooleanField(required=False)
     OR_MW4 = forms.BooleanField(required=False)
@@ -921,30 +921,13 @@ class UnitForm(forms.ModelForm):
                 pass
             try:
                 mainWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=0)
-                self.fields['mainWeapons'].initial=mainWeapons[0].weapon
-                if mainWeapons[0].nameOverride:
-                    self.fields['MW_Custom'].initial=mainWeapons[0].nameOverride
-                    self.fields['OR_MW'].initial=True
-                self.fields['mainWeapons2'].initial=mainWeapons[1].weapon
-                if mainWeapons[1].nameOverride:
-                    self.fields['MW2_Custom'].initial=mainWeapons[1].nameOverride
-                    self.fields['OR_MW2'].initial=True
-                self.fields['mainWeapons3'].initial=mainWeapons[2].weapon
-                if mainWeapons[2].nameOverride:
-                    self.fields['MW3_Custom'].initial=mainWeapons[2].nameOverride
-                    self.fields['OR_MW3'].initial=True
-                self.fields['mainWeapons4'].initial=mainWeapons[3].weapon
-                if mainWeapons[3].nameOverride:
-                    self.fields['MW4_Custom'].initial=mainWeapons[3].nameOverride
-                    self.fields['OR_MW4'].initial=True
-                self.fields['mainWeapons5'].initial=mainWeapons[4].weapon
-                if mainWeapons[4].nameOverride:
-                    self.fields['MW5_Custom'].initial=mainWeapons[4].nameOverride
-                    self.fields['OR_MW5'].initial=True
-                self.fields['mainWeapons6'].initial=mainWeapons[5].weapon
-                if mainWeapons[5].nameOverride:
-                    self.fields['MW6_Custom'].initial=mainWeapons[5].nameOverride
-                    self.fields['OR_MW6'].initial=True
+                count = 1
+                for item in mainWeapons.all():
+                    self.fields['mainWeapons%d' % count].initial=item.weapon
+                    if item.nameOverride:
+                        self.fields['MW%d_Custom' % count].initial=item.nameOverride
+                        self.fields['OR_MW%d' % count].initial = True
+                    count=count+1
             except IndexError:
                 pass
             try:

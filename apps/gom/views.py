@@ -241,8 +241,8 @@ def vehicleSaveAjax(request, unit_id=0):
 def saveOneVehicleWeapon(unit, form, which, type):
     if type == "main":
         if which == 1:
-            if form.cleaned_data['mainWeapons']:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons'], custom=form.cleaned_data['MW_Custom'] if form.cleaned_data['OR_MW'] else None)
+            if form.cleaned_data['mainWeapons1']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons1'], custom=form.cleaned_data['MW1_Custom'] if form.cleaned_data['OR_MW1'] else None)
         elif which == 2:
             if form.cleaned_data['mainWeapons2']:
                 addUnitWeapon(unit, form.cleaned_data['mainWeapons2'], custom=form.cleaned_data['MW2_Custom'] if form.cleaned_data['OR_MW2'] else None)
