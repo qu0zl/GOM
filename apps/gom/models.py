@@ -641,7 +641,7 @@ class Unit(models.Model):
             except Exception, e:
                 pass
             try:
-                if (self.unitType == 13 or self.unitType == 14) and self.cmdTek: # ASV or GSV
+                if self.unitType in (ASV,GSV,MECHA,SHAS,AAV,ARTI) and self.cmdTek:
                     cost=cost+6
             except:
                 pass

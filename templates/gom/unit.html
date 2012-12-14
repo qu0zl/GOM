@@ -156,17 +156,17 @@
             case(3):
             case(4):
                 return multiPerkCost(0) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+            case(12):
             case(13):
             case(14):
-            case(17):
+            case(15):
+            case(18):
             case(21):
                 if ( $('#id_cmdTek').prop('checked') )
                     cmdTekCost = 6;
                 // deliberately fall through
             case(11):
-            case(12):
-            case(15):
-            case(18):
+            case(17):
             case(19):
             case(20):
             case(22):
@@ -405,19 +405,19 @@ function showWeapons(utype) {
         else
             $('#id_inlineWeapons_tb').hide()
         $('#id_cmdTek_tr').hide();
+        $('#id_mainWeapons1_tb').hide();
+        $('#id_mainWeapons2_tb').hide();
+        $('#id_mainWeapons3_tb').hide();
+        $('#id_mainWeapons4_tb').hide();
         $('#id_mainWeapons5_tb').hide();
         $('#id_mainWeapons6_tb').hide();
+        $('#id_AIWeapons_tb').hide();
+        $('#id_AIWeapons2_tb').hide();
         if ( utype < 10 ) {
             $('#id_shoot_tr').show();
             $('#id_assault_tr').show();
             $('#id_mental_tr').show();
             // Hide vehicle specific stuff
-            $('#id_mainWeapons1_tb').hide();
-            $('#id_mainWeapons2_tb').hide();
-            $('#id_mainWeapons3_tb').hide();
-            $('#id_mainWeapons4_tb').hide();
-            $('#id_AIWeapons_tb').hide();
-            $('#id_AIWeapons2_tb').hide();
             $('#id_modz_tb').hide();
             $('#id_grenades_tb').show();
             $('#id_CCW_tb').show();
@@ -471,8 +471,10 @@ function showWeapons(utype) {
             else
                 $('#id_AIWeapons_tb').hide();
             switch (utype) {
-                case 11:
                 case 12:
+                    $('#id_cmdTek_tr').show();
+                    // deliberately fall through
+                case 11:
                     vehicleWeapon('#id_mainWeapons1', utype, size);
                     if ( size == 5 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
@@ -482,65 +484,38 @@ function showWeapons(utype) {
                     } else if ( size >=3 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
                         vehicleWeapon('#id_mainWeapons3', utype, size);
-                        $('#id_mainWeapons4_tb').hide();
                         $('#id_AIWeapons2_tb').show();
                     } else if ( size == 2 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
-                        $('#id_mainWeapons3_tb').hide();
-                        $('#id_mainWeapons4_tb').hide();
-                        $('#id_AIWeapons2_tb').hide();
-                    }  else {
-                        $('#id_mainWeapons2_tb').hide();
-                        $('#id_mainWeapons3_tb').hide();
-                        $('#id_mainWeapons4_tb').hide();
-                        $('#id_AIWeapons2_tb').hide();
                     }
                     break;
                 case 13:
                 case 14:
-                    $('#id_mainWeapons_tb').hide();
-                    $('#id_mainWeapons2_tb').hide();
-                    $('#id_mainWeapons3_tb').hide();
-                    $('#id_mainWeapons4_tb').hide();
                     if ( size >= 3 )
                         $('#id_AIWeapons2_tb').show();
-                    else
-                        $('#id_AIWeapons2_tb').hide();
                     $('#id_cmdTek_tr').show();
                     break;
                 case 15:
+                    $('#id_cmdTek_tr').show();
+                    //deliberately fall through
                 case 17:
                     vehicleWeapon('#id_mainWeapons1', utype, size);
-                    $('#id_mainWeapons3_tb').hide();
-                    $('#id_mainWeapons4_tb').hide();
                     if ( size >= 2 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size)
                         if ( size >= 3 ) {
                             $('#id_AIWeapons2_tb').show();
-                        } else {
-                            $('#id_AIWeapons2_tb').hide();
                         }
-                    } else {
-                        $('#id_mainWeapons2_tb').hide();
                     }
                     break;
                 case 16:
-                    $('#id_basicWeapons_tb').hide();
-                    $('#id_SAWeapons_tb').hide();
                     $('#id_SpecWeapons_tb').show();
                     break;
                 case 18: // AAV
                     $('#id_cmdTek_tr').show();
                     //deliberately fall through
                 case 19: // fighter
-                    $('#id_mainWeapons1_tb').hide();
-                    $('#id_mainWeapons2_tb').hide();
-                    $('#id_mainWeapons3_tb').hide();
-                    $('#id_mainWeapons4_tb').hide();
                     if ( size >= 3 )
                         $('#id_AIWeapons2_tb').show();
-                    else
-                        $('#id_AIWeapons2_tb').hide();
 
                     if ( size == 5 )
                         vehicleWeapon('#id_mainWeapons4', utype, size);
