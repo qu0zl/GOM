@@ -234,7 +234,7 @@
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
+                var cost = WEAPON_COST[$('#id_AIWeapons').val()];
                 if (cost != old_cost) { AI++; old_cost=cost;}
                 if (size >= 2) {
                     var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
