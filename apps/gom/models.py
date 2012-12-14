@@ -721,7 +721,7 @@ class Unit(models.Model):
                 MOBILITY_JET:(18,18,17,16,15),
                 MOBILITY_AEROSPACE:(20,20,19,18,17) }
             return t[self.mobility][self.size-1]
-        elif selt.unitType == MONSTER:
+        elif self.unitType == MONSTER:
             t = {
                 MOBILITY_WALK:(7,6,5,5,4),
                 MOBILITY_WALK_QUAD:(8,7,6,5,5),

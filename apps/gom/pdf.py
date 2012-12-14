@@ -381,7 +381,12 @@ def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
 
     p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[unit.size]) )
     p.setFont("Helvetica-Bold", 8)
-    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, str(unit.getSpeed()) )
+    speed = unit.getSpeed()
+    if speed < 0:
+        speed = "*"
+    else:
+        speed = str(speed)
+    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, speed )
 
 def drawType(p, unit, WIDTH, HEIGHT):
     p.setStrokeColor(colors.darkgrey)

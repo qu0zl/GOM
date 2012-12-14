@@ -536,15 +536,30 @@ def unitSave(request, unit_id=0):
                     unit.mobility = int(form.cleaned_data['commander_mobility'])
                 except:
                     unit.mobility = 1
-            elif unit.unitType == 14:
+            elif unit.unitType in (14,18,21):
                 try:
                     unit.mobility = int(form.cleaned_data['air_mobility'])
                 except:
-                    unit.mobility = 1
+                    unit.mobility = 12
+            elif unit.unitType == 17: # Field artillery
+                try:
+                    unit.mobility = int(form.cleaned_data['field_artillery_mobility'])
+                except:
+                    unit.mobility = 0
             elif unit.unitType == 16: #VSPEC
                 saveModz(unit, form)
                 try:
                     unit.mobility = int(form.cleaned_data['vspec_mobility'])
+                except:
+                    unit.mobility = 1
+            elif unit.unitType == 19:
+                try:
+                    unit.mobility = int(form.cleaned_data['fighter_mobility'])
+                except:
+                    unit.mobility = 12
+            elif unit.unitType == 22: # Monster
+                try:
+                    unit.mobility = int(form.cleaned_data['monster_mobility'])
                 except:
                     unit.mobility = 1
             else:
