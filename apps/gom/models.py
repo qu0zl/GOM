@@ -626,42 +626,26 @@ class Unit(models.Model):
         mountCosts = mainCosts[mainWeapons] + AICosts[AIWeapons]
         return mountCosts
     def perkCost(self):
+        perkCount = 0 # only track positive cost perks
+        cost=0
         if self.isVehicle():
-            cost=0
-            try:
-                cost = cost+self.modz.all()[0].perkCost
-                print 'First modz cost %d' % cost
-                try:
-                    cost = cost + 5 + self.modz.all()[1].perkCost
-                    print 'Second perk found, cost:%d' % cost
-                except Exception, e:
-                    print e
-                    pass
-                print 'perkCost returning %d' % cost
-            except Exception, e:
-                pass
-            try:
-                if self.unitType in (ASV,GSV,MECHA,SHAS,AAV,ARTI) and self.cmdTek:
-                    cost=cost+6
-            except:
-                pass
-            return cost
+            for item in self.modz.all():
+                if item.perkCost > 0:
+                    perkCount = perkCount + 1
+                cost = cost + item.perkCost
+            if self.unitType in (ASV,GSV,MECHA,SHAS,AAV,ARTI) and self.cmdTek:
+                cost=cost+6
         # Infantry
-        if self.unitType != 2: # Not a SA
-            try:
-                cost = self.perks.all()[0].perkCost
-                print 'First perk cost %d' % cost
-                try:
-                    cost = cost + 5 + self.perks.all()[1].perkCost
-                    print 'Second perk found, cost:%d' % cost
-                except Exception, e:
-                    print e
-                    pass
-                print 'perkCost returning %d' % cost
-                return cost
-            except Exception, e:
-                pass
-        return 0
+        if (self.isInfantry() and self.unitType != SA) or self.unitType==VSPEC:
+            for item in self.perks.all():
+                if item.perkCost > 0:
+                    perkCount = perkCount + 1
+                cost = cost + item.perkCost
+                
+        if perkCount > 1:
+            cost = cost + ((perkCount-1)*5)
+        print 'perkCost returning %d' % cost
+        return cost
     def getSpeed(self):
         if self.unitType in (1,2,3):
             return 4 # any modifiers?
@@ -981,9 +965,12 @@ class UnitForm(forms.ModelForm):
             except ObjectDoesNotExist:
                 pass
             try:
+                self.fields['soak'].initial=kwargs['instance'].getSoak()
+            except Exception, e:
+                pass
+            try:
                 self.fields['guard'].initial=kwargs['instance'].getGuard()
             except Exception, e:
-                print "guard exception", e
                 pass
             try:
                 if kwargs['instance'].unitType == COMMANDER:
