@@ -436,14 +436,14 @@ class Unit(models.Model):
         total = 0
         if self.unitType == GRUNT:
             unitInlineList = UnitWeapon.objects.filter(unit=self,mountType=2)
-            for weaponEntry in unitInlineList: # include base cost of SA
-                total = total + weaponEntry.weapon.weaponPoints + 3 
+            for weaponEntry in unitInlineList:
+                total = total + weaponEntry.weapon.weaponPoints
         return total
     def getBaseCost(self):
         if self.unitType == 1:
             return 1
         elif self.unitType== 2:
-            return 3
+            return 0
         elif self.unitType== 3:
             t = (5,6,7,8,9) # includes specialist base cost of 1
         elif self.unitType == 4:

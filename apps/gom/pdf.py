@@ -136,10 +136,11 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     p.setFillColor(colors.white)
     p.setFont("Helvetica-Bold", 6)
     x = .07*WIDTH
-    if grunt.isVehicle():
-        y = .19*HEIGHT
+   
+    if grunt.getDam() > 40:
+        y = .22 * HEIGHT
     else:
-        y = .22*HEIGHT
+        y = .19*HEIGHT
     boxWidth = WIDTH/19
     boxGap = WIDTH/119
     for i in range(0, dmg):
@@ -164,7 +165,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
                 # Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
                 _('Tek'))
         for i in range(0,3):
-            dy = y-(.03*HEIGHT)-((boxWidth+boxGap)*i)
+            dy = (.16*HEIGHT)-((boxWidth+boxGap)*i)
             p.setStrokeColor(colors.black)
             p.setFillColor(colors.white)
             p.roundRect(.88*WIDTH, dy, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
@@ -422,7 +423,7 @@ def drawType(p, unit, WIDTH, HEIGHT):
     elif unit.unitType == 20:
         uString = _('Super-Heavy Tank')
     elif unit.unitType == 21:
-        uString = _('Super-Heavy Air Support')
+        uString = _('S.H. Air Support')
     elif unit.unitType == 22:
         uString = _('Monster')
     if unit.isVehicle():
