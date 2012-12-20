@@ -517,6 +517,8 @@ def unitSave(request, unit_id=0):
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
                 savePerkz(unit, form)
             # General
+            if form.cleaned_data['squadSize']:
+                unit.squadSize=form.cleaned_data['squadSize']
             if form.cleaned_data['desc']:
                 unit.desc=form.cleaned_data['desc']
             if form.cleaned_data['manu']:

@@ -17,6 +17,7 @@ from itertools import chain
 User.profile = property(lambda u: profiles.models.Profile.objects.get_or_create(user=u)[0])
 
 # Create your models here.
+SQUAD_SIZE_CHOICES = map ( (lambda x,y: (x,y)), range(1,31), range(1,31))
 
 SIZE_CHOICES = (
     # Translators: Scout size class
@@ -328,6 +329,7 @@ class Unit(models.Model):
     rating = models.DecimalField(blank=True, decimal_places=2, max_digits=4, default=0)
 
     unitType = models.SmallIntegerField(choices=GRUNTZ_TYPE_CHOICES, default=1, blank=False)
+    squadSize = models.SmallIntegerField(choices=SQUAD_SIZE_CHOICES, default=6, blank=False)
 
     # vehicle specific fields
     modz = models.ManyToManyField('Modz', related_name='Modz Table', default=None)
@@ -429,18 +431,19 @@ class Unit(models.Model):
                 total = total + (6*weaponEntry.weapon.weaponPoints)
             else:
                 total = total + weaponEntry.weapon.weaponPoints
-        if self.unitType == 1: # inline squad attachments
+        return total
+    def inlineSACost(self): # Calculate cost of inline squad attachments if any
+        total = 0
+        if self.unitType == GRUNT:
             unitInlineList = UnitWeapon.objects.filter(unit=self,mountType=2)
-            for weaponEntry in unitInlineList:
-                print 'adding new weapon cost and sa entry'
-                # Inlude base SA cost for an inline sqad attachement
-                total = total + weaponEntry.weapon.weaponPoints +2
+            for weaponEntry in unitInlineList: # include base cost of SA
+                total = total + weaponEntry.weapon.weaponPoints + 3 
         return total
     def getBaseCost(self):
         if self.unitType == 1:
             return 1
         elif self.unitType== 2:
-            return 0
+            return 3
         elif self.unitType== 3:
             t = (5,6,7,8,9) # includes specialist base cost of 1
         elif self.unitType == 4:
@@ -474,7 +477,7 @@ class Unit(models.Model):
         return t[self.size-1]
     def getDam(self):
         if self.unitType == 1:
-            return 6 + self.inlineCount()
+            return self.squadSize + self.inlineCount()
         elif self.unitType == 2:
             return 1
         elif self.unitType == 3 or self.unitType == VSPEC:
@@ -745,13 +748,22 @@ class Unit(models.Model):
         return self.cost
     def updateCost(self):
         self.oldCost = self.cost
-        print 'base:%d, shoot:%d, assault:%d, guard:%d, soak:%d, mental:%d, skill:%d, weapons:%d, perks:%d, mob:%d, mount:%d' % ( self.getBaseCost(), self.shootCost(), self.assaultCost(), self.guardCost(), self.soakCost(), self.mentalCost(), self.skillCost(), self.weaponCost(), self.perkCost(), self.mobilityCost(), self.mountCost() )
+        print 'base:%d, shoot:%d, assault:%d, guard:%d, soak:%d, mental:%d, skill:%d, weapons:%d, SA:%d, perks:%d, mob:%d, mount:%d' % ( self.getBaseCost(), self.shootCost(), self.assaultCost(), self.guardCost(), self.soakCost(), self.mentalCost(), self.skillCost(), self.weaponCost(), self.inlineSACost(), self.perkCost(), self.mobilityCost(), self.mountCost() )
         subTotal = self.getBaseCost() + self.shootCost() + self.assaultCost() + self.guardCost() + self.soakCost() + self.mentalCost() + self.skillCost() + self.mobilityCost()
+        debugTotal1 = subTotal
         if self.isInfantry():
             halved = int(ceil(subTotal /float(2)))
             print 'subTotal %d, halved %d' % (subTotal, halved)
             subTotal = halved
-        self.cost = subTotal + self.weaponCost() + self.perkCost() + self.mountCost()
+        subTotal = subTotal + self.weaponCost() + self.perkCost() + self.mountCost()
+        debugTotal2 = subTotal
+        # See if it's a non-standard grunt unit size
+        # greg this should not be applied to SA inclusive total
+        if self.unitType == GRUNT and self.squadSize != 6:
+            subTotal = int(round((subTotal * self.squadSize)/6.0))
+        debugTotal3 = subTotal
+        self.cost = subTotal + self.inlineSACost()
+        print 'Debug totals: %d, %d, %d, %d' % (debugTotal1, debugTotal2, debugTotal3, self.cost)
         if self.cost != self.oldCost:
             self.save()
             # Update costs of any forces that include this unit
@@ -868,7 +880,7 @@ class UnitForm(forms.ModelForm):
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'mental', 'skill', 'mobility', 'desc', 'cmdTek', 'publish' ]
+        fields = ['id', 'name', 'unitType', 'size', 'shoot', 'assault', 'mental', 'skill', 'mobility', 'desc', 'cmdTek', 'publish', 'squadSize' ]
     def __init__(self, *args, **kwargs):
         super(UnitForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:

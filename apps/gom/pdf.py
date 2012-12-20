@@ -130,10 +130,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     dmg = grunt.getDam()
     interval = calcCriticalInterval(dmg)
 
-    if grunt.unitType == 1:
-        dmgString='1' # Grunt squad
-    else:
-        dmgString = str(dmg)
+    dmgString = str(dmg)
 
     p.setStrokeColor(colors.black)
     p.setFillColor(colors.white)

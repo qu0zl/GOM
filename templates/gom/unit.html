@@ -15,7 +15,7 @@
             case(1):
                 return 1;
             case (2):
-                return 0;
+                return 3;
             case (3):
                 return [5,6,7,8,9][size-1];
             case (4):
@@ -118,7 +118,7 @@
     }
     function skillCost(utype){
         if (utype == 1 || utype == 3 || utype == 4)
-            return [0,0,1,2,3,5,8,12][$('#id_skill').val()];
+            return [0,0,0,1,3,5,7,9][$('#id_skill').val()];
         else if (utype>=11)
             return [0,0,0,1,3,5,8,12][$('#id_skill').val()];
         return 0;
@@ -175,25 +175,29 @@
                 return multiPerkCost(2) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()] + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
         }
     }
+    function inlineSACost(utype) {
+        if (utype != 1)
+            return 0;
+        var old_cost = 0;
+        var inline_cost = WEAPON_COST[$('#id_inlineWeapons').val()];
+        if (inline_cost != old_cost) { inline_cost += 3; old_cost=inline_cost;}
+        inline_cost = old_cost + WEAPON_COST[$('#id_inlineWeapons2').val()];
+        if (inline_cost != old_cost) { inline_cost += 3;}
+        return inline_cost;
+    }
     function weaponCost(utype, size) {
         // adjust to handle PA weapons
         switch (utype) {
             case(1):
                 var soak = parseInt($('#id_soak').val());
-                //need to include base SA cost of 2 per inline weapon guy
-                var old_cost=0;
-                var inline_cost = WEAPON_COST[$('#id_inlineWeapons').val()];
-                if (inline_cost != old_cost) { inline_cost += 2; old_cost=inline_cost;}
-                inline_cost = old_cost + WEAPON_COST[$('#id_inlineWeapons2').val()];
-                if (inline_cost != old_cost) { inline_cost += 2;}
-
                 if ( soak >= 14 ) { // PA squad
+                    // multiply SA weapons chosen by number taken rather than by flat 6 - greg
                     if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
-                        return inline_cost+(6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return (6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                     } else
-                        return inline_cost+WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                 } else
-                    return inline_cost+WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                    return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(4):
@@ -321,11 +325,18 @@
         var size = parseInt($('#id_size').val());
         var utype = parseInt($('#id_unitType').val());
         var cost = baseCost(utype, size)+shootCost(utype)+assaultCost(utype)+guardCost(utype)+soakCost(utype)+mobilityCost(utype)+mentalCost(utype)+skillCost(utype);
+        var debugTotal1 = cost;
         if (utype<10)
             cost = Math.ceil(cost/2);
         cost = cost + weaponCost(utype,size) + perkCost(utype);
+        var debugTotal2 = cost;
 
-        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
+        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' inlineSA:'+inlineSACost()+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
+        if (utype==1 && $('#id_squadSize').val() != 6)
+            cost = Math.round((cost * $('#id_squadSize').val())/6);
+        var debugTotal3 = cost;
+        cost = cost + inlineSACost(utype);
+        //alert('Debug totals: '+debugTotal1+', '+debugTotal2+', '+debugTotal3+', '+cost);
         $('#id_cost').html(cost);
     }
 
@@ -400,10 +411,13 @@ function showMobility(utype) {
     }
 }
 function showWeapons(utype) {
-        if ( utype == 1 )
-            $('#id_inlineWeapons_tb').show()
-        else
+        if ( utype == 1 ) {
+            $('#id_inlineWeapons_tb').show();
+            $('#id_squadSize_tb').show();
+        } else {
             $('#id_inlineWeapons_tb').hide()
+            $('#id_squadSize_tb').hide();
+        }
         $('#id_cmdTek_tr').hide();
         $('#id_mainWeapons1_tb').hide();
         $('#id_mainWeapons2_tb').hide();
@@ -899,6 +913,9 @@ function weaponOR(event) {
                                         <tr><td id="id_inlineWeapons2_td">{% trans "Same-card SA 2" %}</td><td>{{formObject.inlineWeapons2}}</td><td>{{formObject.OR_inline2}}</td></tr>
                                         <tr id="tr_OR_inline2"><td>{{formObject.inline2_Custom.label}}</td><td>{{formObject.inline2_Custom}}</td></tr>
                                     </tbody>
+                                </tbody>
+                                <tbody id="id_squadSize_tb">
+                                    <tr><td>{% trans "Squad Size" %}</td><td>{{formObject.squadSize}}</td></tr>
                                 </tbody>
                                 <tbody id="id_mainWeapons1_tb">
                                     <tr><td>{{formObject.mainWeapons1.label}}</td><td>{{formObject.mainWeapons1}}</td><td>{{formObject.OR_MW1}}</td></tr>
