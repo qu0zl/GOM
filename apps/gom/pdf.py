@@ -149,7 +149,7 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
         boxX = x+((i%10)*(boxWidth+boxGap))
         boxY = y-((i/10)*(boxWidth+boxGap))
         p.roundRect(boxX, boxY, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
-        if (i+1)%interval == 0 and grunt.isVehicle():
+        if (i+1)%interval == 0 and grunt.nonVSpecVehicle():
             if (i+1)/interval <= 3:
                 p.setFillColor(colors.black)
                 # Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
@@ -161,8 +161,8 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     p.drawCentredString(.9*WIDTH, .23*HEIGHT, dmgString)
     p.setStrokeColor(colors.lightgrey)
     p.circle( .9*WIDTH, .24*HEIGHT, .04*WIDTH, fill=0, stroke=1)
-    # Draw Critical boxes if this is a vehicle
-    if grunt.isVehicle():
+    # Draw Critical boxes if this is a vehicle other than vehicle specialist
+    if grunt.nonVSpecVehicle():
         strings=(_('Armour'), _('Engine'),
                 # Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
                 _('Tek'))

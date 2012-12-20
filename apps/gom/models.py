@@ -406,6 +406,10 @@ class Unit(models.Model):
         return False
     def isInfantry(self):
         return not self.isVehicle()
+    def nonVSpecVehicle(self):
+        if self.isVehicle() and self.unitType != VSPEC:
+            return True
+        return False
     def getSoak(self):
         return self.soak
     def getGuard(self):
