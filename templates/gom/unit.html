@@ -351,7 +351,10 @@ function vehicleWeapon(which, utype, size)
 {
     $(which+'_tb').show();
     $("option", $(which)).each(function(i) {
-            if ($(this).attr("weaponSize")>size || ((utype!=15 && utype!=17) && $(this).attr("weaponType") == 11) ) {
+            if ($(this).attr("weaponSize")>size 
+                || ((utype!=15 && utype!=17) && $(this).attr("weaponType") == 11)
+                || ((utype!=19) && $(this).attr("weaponType") == 12) 
+                || ((utype==19) && $(this).attr("weaponType") != 12) ) {
                 $(this).attr("disabled", "disabled");
                 if ($(this).attr("selected")) {
                 $(this).removeAttr("selected");
