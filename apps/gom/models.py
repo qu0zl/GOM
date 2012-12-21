@@ -655,6 +655,49 @@ class Unit(models.Model):
             cost = cost + ((perkCount-1)*5)
         print 'perkCost returning %d' % cost
         return cost
+    def soakMods(self):
+        soakMod = 0
+        soakOverride = 0
+        if self.isInfantry() or self.unitType==VSPEC:
+            for item in self.perks.all():
+                soakMod = soakMod + item.soakMod
+                if item.soakAlternative != 0:
+                    soakOverride = item.soakAlternative
+        if self.isVehicle():
+            for item in self.modz.all():
+                soakMod = soakMod + item.soakMod
+                if item.soakAlternative != 0:
+                    soakOverride = item.soakAlternative
+        return (soakMod,soakOverride)
+    def getSoakStr(self):
+        soak = self.getSoak()
+        soakMod, soakOverride = self.soakMods()
+        if soakMod != 0:
+            soakStr = "%s*" % (soak+soakMod)
+        else:
+            soakStr = "%s" % soak
+
+        if soakOverride != 0:
+            soakStr = ("%s/" % soakOverride) + soakStr
+        return soakStr
+    def speedMods(self):
+        speedMod = 0
+        if self.isInfantry() or self.unitType==VSPEC:
+            for item in self.perks.all():
+                speedMod = speedMod + item.moveMod
+        if self.isVehicle():
+            for item in self.modz.all():
+                speedMod = speedMod + item.moveMod
+        return speedMod
+    def getSpeedStr(self):
+        speed = self.getSpeed()
+        if speed == -1:
+            return '*'
+        speedMod = self.speedMods()
+        if speedMod != 0:
+            return "%s*" % (speed+speedMod)
+        else:
+            return str(speed)
     def getSpeed(self):
         if self.unitType in (1,2,3):
             return 4 # any modifiers?
@@ -807,6 +850,10 @@ class PerksBase(models.Model):
     perkDescription = models.CharField(max_length=300, default='Empty Perk Description')
     perkEffect = models.CharField(max_length=200, default='Empty Perk Effect')
     perkCost = models.SmallIntegerField(default=999)
+    moveMod = models.SmallIntegerField(default=0)
+    soakMod = models.SmallIntegerField(default=0)
+    # Used for perks that give an alternative soak until a condition occurs
+    soakAlternative = models.SmallIntegerField(default=0)
 
 class Perks(PerksBase):
     pass

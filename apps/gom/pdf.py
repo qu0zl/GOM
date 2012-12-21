@@ -31,7 +31,7 @@ def drawStats(p, grunt, WIDTH, HEIGHT):
     locations[0][2] = grunt.shoot
     locations[1][2] = grunt.getGuard()
     locations[2][2] = grunt.assault
-    locations[3][2] = grunt.getSoak()
+    locations[3][2] = grunt.getSoakStr()
     locations[4][2] = grunt.mental
     locations[5][2] = grunt.skill
     locations[0][3] = _('Shoot')
@@ -388,7 +388,7 @@ def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
 
     p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[unit.size]) )
     p.setFont("Helvetica-Bold", 8)
-    speed = unit.getSpeed()
+    speed = unit.getSpeedStr()
     if speed < 0:
         speed = "*"
     else:
