@@ -95,7 +95,8 @@ CHOICE_MOBILITY_HELI = (MOBILITY_HELI, _('Helicopter'))
 CHOICE_MOBILITY_PROP_VTOL = (MOBILITY_PROP_VTOL, _('Prop VTOL'))
 # Translators: Jet vertical take off & landing mobility type.
 CHOICE_MOBILITY_JET_VTOL = (MOBILITY_JET_VTOL, _('Jet VTOL'))
-CHOICE_MOBILITY_PROP = (MOBILITY_PROP, _('Propeller Flight'))
+# Translators: Propeller based flight.
+CHOICE_MOBILITY_PROP = (MOBILITY_PROP, _('Prop. Flight'))
 CHOICE_MOBILITY_JET = (MOBILITY_JET, _('Jet Flight'))
 CHOICE_MOBILITY_AEROSPACE = (MOBILITY_AEROSPACE, _('Aerospace'))
 # Translators: Towed (eg by another vehicle)
@@ -734,13 +735,20 @@ class Unit(models.Model):
         elif self.unitType == ASV:
             t=[None,None,"1/2",1,2,3]
             return t[self.size]
+        elif self.unitType == SHAS:
+            t=[None,4,5,6,7,8]
+            return t[self.size]
         else:
             return 0
     def getRam(self):
-        if self.unitType == 12:
+        if self.unitType == MECHA:
             return 6+self.size
-        elif self.unitType in (11,13,14,15):
+        elif self.unitType in (TANK,GSV,ASV,ARTI,AAV,FIGHTER):
             return 8+self.size
+        elif self.unitType in (SHT,SHAS):
+            return 13+self.size
+        elif self.unitType == MONSTER:
+            return [9,10,12,12,13][self.size-1]
         return 0
     def getCost(self):
         if self.cost == 0:
