@@ -180,15 +180,22 @@
             return 0;
         return WEAPON_COST[$('#id_inlineWeapons').val()] + WEAPON_COST[$('#id_inlineWeapons2').val()];
     }
+    function PAweaponCost(utype) {
+        if ((utype == 1) && (parseInt($('#id_soak').val()) >= 14) && $('#id_SAWeapons option:selected').text().match(/^SA./)) {
+            return $('#id_squadSize').val()*WEAPON_COST[$('#id_SAWeapons').val()];
+        }
+        return 0;
+    }
     function weaponCost(utype, size) {
         // adjust to handle PA weapons
         switch (utype) {
             case(1):
                 var soak = parseInt($('#id_soak').val());
                 if ( soak >= 14 ) { // PA squad
-                    // multiply SA weapons chosen by number taken rather than by flat 6 - greg
+                    // multiply SA weapons chosen by number taken
+                    // If power-armour carrying SA weapons then ignore those for now and add after determining squad size.
                     if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
-                        return (6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                     } else
                         return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                 } else
@@ -331,8 +338,11 @@
         var debugTotal2 = cost;
 
         //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' inlineSA:'+inlineSACost()+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
-        if (utype==1 && $('#id_squadSize').val() != 6)
-            cost = Math.round((cost * $('#id_squadSize').val())/6);
+        if (utype==1) {
+            if ( $('#id_squadSize').val() != 6 )
+                cost = Math.round((cost * $('#id_squadSize').val())/6);
+            cost = cost + PAweaponCost(utype);
+        }
         var debugTotal3 = cost;
         cost = cost + inlineSACost(utype);
         //alert('Debug totals: '+debugTotal1+', '+debugTotal2+', '+debugTotal3+', '+cost);
