@@ -212,6 +212,10 @@
                     cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
                     if (cost != old_cost) { AI++; old_cost=cost;}
                 }
+                if (utype == 12) { // MECHA CCW
+                    cost = cost+WEAPON_COST[$('#id_MECHA_CCW').val()];
+                    old_cost=cost;
+                }
                 if (size >= 2) {
                     cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
                     if (cost != old_cost) { main++; old_cost=cost;}
@@ -420,6 +424,7 @@ function showWeapons(utype) {
         $('#id_mainWeapons4_tb').hide();
         $('#id_mainWeapons5_tb').hide();
         $('#id_mainWeapons6_tb').hide();
+        $('#id_MECHA_CCW_tb').hide();
         $('#id_AIWeapons_tb').hide();
         $('#id_AIWeapons2_tb').hide();
         if ( utype < 10 ) {
@@ -481,6 +486,7 @@ function showWeapons(utype) {
                 $('#id_AIWeapons_tb').hide();
             switch (utype) {
                 case 12:
+                    $('#id_MECHA_CCW_tb').show();
                     $('#id_cmdTek_tr').show();
                     // deliberately fall through
                 case 11:
@@ -943,6 +949,10 @@ function weaponOR(event) {
                                 <tbody id="id_AIWeapons2_tb">
                                     <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
                                     <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
+                                </tbody>
+                                <tbody id="id_MECHA_CCW_tb">
+                                    <tr><td>{{formObject.MECHA_CCW.label}}</td><td>{{formObject.MECHA_CCW}}</td><td>{{formObject.OR_MECHA_CCW}}</td></tr>
+                                    <tr id="tr_OR_MECHA_CCW"><td>{{formObject.MECHA_CCW_Custom.label}}</td><td>{{formObject.MECHA_CCW_Custom}}</td></tr>
                                 </tbody>
                                 <tbody>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>

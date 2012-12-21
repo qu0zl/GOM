@@ -271,6 +271,11 @@ def saveOneVehicleWeapon(unit, form, which, type):
 
 def saveVehicleWeapons(unit, form):
     unit.weapons.clear()
+
+    # edge case weapons
+    if unit.unitType == 12 and form.cleaned_data['MECHA_CCW']: # MECHA CCW
+        addUnitWeapon(unit, form.cleaned_data['MECHA_CCW'], custom=form.cleaned_data['MECHA_CCW_Custom'] if form.cleaned_data['OR_MECHA_CCW'] else None)
+
     saveOneVehicleWeapon(unit, form, 1, "ai")
     if unit.unitType in (11,12,22): # Tank, Mecha or Monster
         saveOneVehicleWeapon(unit, form, 1, "main")

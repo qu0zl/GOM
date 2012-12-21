@@ -94,6 +94,16 @@ def getPerkText(grunt):
     return perkString
 
 def calcCriticalInterval(dmg):
+    if dmg >= 50:
+        return 15
+    if dmg >= 46:
+        return 14
+    if dmg >= 42:
+        return 12
+    if dmg >= 38:
+        return 11
+    if dmg >= 34:
+        return 10
     if dmg >= 26:
         return 7
     elif dmg >= 20:
@@ -191,7 +201,7 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
 # Draw the weapon stat for a unitWeapon OR a weapon. Handles both.
 # Which is number of box this is, as we offset downwards for each box.
 # dxs are the x co-ords of the breaks in the weapon box.
-def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon):
+def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon, unit=None):
         p.setFillColor(colors.white)
         dy = y-(which*BOX_HEIGHT)
         p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
@@ -233,7 +243,12 @@ def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, w
         if weapon.weaponAP != 0 :
             p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(weapon.weaponAP) )
         else:
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '-' )
+            # Check if it's a Mecha using  a CCW weapon - affects AP value
+            if unit and unit.unitType == 12 and weapon.weaponType == 0:
+                apString=str([1,2,3,4,5][unit.size-1])
+            else:
+                apString = '-'
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, apString )
 
 
         dx = dxs[3]
@@ -310,7 +325,7 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
         pass
     for unitWeapon in unitWeaponList:
         i = i + 1
-        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon)
+        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon, unit)
 
 def drawDesc(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.white)

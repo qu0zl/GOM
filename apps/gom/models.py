@@ -838,6 +838,7 @@ class UnitForm(forms.ModelForm):
     inlineWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     # Grunt CCWs only
     CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None, label=_('CCW'))
+    MECHA_CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0, weaponName__in=['Basic','Small']), required=False, label=_('Mecha CCW'))
     # Grunt grenades only
     grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False, label=_('Grenade'))
     # Translators: Label for User customisable weapon name box.
@@ -855,6 +856,7 @@ class UnitForm(forms.ModelForm):
     inline_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     inline2_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     CCW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
+    MECHA_CCW_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     grenades_Custom = forms.CharField(max_length=100, required=False, label=_('Custom Name'))
     OR_MW1 = forms.BooleanField(required=False)
     OR_MW2 = forms.BooleanField(required=False)
@@ -868,6 +870,7 @@ class UnitForm(forms.ModelForm):
     OR_SA = forms.BooleanField(required=False)
     OR_Spec = forms.BooleanField(required=False)
     OR_CCW = forms.BooleanField(required=False)
+    OR_MECHA_CCW = forms.BooleanField(required=False)
     OR_grenades = forms.BooleanField(required=False)
     OR_inline = forms.BooleanField(required=False)
     OR_inline2 = forms.BooleanField(required=False)
@@ -919,6 +922,15 @@ class UnitForm(forms.ModelForm):
             except (ObjectDoesNotExist, IndexError):
                 pass
             try:
+                if kwargs['instance'].unitType == MECHA:
+                    MECHA_CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0, mountType=0).get()
+                    self.fields['MECHA_CCW'].initial=MECHA_CCW_instance.weapon
+                    if MECHA_CCW_instance.nameOverride:
+                        self.fields['MECHA_CCW_Custom'].initial=MECHA_CCW_instance.nameOverride
+                        self.fields['OR_MECHA_CCW'].initial=True
+            except ObjectDoesNotExist:
+                pass
+            try:
                 CCW_instance = UnitWeapon.objects.filter(unit=kwargs['instance'], weapon__weaponType=0, mountType=0).get()
                 self.fields['CCW'].initial=CCW_instance.weapon
                 if CCW_instance.nameOverride:
@@ -935,7 +947,7 @@ class UnitForm(forms.ModelForm):
             except ObjectDoesNotExist:
                 pass
             try:
-                mainWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=0)
+                mainWeapons = UnitWeapon.objects.filter(unit=kwargs['instance'], mountType=0, weapon__weaponType__gte=1) # Avoid CCW weapons, which a Mecha could be carrying
                 count = 1
                 for item in mainWeapons.all():
                     self.fields['mainWeapons%d' % count].initial=item.weapon
