@@ -795,6 +795,7 @@ class Weapons(models.Model):
     weaponAE = models.SmallIntegerField(default=0)
     weaponAP = models.SmallIntegerField(default=0)
     weaponPoints = models.SmallIntegerField(default=999)
+    weaponFA = models.BooleanField(default=False)
 
 class PerksBase(models.Model):
     class Meta:

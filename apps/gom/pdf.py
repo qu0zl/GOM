@@ -197,12 +197,16 @@ def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, w
         p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
         p.setFillColor(colors.black)
         p.drawString(x+(.03*inch), dy+(.03*inch), weapon.__unicode__())
+
         # Now that we've gotten the name, which may be an override from a unitWeapon
         # get the associated weapon if this is a unitWeapon. So that either way, we have a weapon from here on.
         try:
             weapon = weapon.weapon
         except:
             pass
+        if weapon.weaponFA:
+            p.drawImage('static/FA.png', .46*WIDTH, dy+(.1*BOX_HEIGHT) , width=.9*BOX_HEIGHT, height=.8*BOX_HEIGHT, preserveAspectRatio=True, mask='auto')
+
         dx = dxs[0]
         p.setFillColor(colors.white)
         p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
