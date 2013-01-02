@@ -642,7 +642,7 @@ class Unit(models.Model):
                 if item.perkCost > 0:
                     perkCount = perkCount + 1
                 cost = cost + item.perkCost
-            if self.unitType in (ASV,GSV,MECHA,SHAS,AAV,ARTI) and self.cmdTek:
+            if self.unitType in (ASV,GSV,TANK,MECHA,SHT,SHAS,AAV,ARTI) and self.cmdTek:
                 cost=cost+6
         # Infantry
         if (self.isInfantry() and self.unitType != SA) or self.unitType==VSPEC:

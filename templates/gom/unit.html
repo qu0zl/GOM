@@ -156,19 +156,19 @@
             case(3):
             case(4):
                 return multiPerkCost(0) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+            case(11):
             case(12):
             case(13):
             case(14):
             case(15):
             case(18):
+            case(20):
             case(21):
                 if ( $('#id_cmdTek').prop('checked') )
                     cmdTekCost = 6;
                 // deliberately fall through
-            case(11):
             case(17):
             case(19):
-            case(20):
             case(22):
                 return multiPerkCost(1)+cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
             case (16):
@@ -500,9 +500,9 @@ function showWeapons(utype) {
             switch (utype) {
                 case 12:
                     $('#id_MECHA_CCW_tb').show();
-                    $('#id_cmdTek_tr').show();
                     // deliberately fall through
                 case 11:
+                    $('#id_cmdTek_tr').show();
                     vehicleWeapon('#id_mainWeapons1', utype, size);
                     if ( size == 5 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
@@ -554,10 +554,9 @@ function showWeapons(utype) {
                     if ( size >= 2 )
                         vehicleWeapon('#id_mainWeapons1', utype, size);
                     break;
+                case 20: // SHT
                 case 21: // SHAS
                     $('#id_cmdTek_tr').show();
-                    // deliberately fall through to use SHT weapons
-                case 20: // SHT
                     if ( size >= 3 )
                         $('#id_AIWeapons2_tb').show();
                     else

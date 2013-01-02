@@ -528,7 +528,7 @@ def unitSave(request, unit_id=0):
                 unit.desc=form.cleaned_data['desc']
             if form.cleaned_data['manu']:
                 unit.manu=form.cleaned_data['manu'],
-            if unit.unitType in (12,13,14,15,18,21) and form.cleaned_data['cmdTek']:
+            if unit.unitType in (11,12,13,14,15,18,20,21) and form.cleaned_data['cmdTek']:
                 unit.cmdTek=form.cleaned_data['cmdTek']
             else:
                 unit.cmdTek = False
