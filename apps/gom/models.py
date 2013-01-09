@@ -479,7 +479,9 @@ class Unit(models.Model):
         return t[self.size-1]
     def getDam(self):
         if self.unitType == 1:
-            return self.squadSize + self.inlineCount()
+            # Now that SAs replace gruntz rather than add to them
+            # no longer add the inline SA count.
+            return self.squadSize
         elif self.unitType == 2:
             return 1
         elif self.unitType == 3 or self.unitType == VSPEC:
