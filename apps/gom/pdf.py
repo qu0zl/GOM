@@ -75,7 +75,7 @@ def getPerkText(grunt):
     perkz = None
     if grunt.isInfantry() or grunt.unitType == 16:
         if grunt.unitType == 2: # Squad attachments display no perk string
-            return
+            return ''
         perkString = _('No Perks')
         perkz = grunt.perks.all()
     if grunt.isVehicle():
