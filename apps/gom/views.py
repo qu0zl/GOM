@@ -142,31 +142,30 @@ def forceForm(request, force_id):
 
 def unitForm(request, unit_id):
     image = None
+    unit = None
     unit_owner = 0
     if ( unit_id != "0" ):
         unit = gom.models.Unit.objects.get(id=unit_id);
         unit_owner = unit.owner
         image = '%d/%s' % (unit_owner.id, unit.image)
         form = gom.models.UnitForm(instance=unit)
-        return render_to_response('gom/unit.html', \
-            {
-                'unit_owner':unit_owner,
-                'formObject':form,
-                'filename':image,
-                'saved':0,
-                'unit':unit,
-                'weapons':weaponCosts(),
-                'perkz':perkCosts(),
-                'modz':modCosts(),
-            }, \
-            RequestContext(request))
     else: # Make a new temporary unit
         if (request.user.is_authenticated()):
-            unit = gom.models.Unit(tempInstance=True, owner=request.user)
-            unit.save()
-            return redirect('/gom/unit/%d/' % unit.id)
+            form = gom.models.UnitForm()
         else:
             return HttpResponseForbidden(_('You must be logged in to create a new unit.'))
+    return render_to_response('gom/unit.html', \
+        {
+            'unit_owner':unit_owner,
+            'formObject':form,
+            'filename':image,
+            'saved':0,
+            'unit':unit,
+            'weapons':weaponCosts(),
+            'perkz':perkCosts(),
+            'modz':modCosts(),
+        }, \
+        RequestContext(request))
 
 def scale_dimensions(width, height, longest_side):
     if width > height:
@@ -477,10 +476,6 @@ def unitSave(request, unit_id=0):
                 if 'delete' in request.POST:
                     unit.delete()
                     return HttpResponseRedirect('/gom/list/all/')
-                if unit.tempInstance: # Clear the temp object flag if set
-                    print 'clearing tempInstance'
-                    unit.tempInstance = False
-                    unit.save() # Important enough to warrant an immediate save imo
                 unit.name = form.cleaned_data['name']
                 unit.shoot=int(form.cleaned_data['shoot'])
                 unit.assault=int(form.cleaned_data['assault'])
@@ -696,7 +691,7 @@ def listHandler(request, what):
     return list(request)
 
 def list(request):
-    units = gom.models.Unit.objects.exclude(tempInstance=True)
+    units = gom.models.Unit.objects.all()
     try:
         forces = gom.models.Force.objects.filter(owner=request.user)
     except:

@@ -804,7 +804,7 @@ function weaponOR(event) {
         $('select').change(updateCost);
         $('#id_cmdTek').change(updateCost);
         $('#star').raty({
-            score:{{unit.getRating}},
+score:{%if unit%}{{unit.getRating}}{%else%}null{%endif%},
             {% if not user.is_authenticated %}
                 readOnly : true,
             {% endif %}
@@ -835,11 +835,11 @@ function weaponOR(event) {
 {% block head_title %}{% trans "Edit Unit" %}{% endblock %}
 
 {% block body %}
-    <form method="post" id="unit" action="/gom/unit/{{unit.id}}/save/" enctype="multipart/form-data"> {% csrf_token %}
+<form method="post" id="unit" action="/gom/unit/{%if unit%}{{unit.id}}{%else%}0{%endif%}/save/" enctype="multipart/form-data"> {% csrf_token %}
         {{ formset.management_form }}
         <div style="white-space:nowrap; height:50px;">
             <div style="display:inline; float:left; white-space:nowrap;">
-                {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+                {% if not unit or user.is_authenticated and request.user == unit_owner %}
                 <div style="display:inline; float:left;"><h1>{% trans "Edit Unit"%}</h1></div>
                 <div style="display:inline; float:left; padding-left:10px;">{% trans "Publish" %} {{formObject.publish}}</div>
                 {% else %}
@@ -848,7 +848,7 @@ function weaponOR(event) {
             </div>
             <div style="display:inline; float:right;" id="star"></div>
             <div style="float:right;white-space:nowrap;">
-                <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{{unit.cost}}</span></h1>
+                <h1 style="margin-bottom:0px; margin-right:20px;">{% trans 'Cost: ' %}<span id="id_cost">{%if unit%}{{unit.cost}}{%endif%}</span></h1>
             </div>
         </div>
             <div style="width:100%; clear:both;">
@@ -992,11 +992,11 @@ function weaponOR(event) {
             <table>
                 <tbody>
                     <tr>
-                        {% if unit.tempInstance or user.is_authenticated and request.user == unit_owner %}
+                        {% if not unit or user.is_authenticated and request.user == unit_owner %}
                         <td> <button name="save" type="submit">{% trans "Save" %}</button> </td>
                         {% endif %}
                         {% if user.is_authenticated and request.user == unit_owner %}
-                            {% if not unit.tempInstance %}
+                            {% if unit %}
                             <td> <button name="delete" type="submit" id="id_delete">{% trans "delete" %}</button> </td>
                             {% endif %}
                         {% endif %}

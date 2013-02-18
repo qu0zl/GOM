@@ -326,7 +326,6 @@ class Unit(models.Model):
     mobility = models.SmallIntegerField(choices=ALL_MOBILITY_CHOICES, default=1, blank=False)
     size = models.SmallIntegerField(choices=SIZE_CHOICES, default=1, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=True)
-    tempInstance = models.BooleanField(default=False)
     creationTime = models.DateTimeField(auto_now_add=True, null=True)
     rating = models.DecimalField(blank=True, decimal_places=2, max_digits=4, default=0)
 
