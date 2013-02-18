@@ -605,7 +605,7 @@ def oneCard(p, WIDTH, HEIGHT, request, unit):
     drawBackgroundBox(p, WIDTH, HEIGHT)
 
     if unit.image:
-        imageFilename = str('user_media/%d/%s' % (unit.owner.get().id, unit.image))
+        imageFilename = str('user_media/%d/%s' % (unit.owner.id, unit.image))
         try:
             p.drawImage(imageFilename, .020*WIDTH, .595*HEIGHT, width=.365*WIDTH,height=.265*HEIGHT, preserveAspectRatio=True)
         except IOError, e:

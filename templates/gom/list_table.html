@@ -1,7 +1,7 @@
 {% load i18n %}
 {% for item in units %}
     <tr><td><a href="/gom/unit/{{item.id}}/">{{item.name}}</a></td>
-        <td>{{item.owner.get}}</td>
+        <td>{{item.owner}}</td>
         <td>{{item.getCost}}</td>
         <td>{{item.manu.get.manuName}}</td>
         <td>{% if item.rating > 0 %}

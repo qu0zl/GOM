@@ -255,7 +255,7 @@ class ForceEntry(models.Model):
 
 class Force(models.Model):
     name = models.CharField(max_length=100)
-    owner = models.ManyToManyField(User, related_name='Force Owner Table', default=None, blank=False)
+    owner = models.ForeignKey(User, null=True)
     description = models.TextField(max_length=300, blank=True)
     # Cost of army
     cost = models.PositiveIntegerField(default=0, blank=True)
@@ -318,7 +318,7 @@ class Unit(models.Model):
     mental = models.SmallIntegerField(choices=MENTAL_CHOICES, default=7, blank=False)
     skill = models.SmallIntegerField(choices=STAT_CHOICES, default=3, blank=False)
     weapons = models.ManyToManyField('Weapons', default=None, through='UnitWeapon', blank=True)
-    owner = models.ManyToManyField(User, related_name='Owner Table', default=None, blank=False)
+    owner = models.ForeignKey(User,null=True)
     image = models.CharField(max_length=200)
     perks = models.ManyToManyField('Perks', related_name='Perk Table', default=None, blank=True)
     desc = models.TextField(max_length=300, blank=True)
@@ -385,8 +385,8 @@ class Unit(models.Model):
             pass
         try:
             f.write('import django.contrib.auth.models\n')
-            f.write('u = django.contrib.auth.models.User.objects.get(username="%s")\n' % self.owner.get().username)
-            f.write('g.owner.add(u)\n')
+            f.write('u = django.contrib.auth.models.User.objects.get(username="%s")\n' % self.owner.username)
+            f.write('g.owner=u\n')
         except Exception, e:
             pass
         for uw in UnitWeapon.objects.filter(unit=self):
@@ -1115,10 +1115,10 @@ def unit_predelete(sender, **kwargs):
     # If so, delete the image file.
     if obj.image:
         try:
-            sameImageCount = Unit.objects.filter(image=obj.image, owner=obj.owner.get()).count()
+            sameImageCount = Unit.objects.filter(image=obj.image, owner=obj.owner).count()
             print 'sameImage count is %d' % sameImageCount
             if sameImageCount < 2: # No other objects have this image
-                os.remove('user_media/%d/%s' % (obj.owner.get().id, obj.image))
+                os.remove('user_media/%d/%s' % (obj.owner.id, obj.image))
         except Exception, e:
             print 'unit_predelete exception: %s' % e
 

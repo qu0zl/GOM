@@ -31,7 +31,7 @@
     <tbody>
     {% for item in Forces %}
     <tr><td><a href="/gom/force/{{item.id}}/">{{item.name}}</a></td>
-        <td>{{item.owner.get}}</td>
+        <td>{{item.owner}}</td>
         <td>{{item.cost}}</td>
     </tr>
         {% endfor %}

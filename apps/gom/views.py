@@ -73,7 +73,7 @@ def updateEntryOrder(request):
             direction = True if request.POST['direction'] == 'true' else False
             entry = gom.models.ForceEntry.objects.get(id=entry_id)
             force = entry.force
-            if force.owner.get() != request.user:
+            if force.owner != request.user:
                 return HttpResponseBadRequest(_('Attempt to reorder force not owned by this user'))
             # Actual re-ordering
             force.reorder(entry, direction)
@@ -91,7 +91,7 @@ def updateEntryCount(request):
             count = int(request.POST['count'])
             entry = gom.models.ForceEntry.objects.get(id=entry_id)
             force = entry.force
-            if force.owner.get() == request.user:
+            if force.owner == request.user:
                 print 'owner match'
             else:
                 print "trying to adjust force entry in someone else's force"
@@ -126,7 +126,7 @@ def forceForm(request, force_id):
             form = gom.models.ForceForm(instance=force)
         except:
             return HttpResponseBadRequest(_('No such force id. It may have been deleted.'))
-        force_owner = force.owner.get()
+        force_owner = force.owner
     else:
         form = gom.models.ForceForm()
     return render_to_response('gom/force.html', \
@@ -145,7 +145,7 @@ def unitForm(request, unit_id):
     unit_owner = 0
     if ( unit_id != "0" ):
         unit = gom.models.Unit.objects.get(id=unit_id);
-        unit_owner = unit.owner.get()
+        unit_owner = unit.owner
         image = '%d/%s' % (unit_owner.id, unit.image)
         form = gom.models.UnitForm(instance=unit)
         return render_to_response('gom/unit.html', \
@@ -162,9 +162,7 @@ def unitForm(request, unit_id):
             RequestContext(request))
     else: # Make a new temporary unit
         if (request.user.is_authenticated()):
-            unit = gom.models.Unit(tempInstance=True)
-            unit.save() # Need to be able to do owner M2M below
-            unit.owner=request.user,
+            unit = gom.models.Unit(tempInstance=True, owner=request.user)
             unit.save()
             return redirect('/gom/unit/%d/' % unit.id)
         else:
@@ -199,7 +197,7 @@ def handle_uploaded_image(unit, i):
     resizedImage.save(imagefile,'JPEG', quality=90 )
 
     # Make the user's image directory if not already present
-    user_dir = 'user_media/%d/' % unit.owner.get().id
+    user_dir = 'user_media/%d/' % unit.owner.id
     if not os.path.isdir(user_dir):
         print 'trying to make user media directory %s' % user_dir
         os.mkdir(user_dir)
@@ -210,9 +208,9 @@ def handle_uploaded_image(unit, i):
     try:
         if unit.image:
             # Only delete old image if not used by another unit of this user's
-            sameImageCount = gom.models.Unit.objects.filter(image=unit.image, owner=unit.owner.get()).count()
+            sameImageCount = gom.models.Unit.objects.filter(image=unit.image, owner=unit.owner).count()
             if sameImageCount < 2: # No other objects have this image
-                os.remove('user_media/%d/%s' % (unit.owner.get().id, unit.image))
+                os.remove('user_media/%d/%s' % (unit.owner.id, unit.image))
     except OSError:
         pass
 
@@ -336,17 +334,17 @@ def forceSave(request, force_id=0):
                 print 'trying to make new force'
                 force = gom.models.Force( name=form.cleaned_data['name'] )
                 force.save() # Needed before we can access M2M fields or id
-                force.owner.add(request.user)
+                force.owner=request.user
                 force.save()
                 force_id = force.id
                 print 'saved new force - %d' % force.id
             else:
                 force = gom.models.Force.objects.get(id=force_id)
                 # If the authenticated user is not the owner of this object then don't let them edit it!
-                if (request.user != force.owner.get()): # If they want a PDF allow that, but nothing else
+                if (request.user != force.owner): # If they want a PDF allow that, but nothing else
                     if 'pdf' in request.POST:
                         return forcePDF(request, force)
-                    print 'Attempt by user %s to edit force owned by user %s' % (request.user, force.owner.get())
+                    print 'Attempt by user %s to edit force owned by user %s' % (request.user, force.owner)
                     return HttpResponseForbidden()
                 if 'delete' in request.POST:
                     force.delete()
@@ -366,7 +364,7 @@ def forceSave(request, force_id=0):
             print form._errors
             return HttpResponseBadRequest(_('Invalid Force data. Please sanity check data values'))
 
-        force_owner = force.owner.get()
+        force_owner = force.owner
     else:
         if request.method == 'POST' and 'pdf' in request.POST:
             try:
@@ -466,16 +464,14 @@ def unitSave(request, unit_id=0):
                     soak=int(form.cleaned_data['soak']),
                     mental=int(form.cleaned_data['mental']),
                     skill=int(form.cleaned_data['skill']),
-                    size=int(form.cleaned_data['size']))
-                unit.save()
-                unit.owner.add(request.user)
+                    size=int(form.cleaned_data['size']),owner=request.user)
                 unit.save()
                 unit_id = unit.id
             else:
 
                 unit = gom.models.Unit.objects.get(id=unit_id);
                 # If the authenticated user is not the owner of this object then don't let them edit it!
-                if (request.user != unit.owner.get()):
+                if (request.user != unit.owner):
                     return pdfIt(request, unit_id)
                 #test for delete
                 if 'delete' in request.POST:
@@ -591,7 +587,7 @@ def unitSave(request, unit_id=0):
             return HttpResponseBadRequest(error_string)
             # Failed is_valid
 
-        unit_owner = unit.owner.get()
+        unit_owner = unit.owner
         image = '%d/%s' % (unit_owner.id, unit.image)
     else:
         return pdfIt(request, unit_id)
@@ -707,12 +703,12 @@ def list(request):
         forces = None
     # Find any users who have units, as we may wish to filter on them
     owners=[]
-    for unit in units:
-        owner = unit.owner.get()
-        if owner not in owners:
-            owners.append(owner)
-    # Put owners list in case-insensitive alphabetical order
-    owners.sort(key=lambda x: str.lower(repr(x)))
+    #for unit in units:
+    #    owner = unit.owner
+    #    if owner not in owners:
+    #        owners.append(owner)
+    ## Put owners list in case-insensitive alphabetical order
+    #owners.sort(key=lambda x: str.lower(repr(x)))
 
     filterDict=None
     filterSet=None # use to pass defaults for html selects if this is based on user profile
