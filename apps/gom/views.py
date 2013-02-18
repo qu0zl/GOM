@@ -129,7 +129,6 @@ def forceForm(request, force_id):
         force_owner = force.owner.get()
     else:
         form = gom.models.ForceForm()
-    #import pdb; pdb.set_trace()
     return render_to_response('gom/force.html', \
         {
             'force':force,
@@ -239,38 +238,86 @@ def vehicleSaveAjax(request, unit_id=0):
         pass
     return tankForm(request, unit_id)
 
-def saveVehicleWeapons(unit, form):
-    unit.weapons.clear()
-    if form.cleaned_data['AIWeapons']:
-        addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1, custom=form.cleaned_data['AI_Custom'] if form.cleaned_data['OR_AI'] else None)
-    if unit.unitType == 11 or unit.unitType == 12: # Tank or Mecha
-        if form.cleaned_data['mainWeapons']:
-            try:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons'], custom=form.cleaned_data['MW_Custom'] if form.cleaned_data['OR_MW'] else None)
-            except:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons'])
-        if unit.size > 1:
+def saveOneVehicleWeapon(unit, form, which, type):
+    if type == "main":
+        if which == 1:
+            if form.cleaned_data['mainWeapons1']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons1'], custom=form.cleaned_data['MW1_Custom'] if form.cleaned_data['OR_MW1'] else None)
+        elif which == 2:
             if form.cleaned_data['mainWeapons2']:
                 addUnitWeapon(unit, form.cleaned_data['mainWeapons2'], custom=form.cleaned_data['MW2_Custom'] if form.cleaned_data['OR_MW2'] else None)
-            if unit.size > 2:
-                if form.cleaned_data['mainWeapons3']:
-                    addUnitWeapon(unit, form.cleaned_data['mainWeapons3'], custom=form.cleaned_data['MW3_Custom'] if form.cleaned_data['OR_MW3'] else None)
-                if unit.size > 4 and form.cleaned_data['mainWeapons4']:
-                    addUnitWeapon(unit, form.cleaned_data['mainWeapons4'], custom=form.cleaned_data['MW4_Custom'] if form.cleaned_data['OR_MW4'] else None)
-        if unit.size > 2 and form.cleaned_data['AIWeapons2']:
-            addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
-    elif unit.unitType == 13 or unit.unitType == 14:
-        # Don't save main weapons for GSV or ASV
-        if unit.size >= 3 and form.cleaned_data['AIWeapons2']:
-            addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
-    elif unit.unitType == 15: # Artillery
-        if form.cleaned_data['mainWeapons']:
-            addUnitWeapon(unit, form.cleaned_data['mainWeapons'], custom=form.cleaned_data['MW_Custom'] if form.cleaned_data['OR_MW'] else None)
-        if unit.size >= 3:
-            if form.cleaned_data['mainWeapons2']:
-                addUnitWeapon(unit, form.cleaned_data['mainWeapons2'], custom=form.cleaned_data['MW2_Custom'] if form.cleaned_data['OR_MW2'] else None)
+        elif which == 3:
+            if form.cleaned_data['mainWeapons3']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons3'], custom=form.cleaned_data['MW3_Custom'] if form.cleaned_data['OR_MW3'] else None)
+        elif which == 4:
+            if form.cleaned_data['mainWeapons4']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons4'], custom=form.cleaned_data['MW4_Custom'] if form.cleaned_data['OR_MW4'] else None)
+        elif which == 5:
+            if form.cleaned_data['mainWeapons5']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons5'], custom=form.cleaned_data['MW5_Custom'] if form.cleaned_data['OR_MW5'] else None)
+        elif which == 6:
+            if form.cleaned_data['mainWeapons6']:
+                addUnitWeapon(unit, form.cleaned_data['mainWeapons6'], custom=form.cleaned_data['MW6_Custom'] if form.cleaned_data['OR_MW6'] else None)
+    elif type == "ai":
+        if which == 1:
+            if form.cleaned_data['AIWeapons']:
+                addUnitWeapon(unit, form.cleaned_data['AIWeapons'], 1, custom=form.cleaned_data['AI_Custom'] if form.cleaned_data['OR_AI'] else None)
+        elif which == 2:
             if form.cleaned_data['AIWeapons2']:
                 addUnitWeapon(unit, form.cleaned_data['AIWeapons2'], 1, custom=form.cleaned_data['AI2_Custom'] if form.cleaned_data['OR_AI2'] else None)
+    else:
+        raise Exception('Unknown vehicle weapon type')
+
+
+def saveVehicleWeapons(unit, form):
+    unit.weapons.clear()
+
+    # edge case weapons
+    if unit.unitType == 12 and form.cleaned_data['MECHA_CCW']: # MECHA CCW
+        addUnitWeapon(unit, form.cleaned_data['MECHA_CCW'], custom=form.cleaned_data['MECHA_CCW_Custom'] if form.cleaned_data['OR_MECHA_CCW'] else None)
+
+    saveOneVehicleWeapon(unit, form, 1, "ai")
+    if unit.unitType in (11,12,22): # Tank, Mecha or Monster
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 2, "main")
+            if unit.size > 2:
+                if unit.unitType != 22: # Monster's don't get AI guns
+                    saveOneVehicleWeapon(unit, form, 2, "ai")
+                saveOneVehicleWeapon(unit, form, 3, "main")
+                if unit.size > 4:
+                    saveOneVehicleWeapon(unit, form, 4, "main")
+    elif unit.unitType in (13,14,18):
+        # Don't save main weapons for GSV, ASV or AAV
+        if unit.size >= 3:
+            saveOneVehicleWeapon(unit, form, 2, "ai")
+    elif unit.unitType in (15,17): # Artillery
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        if unit.size >= 2:
+            saveOneVehicleWeapon(unit, form, 2, "main")
+        if unit.size >= 3:
+            saveOneVehicleWeapon(unit, form, 2, "ai")
+    elif unit.unitType == 19: # Fighter
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 1, "main")
+            if unit.size > 2:
+                saveOneVehicleWeapon(unit, form, 2, "main")
+                saveOneVehicleWeapon(unit, form, 2, "ai")
+                if unit.size > 3:
+                    saveOneVehicleWeapon(unit, form, 3, "main")
+                    if unit.size > 4:
+                        saveOneVehicleWeapon(unit, form, 4, "main")
+    elif unit.unitType in (20,21):
+        saveOneVehicleWeapon(unit, form, 1, "main")
+        saveOneVehicleWeapon(unit, form, 2, "main")
+        saveOneVehicleWeapon(unit, form, 3, "main")
+        if unit.size > 1:
+            saveOneVehicleWeapon(unit, form, 4, "main")
+            if unit.size > 2:
+                saveOneVehicleWeapon(unit, form, 5, "main")
+                saveOneVehicleWeapon(unit, form, 2, "ai")
+                if unit.size > 3:
+                    saveOneVehicleWeapon(unit, form, 6, "main")
     else:
         print 'Unknown unit type:%d'
         raise Exception
@@ -381,6 +428,27 @@ def weaponCosts():
     for (a,b) in map (lambda x: (x.id, x.weaponPoints), w):
         weapons = weapons + "%s:%s," % (a,b)
     return weapons
+def saveModz(unit, form):
+    if form.cleaned_data['modz']:
+        if form.cleaned_data['modz2']:
+            unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
+        else:
+            unit.modz=form.cleaned_data['modz'],
+    elif form.cleaned_data['modz2']:
+        unit.modz=form.cleaned_data['modz2'],
+    else:
+        unit.modz.clear()
+def savePerkz(unit, form):
+    if form.cleaned_data['perks']:
+        if form.cleaned_data['perks2']:
+            unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
+        else:
+            unit.perks=form.cleaned_data['perks'],
+    elif form.cleaned_data['perks2']:
+        unit.perks=form.cleaned_data['perks2'],
+    else:
+        unit.perks.clear()
+
 def unitSave(request, unit_id=0):
     unit_id = int(unit_id)
     original_unit_id = unit_id
@@ -429,17 +497,9 @@ def unitSave(request, unit_id=0):
 
             # Now add weapon groups
             unit.weapons.clear()
-            if unit.isVehicle():
+            if unit.isVehicle() and unit.unitType != 16:
                 saveVehicleWeapons(unit, form)
-                if form.cleaned_data['modz']:
-                    if form.cleaned_data['modz2']:
-                        unit.modz=(form.cleaned_data['modz'], form.cleaned_data['modz2'])
-                    else:
-                        unit.modz=form.cleaned_data['modz'],
-                elif form.cleaned_data['modz2']:
-                    unit.modz=form.cleaned_data['modz2'],
-                else:
-                    unit.modz.clear()
+                saveModz(unit, form)
             else: # infantry
                 if unit.unitType == 1:
                     if unit.isPowerArmour():
@@ -453,41 +513,22 @@ def unitSave(request, unit_id=0):
                         addUnitWeapon(unit, form.cleaned_data['inlineWeapons2'], mountType=2, custom=form.cleaned_data['inline2_Custom'] if form.cleaned_data['OR_inline2'] else None)
                 elif unit.unitType == 2 or unit.unitType == 4: # SA or Commander
                     addUnitWeapon(unit, form.cleaned_data['SAWeapons'], custom=form.cleaned_data['SA_Custom'] if form.cleaned_data['OR_SA'] else None)
-                elif unit.unitType == 3:
+                elif unit.unitType == 3 or unit.unitType == 16:
                     addUnitWeapon(unit, form.cleaned_data['SpecWeapons'], custom=form.cleaned_data['Spec_Custom'] if form.cleaned_data['OR_Spec'] else None)
 
-                if form.cleaned_data['CCW']:
+                if unit.unitType != 16 and form.cleaned_data['CCW']:
                     addUnitWeapon(unit, form.cleaned_data['CCW'], custom=form.cleaned_data['CCW_Custom'] if form.cleaned_data['OR_CCW'] else None)
-                if form.cleaned_data['grenades']:
+                if unit.unitType != 16 and form.cleaned_data['grenades']:
                     addUnitWeapon(unit, form.cleaned_data['grenades'], custom=form.cleaned_data['grenades_Custom'] if form.cleaned_data['OR_grenades'] else None)
-                if form.cleaned_data['perks']:
-                    if form.cleaned_data['perks2']:
-                        unit.perks=(form.cleaned_data['perks'], form.cleaned_data['perks2'])
-                    else:
-                        unit.perks=form.cleaned_data['perks'],
-                elif form.cleaned_data['perks2']:
-                    unit.perks=form.cleaned_data['perks2'],
-                else:
-                    unit.perks.clear()
-
-                try:
-                    unit.medicSpecialist=form.cleaned_data['medicSpecialist']
-                except:
-                    unit.medicSpecialist=0
-                try:
-                    unit.engineerSpecialist=form.cleaned_data['engineerSpecialist']
-                except:
-                    unit.engineerSpecialist=0
-                try:
-                    unit.mechaSpecialist=form.cleaned_data['mechaSpecialist']
-                except:
-                    unit.mechaSpecialist=0
+                savePerkz(unit, form)
             # General
+            if form.cleaned_data['squadSize']:
+                unit.squadSize=form.cleaned_data['squadSize']
             if form.cleaned_data['desc']:
                 unit.desc=form.cleaned_data['desc']
             if form.cleaned_data['manu']:
                 unit.manu=form.cleaned_data['manu'],
-            if (unit.unitType == 13 or unit.unitType == 14) and form.cleaned_data['cmdTek']:
+            if unit.unitType in (11,12,13,14,15,18,20,21) and form.cleaned_data['cmdTek']:
                 unit.cmdTek=form.cleaned_data['cmdTek']
             else:
                 unit.cmdTek = False
@@ -497,9 +538,35 @@ def unitSave(request, unit_id=0):
                 unit.publish = False
             if unit.unitType == 12:
                 unit.mobility = 1 # Walk - it's a mecha
-            elif unit.unitType == 14:
+            elif unit.unitType == 4:
+                try:
+                    unit.mobility = int(form.cleaned_data['commander_mobility'])
+                except:
+                    unit.mobility = 1
+            elif unit.unitType in (14,18,21):
                 try:
                     unit.mobility = int(form.cleaned_data['air_mobility'])
+                except:
+                    unit.mobility = 12
+            elif unit.unitType == 17: # Field artillery
+                try:
+                    unit.mobility = int(form.cleaned_data['field_artillery_mobility'])
+                except:
+                    unit.mobility = 0
+            elif unit.unitType == 16: #VSPEC
+                saveModz(unit, form)
+                try:
+                    unit.mobility = int(form.cleaned_data['vspec_mobility'])
+                except:
+                    unit.mobility = 1
+            elif unit.unitType == 19:
+                try:
+                    unit.mobility = int(form.cleaned_data['fighter_mobility'])
+                except:
+                    unit.mobility = 12
+            elif unit.unitType == 22: # Monster
+                try:
+                    unit.mobility = int(form.cleaned_data['monster_mobility'])
                 except:
                     unit.mobility = 1
             else:

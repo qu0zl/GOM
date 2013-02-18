@@ -15,56 +15,89 @@
             case(1):
                 return 1;
             case (2):
-                return 2;
+                return 0;
             case (3):
-                var specCost=0;
-                if ($('#id_medicSpecialist').prop('checked'))
-                    specCost = specCost+5;
-                if ($('#id_engineerSpecialist').prop('checked'))
-                    specCost = specCost+5;
-                return specCost+[0,2,4,6,8,10][size];
+                return [5,6,7,8,9][size-1];
             case (4):
-                return [0,1,3,5,7,9][size];
+                return[13,15,17,19,21][size-1];
             case (11):
-                return [0, 21, 22, 25, 28, 32][size];
+                return[14,19,24,29,34][size-1];
             case (12):
-                return [0, 17, 18, 20, 23, 27][size];
+                return[11,14,17,22,27][size-1];
             case (13):
-                return [0, 15, 16, 19, 22, 26][size];
+                return[9,13,20,27,32][size-1];
             case (14):
-                return [0, 16, 18, 21, 24, 28][size];
+                return[7,11,15,20,25][size-1];
             case (15):
-                return [0, 17, 20, 23, 27, 31][size];
+                return[12,15,20,25,28][size-1];
+            case (16):
+                return[2,4,6,8,10][size-1];
+            case (17):
+                return[3,6,9,13,16][size-1];
+            case (18):
+                return[7,10,13,16,19][size-1];
+            case (19):
+                return[10,13,16,19,22][size-1];
+            case (20):
+                return[39,44,49,54,59][size-1];
+            case (21):
+                return[47,54,61,68,75][size-1];
+            case (22):
+                return[16,23,28,33,38][size-1];
             default:
+                alert("Unsupported baseCost unit");
                 return 0;
         }
     }
     function mobilityCost(utype){
-        var mobi=$('#id_mobility').val();
         switch (utype) {
             case(1):
             case(2):
-            case(4):
+            case(3):
             case(12):
                 return 0;
-            case(3):
-                var mechaCost=0;
-                if (mobi == 1 && $('#id_mechaSpecialist').prop('checked')) {
-                    mechaCost=1;
-                }
-                return [0,0,1,2,3,3][mobi] + mechaCost;
+            case(4):
+                mobi=$('#id_commander_mobility').val();
+                return [0,0,1,3,5,7,0,9][mobi];
+            case(21):
             case(14):
-                mobi=$('#id_air_mobility').val()
-                return [0,0,1,1,2,999][mobi];
+            case(18):
+                mobi=$('#id_air_mobility').val();
+                var t={11:0, 12:2, 13:3, 7:4};
+                return t[mobi];
+            case(11):
+            case(12):
+            case(13):
+            case(15):
+            case(20):
+                var mobi=$('#id_mobility').val();
+                var t={1:0, 3:1, 4:1, 5:2, 7:4};
+                return t[mobi];
+            case(17):
+                var mobi=$('#id_field_artillery_mobility').val();
+                var t={0:0, 17:1, 1:3, 5:3, 7:3}
+                return t[mobi];
+            case(19):
+                var t={12:1, 13:2, 14:5, 15:8, 16:12};
+                return t[$('#id_fighter_mobility').val()];
+            case(22):
+                var mobi=$('#id_monster_mobility').val();
+                var t={1:0, 18:0, 8:2, 9:5, 10:8}
+                return t[mobi];
+            case(16):
+                var mobi=$('#id_vspec_mobility').val();
+                var t={0:0, 2:1, 3:2, 4:2, 5:3, 6:5, 7:6};
+                return t[mobi];
             default:
-                return [0,0,1,1,2,3][mobi];
+                alert('Unsupported unit type for mobility cost');
+                return 0;
         }
     }
     function shootCost(utype){
         if (utype < 10){
             if (utype == 2)
                 return 0;
-            return $('#id_shoot').val()-2;
+            return [0,0,0,1,3,5,7,9][$('#id_shoot').val()]
         }
         return 0;
     }
@@ -72,34 +105,46 @@
         if (utype < 10){
             if (utype == 2)
                 return 0;
-            return $('#id_assault').val()-2;
+            return [0,0,0,1,3,5,7,9][$('#id_assault').val()]
         }
         return 0;
     }
     function guardCost(utype){
-        if (utype == 1 || utype == 4){
-            var t={10:1, 11:2, 12:4, 13:6, 14:8}
+        if (utype == 1 || utype == 4 || utype == 3){
+            var t={10:1, 11:3, 12:5, 13:7, 14:9}
             return t[$('#id_guard').val()];
         }
         return 0;
     }
     function skillCost(utype){
         if (utype == 1 || utype == 3 || utype == 4)
-            return [0,0,1,2,3,5,8,12][$('#id_skill').val()];
+            return [0,0,0,1,3,5,7,9][$('#id_skill').val()];
         else if (utype>=11)
-            return [0,0,0,1,2,5,8,12][$('#id_skill').val()];
+            return [0,0,0,1,3,5,8,12][$('#id_skill').val()];
         return 0;
     }
     function mentalCost(utype){
-        if (utype == 1 || utype == 4 || utype == 3)
-            return $('#id_mental').val()-4;
+        if (utype == 1 || utype == 4 || utype == 3) {
+            var t={6:0, 7:1, 8:3, 9:5, 10:7}
+            return t[$('#id_mental').val()];
+        }
         return 0;
     }
     function soakCost(utype){
-        if (utype == 1 || utype == 4){
-            var t={10:1, 11:2, 12:3, 13:4, 14:6, 15:8};
+        if (utype == 1 || utype == 4 || utype == 3){
+            var t={10:0, 11:1, 12:3, 13:5, 14:7, 15:9, 16:11};
             return t[$('#id_soak').val()];
         }
+        return 0;
+    }
+    function multiPerkCost(which) {
+        count = 0;
+        if ( which != 1 )
+            count = (($('#id_perks').val() != '' && PERK_COST[$('#id_perks').val()] > 0) + ($('#id_perks2').val() != '' && PERK_COST[$('#id_perks2').val()] > 0));
+        if ( which != 0 )
+            count = count + (($('#id_modz').val() != '' && MODZ_COST[$('#id_modz').val()] > 0)+($('#id_modz2').val() != '' && MODZ_COST[$('#id_modz2').val()] > 0));
+        if ( count > 1 )
+            return ((count - 1)*5)
         return 0;
     }
     function perkCost(utype, size) {
@@ -110,72 +155,143 @@
             case(1):
             case(3):
             case(4):
-                if ($('#id_perks').val() != '' && $('#id_perks2').val() != '') {
-                    return 5 + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
-                }
-                return PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+                return multiPerkCost(0) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()];
+            case(11):
+            case(12):
             case(13):
             case(14):
+            case(15):
+            case(18):
+            case(20):
+            case(21):
                 if ( $('#id_cmdTek').prop('checked') )
                     cmdTekCost = 6;
                 // deliberately fall through
-            case(11):
-            case(12):
-            case(15):
-                if ($('#id_modz').val() != '' && $('#id_modz2').val() != '') {
-                    return cmdTekCost + 5 + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
-                }
-                return cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+            case(17):
+            case(19):
+            case(22):
+                return multiPerkCost(1)+cmdTekCost+MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
+            case (16):
+                return multiPerkCost(2) + PERK_COST[$('#id_perks').val()] + PERK_COST[$('#id_perks2').val()] + MODZ_COST[$('#id_modz').val()] + MODZ_COST[$('#id_modz2').val()];
         }
+    }
+    function inlineSACost(utype) {
+        if (utype != 1)
+            return 0;
+        return WEAPON_COST[$('#id_inlineWeapons').val()] + WEAPON_COST[$('#id_inlineWeapons2').val()];
+    }
+    function PAweaponCost(utype) {
+        if ((utype == 1) && (parseInt($('#id_soak').val()) >= 14) && $('#id_SAWeapons option:selected').text().match(/^SA./)) {
+            return $('#id_squadSize').val()*WEAPON_COST[$('#id_SAWeapons').val()];
+        }
+        return 0;
     }
     function weaponCost(utype, size) {
         // adjust to handle PA weapons
         switch (utype) {
             case(1):
                 var soak = parseInt($('#id_soak').val());
-                //need to include base SA cost of 2 per inline weapon guy
-                var old_cost=0;
-                var inline_cost = WEAPON_COST[$('#id_inlineWeapons').val()];
-                if (inline_cost != old_cost) { inline_cost += 2; old_cost=inline_cost;}
-                inline_cost = old_cost + WEAPON_COST[$('#id_inlineWeapons2').val()];
-                if (inline_cost != old_cost) { inline_cost += 2;}
-
                 if ( soak >= 14 ) { // PA squad
+                    // multiply SA weapons chosen by number taken
+                    // If power-armour carrying SA weapons then ignore those for now and add after determining squad size.
                     if ( $('#id_SAWeapons option:selected').text().match(/^SA./)) { // PA squad with SA weapon
-                        return inline_cost+(6*WEAPON_COST[$('#id_SAWeapons').val()])+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                     } else
-                        return inline_cost+WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                        return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
                 } else
-                    return inline_cost+WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
+                    return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(4):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(3):
+            case(16):
                 return WEAPON_COST[$('#id_SpecWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(11):
             case(12):
+            case(22):
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
-                cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
-                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (utype!=22) {
+                    cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
+                    if (cost != old_cost) { AI++; old_cost=cost;}
+                }
+                if (utype == 12) { // MECHA CCW
+                    cost = cost+WEAPON_COST[$('#id_MECHA_CCW').val()];
+                    old_cost=cost;
+                }
                 if (size >= 2) {
                     cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
                     if (cost != old_cost) { main++; old_cost=cost;}
                     if (size >= 3) {
+                        if (utype!=22) {
+                            cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                            if (cost != old_cost) { AI++; old_cost=cost;}
+                        }
                         cost = cost + WEAPON_COST[$('#id_mainWeapons3').val()];
                         if (cost != old_cost) { main++; old_cost=cost;}
-                        cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
-                        if (cost != old_cost) { AI++; old_cost=cost;}
                         if (size >= 5)
                             cost = cost + WEAPON_COST[$('#id_mainWeapons4').val()];
                             if (cost != old_cost) { main++; old_cost=cost;}
                     }
                 }
                 return cost+[0, 1, 4, 8, 13][main]+[0, 2, 4][AI];
+            case(18):
+            case(19):
+                var main=0;
+                var AI=0;
+                var old_cost=0;
+                var cost = WEAPON_COST[$('#id_AIWeapons').val()];
+                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (size >= 2) {
+                    var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
+                    if (cost != old_cost) { main++; old_cost=cost;}
+                    if (size >= 3) {
+                        cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                        if (cost != old_cost) { AI++; old_cost=cost;}
+                        cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
+                        if (cost != old_cost) { main++; old_cost=cost;}
+                        if (size >= 4) {
+                            cost = cost + WEAPON_COST[$('#id_mainWeapons3').val()];
+                            if (cost != old_cost) { main++; old_cost=cost;}
+                            if (size >= 5) {
+                                cost = cost + WEAPON_COST[$('#id_mainWeapons4').val()];
+                                if (cost != old_cost) { main++; old_cost=cost;}
+                            }
+                        }
+                    }
+                }
+                return cost+[0, 1, 4, 8, 13][main]+[0, 2, 4][AI];
+            case(20): //SHT
+            case(21): //SHAS
+                var main=0;
+                var AI=0;
+                var old_cost=0;
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
+                if (cost != old_cost) { main++; old_cost=cost;}
+                cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
+                if (cost != old_cost) { main++; old_cost=cost;}
+                cost = cost + WEAPON_COST[$('#id_mainWeapons3').val()];
+                if (cost != old_cost) { main++; old_cost=cost;}
+                cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
+                if (cost != old_cost) { AI++; old_cost=cost;}
+                if (size >= 2) {
+                    cost = cost + WEAPON_COST[$('#id_mainWeapons4').val()];
+                    if (cost != old_cost) { main++; old_cost=cost;}
+                    if (size >= 3) {
+                        cost = cost + WEAPON_COST[$('#id_mainWeapons5').val()];
+                        if (cost != old_cost) { main++; old_cost=cost;}
+                        cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
+                        if (cost != old_cost) { AI++; old_cost=cost;}
+                        if (size >= 4)
+                            cost = cost + WEAPON_COST[$('#id_mainWeapons6').val()];
+                            if (cost != old_cost) { main++; old_cost=cost;}
+                    }
+                }
+                return cost+[0, 1, 4, 8, 12, 14, 16][main]+[0, 2, 4][AI];
             case(13):
             case(14):
                 var old_cost=0;
@@ -188,31 +304,48 @@
                 }
                 return cost+[0, 2, 4][AI];
             case(15):
+            case(17):
                 var main=0;
                 var AI=0;
                 var old_cost=0;
-                var cost = WEAPON_COST[$('#id_mainWeapons').val()];
+                var cost = WEAPON_COST[$('#id_mainWeapons1').val()];
                 if (cost != old_cost) { main++; old_cost=cost;}
                 cost = cost + WEAPON_COST[$('#id_AIWeapons').val()];
                 if (cost != old_cost) { AI++; old_cost=cost;}
-                if (size >= 3) {
-                    cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
-                    if (cost != old_cost) { main++; old_cost=cost;}
+                if (size>=2) {
                     cost = cost + WEAPON_COST[$('#id_AIWeapons2').val()];
                     if (cost != old_cost) { AI++; old_cost=cost;}
                 }
+                if (size >= 3) {
+                    cost = cost + WEAPON_COST[$('#id_mainWeapons2').val()];
+                    if (cost != old_cost) { main++; old_cost=cost;}
+                }
                 return cost+[0, 1, 4, 8, 13][main]+[0, 2, 4][AI];
-             
+            default:
+                alert('Unsupported unittype for weapons');
+                break;
         }
     }
 
     function updateCost(){
         var size = parseInt($('#id_size').val());
         var utype = parseInt($('#id_unitType').val());
-        var cost = baseCost(utype, size)+shootCost(utype)+assaultCost(utype)+guardCost(utype)+soakCost(utype)+weaponCost(utype,size)+mobilityCost(utype)+mentalCost(utype)+skillCost(utype)+perkCost(utype);
+        var cost = baseCost(utype, size)+shootCost(utype)+assaultCost(utype)+guardCost(utype)+soakCost(utype)+mobilityCost(utype)+mentalCost(utype)+skillCost(utype);
+        var debugTotal1 = cost;
         if (utype<10)
             cost = Math.ceil(cost/2);
-        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' perks: '+perkCost(utype)); 
+        cost = cost + weaponCost(utype,size) + perkCost(utype);
+        var debugTotal2 = cost;
+
+        //alert ('base: ' + baseCost(utype,size)+'shoot:'+shootCost(utype)+' assault:'+assaultCost(utype)+' guard:'+guardCost(utype)+' soak:'+soakCost(utype)+' mental:'+mentalCost(utype)+' skill:'+skillCost(utype)+' weapons:'+weaponCost(utype,size)+' inlineSA:'+inlineSACost()+' perks: '+perkCost(utype)) +' mobility:'+mobilityCost(utype); 
+        if (utype==1) {
+            if ( $('#id_squadSize').val() != 6 )
+                cost = Math.round((cost * $('#id_squadSize').val())/6);
+            cost = cost + PAweaponCost(utype);
+        }
+        var debugTotal3 = cost;
+        cost = cost + inlineSACost(utype);
+        //alert('Debug totals: '+debugTotal1+', '+debugTotal2+', '+debugTotal3+', '+cost);
         $('#id_cost').html(cost);
     }
 
@@ -228,7 +361,10 @@ function vehicleWeapon(which, utype, size)
 {
     $(which+'_tb').show();
     $("option", $(which)).each(function(i) {
-            if ($(this).attr("weaponSize")>size || (utype != 15 && $(this).attr("weaponType") == 11) ) {
+            if ($(this).attr("weaponSize")>size 
+                || ((utype!=15 && utype!=17) && $(this).attr("weaponType") == 11)
+                || ((utype!=19) && $(this).attr("weaponType") == 12) 
+                || ((utype==19) && $(this).attr("weaponType") != 12) ) {
                 $(this).attr("disabled", "disabled");
                 if ($(this).attr("selected")) {
                 $(this).removeAttr("selected");
@@ -240,24 +376,76 @@ function vehicleWeapon(which, utype, size)
             });
 }
 
+function showMobility(utype) {
+    $('#id_mobility_tr').hide();
+    $('#id_commander_mobility_tr').hide();
+    $('#id_air_mobility_tr').hide();
+    $('#id_vspec_mobility_tr').hide();
+    $('#id_field_artillery_mobility_tr').hide();
+    $('#id_fighter_mobility_tr').hide();
+    $('#id_monster_mobility_tr').hide();
+
+    switch (utype) {
+        case (4):
+            $('#id_commander_mobility_tr').show();
+            break;
+        case (1):
+        case (2):
+        case (3):
+        case (12):
+            break;
+        // vehicles
+        case 11:
+        case 13:
+        case 15:
+        case 20:
+            $('#id_mobility_tr').show();
+            break;
+        case 14: //ASV
+        case 18: // AAV
+        case 21: // SHAS
+            $('#id_air_mobility_tr').show();
+            break;
+        case 16: // VSPEC
+            $('#id_vspec_mobility_tr').show();
+            break;
+        case 17: //Field artillery
+            $('#id_field_artillery_mobility_tr').show();
+            break;
+        case 19: // Fighter
+            $('#id_fighter_mobility_tr').show();
+            break;
+        case 22: // Monster
+            $('#id_monster_mobility_tr').show();
+            break;
+        default:
+            alert ('Unit type ' + utype + ' not yet supported.');
+    }
+}
 function showWeapons(utype) {
-        if ( utype == 1 )
-            $('#id_inlineWeapons_tb').show()
-        else
+        if ( utype == 1 ) {
+            $('#id_inlineWeapons_tb').show();
+            $('#id_squadSize_tb').show();
+        } else {
             $('#id_inlineWeapons_tb').hide()
+            $('#id_squadSize_tb').hide();
+        }
+        $('#id_cmdTek_tr').hide();
+        $('#id_mainWeapons1_tb').hide();
+        $('#id_mainWeapons2_tb').hide();
+        $('#id_mainWeapons3_tb').hide();
+        $('#id_mainWeapons4_tb').hide();
+        $('#id_mainWeapons5_tb').hide();
+        $('#id_mainWeapons6_tb').hide();
+        $('#id_MECHA_CCW_tb').hide();
+        $('#id_AIWeapons_tb').hide();
+        $('#id_AIWeapons2_tb').hide();
         if ( utype < 10 ) {
             $('#id_shoot_tr').show();
             $('#id_assault_tr').show();
             $('#id_mental_tr').show();
             // Hide vehicle specific stuff
-            $('#id_mainWeapons_tb').hide();
-            $('#id_mainWeapons2_tb').hide();
-            $('#id_mainWeapons3_tb').hide();
-            $('#id_mainWeapons4_tb').hide();
-            $('#id_AIWeapons_tb').hide();
-            $('#id_AIWeapons2_tb').hide();
             $('#id_modz_tb').hide();
-            $('#id_cmdTek_tr').hide();
             $('#id_grenades_tb').show();
             $('#id_CCW_tb').show();
             switch (utype) {
@@ -305,11 +493,17 @@ function showWeapons(utype) {
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
             $('#id_modz_tb').show();
-            vehicleWeapon('#id_AIWeapons', utype, size);
+            if ( utype != 16 && utype != 22 )
+                vehicleWeapon('#id_AIWeapons', utype, size);
+            else
+                $('#id_AIWeapons_tb').hide();
             switch (utype) {
-                case 11:
                 case 12:
-                    vehicleWeapon('#id_mainWeapons', utype, size);
+                    $('#id_MECHA_CCW_tb').show();
+                    // deliberately fall through
+                case 11:
+                    $('#id_cmdTek_tr').show();
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
                     if ( size == 5 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
                         vehicleWeapon('#id_mainWeapons3', utype, size);
@@ -318,45 +512,73 @@ function showWeapons(utype) {
                     } else if ( size >=3 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
                         vehicleWeapon('#id_mainWeapons3', utype, size);
-                        $('#id_mainWeapons4_tb').hide();
                         $('#id_AIWeapons2_tb').show();
                     } else if ( size == 2 ) {
                         vehicleWeapon('#id_mainWeapons2', utype, size);
-                        $('#id_mainWeapons3_tb').hide();
-                        $('#id_mainWeapons4_tb').hide();
-                        $('#id_AIWeapons2_tb').hide();
-                    }  else {
-                        $('#id_mainWeapons2_tb').hide();
-                        $('#id_mainWeapons3_tb').hide();
-                        $('#id_mainWeapons4_tb').hide();
-                        $('#id_AIWeapons2_tb').hide();
                     }
-                    $('#id_cmdTek_tr').hide();
                     break;
                 case 13:
                 case 14:
-                    $('#id_mainWeapons_tb').hide();
-                    $('#id_mainWeapons2_tb').hide();
-                    $('#id_mainWeapons3_tb').hide();
-                    $('#id_mainWeapons4_tb').hide();
+                    if ( size >= 3 )
+                        $('#id_AIWeapons2_tb').show();
+                    $('#id_cmdTek_tr').show();
+                    break;
+                case 15:
+                    $('#id_cmdTek_tr').show();
+                    //deliberately fall through
+                case 17:
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
+                    if ( size >= 2 ) {
+                        vehicleWeapon('#id_mainWeapons2', utype, size)
+                        if ( size >= 3 ) {
+                            $('#id_AIWeapons2_tb').show();
+                        }
+                    }
+                    break;
+                case 16:
+                    $('#id_SpecWeapons_tb').show();
+                    break;
+                case 18: // AAV
+                    $('#id_cmdTek_tr').show();
+                    //deliberately fall through
+                case 19: // fighter
+                    if ( size >= 3 )
+                        $('#id_AIWeapons2_tb').show();
+
+                    if ( size == 5 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
+                    if ( size >= 4 )
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons2', utype, size);
+                    if ( size >= 2 )
+                        vehicleWeapon('#id_mainWeapons1', utype, size);
+                    break;
+                case 20: // SHT
+                case 21: // SHAS
+                    $('#id_cmdTek_tr').show();
                     if ( size >= 3 )
                         $('#id_AIWeapons2_tb').show();
                     else
                         $('#id_AIWeapons2_tb').hide();
-                    $('#id_cmdTek_tr').show();
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
+                    vehicleWeapon('#id_mainWeapons2', utype, size);
+                    vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 4 )
+                        vehicleWeapon('#id_mainWeapons6', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons5', utype, size);
+                    if ( size >= 2 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
                     break;
-                case 15:
-                    vehicleWeapon('#id_mainWeapons', utype, size);
-                    $('#id_mainWeapons3_tb').hide();
-                    $('#id_mainWeapons4_tb').hide();
-                    if ( size >= 3 ) {
-                        $('#id_AIWeapons2_tb').show();
+                case 22:
+                    vehicleWeapon('#id_mainWeapons1', utype, size);
+                    if ( size == 5 )
+                        vehicleWeapon('#id_mainWeapons4', utype, size);
+                    if ( size >= 3 )
+                        vehicleWeapon('#id_mainWeapons3', utype, size);
+                    if ( size >= 2 )
                         vehicleWeapon('#id_mainWeapons2', utype, size);
-                    } else {
-                        $('#id_AIWeapons2_tb').hide();
-                        $('#id_mainWeapons2_tb').hide();
-                    }
-                    $('#id_cmdTek_tr').hide();
                     break;
                 default:
                     alert ('No weapon support for this vehicle type yet');
@@ -364,7 +586,11 @@ function showWeapons(utype) {
             }
         }
     }
-
+    function setSoak(soak) {
+        if (soak > 15)
+            $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>");
+        $("#id_soak").val(soak);
+    }
     function updateStats(utype, size) {
         if ( utype >= 3) {
             $('#id_size_tr').show();
@@ -373,103 +599,135 @@ function showWeapons(utype) {
             $('#id_size_tr').hide();
             $('#id_damage_tr').hide();
         }
-        if ( utype == 3)
-            $('#id_spec_abilities').show();
-        else
-            $('#id_spec_abilities').hide();
         mobiClick(); // updates mecha walk box
+        $("#id_guard option[value='4']").remove();
+        $("#id_guard option[value='5']").remove();
+        $("#id_guard option[value='6']").remove();
+        $("#id_guard option[value='7']").remove();
+        $("#id_guard option[value='8']").remove();
         $("#id_guard option[value='9']").remove();
+        $("#id_guard option[value='15']").remove();
         $("#id_soak option[value='16']").remove();
         $("#id_soak option[value='17']").remove();
         $("#id_soak option[value='18']").remove();
         $("#id_soak option[value='19']").remove();
+        $("#id_soak option[value='20']").remove();
+        $("#id_soak option[value='21']").remove();
+        $("#id_soak option[value='22']").remove();
+        $("#id_soak option[value='23']").remove();
+        $("#id_soak option[value='24']").remove();
         // size and damage boxes
         switch (utype) {
             case (4):
-                $('#id_dam_text').html([0,12,14,16,18,20][size]);
-                // deliberately fall through into 1,2
-            case (1):
-            case (2):
-                $('#id_mobility_tr').hide();
-                $('#id_air_mobility_tr').hide();
+                $('#id_dam_text').html([12,14,16,18,20][size-1]);
                 break;
+            case (16):
             case (3):
-                $('#id_dam_text').html([0,4,5,6,7,8][size]);
-                $('#id_mobility_tr').show();
-                $('#id_air_mobility_tr').hide();
-                // calc values then lock them
-                $("#id_guard").val(15-size);
-                if ( size == 5 ) { 
+                $('#id_dam_text').html([4,5,6,7,8][size-1]);
+                if (utype == 16) {
                     $("#id_soak").append("<option value='16'>{% trans 'Spec. Assault(16)'%}</option>")
+                    $("#id_guard").val(15-size);
+                    $("#id_soak").val(11+size);
+                } else {
+                    $("#id_soak").append("<option value='16'>{% trans 'Uber(16)'%}</option>");
                 }
-                $("#id_soak").val(11+size);
                 break;
             // vehicles
             case 11:
-                var damValues= [0, 14, 18, 22, 26, 30];
-                var soak = 14+size;
+                var damValues= [14, 18, 22, 26, 30];
                 var guard = 14-size;
                 if (guard < 10)
                     $("#id_guard").append("<option value='"+guard+"'>{% trans 'Super Slow'%} ("+guard+")</option>")
-                $('#id_guard').val(14-size);
-                if (soak > 15)
-                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
-                $('#id_soak').val(14+size);
-                $('#id_dam_text').html(damValues[size]);
-                $('#id_mobility_tr').show();
-                $('#id_air_mobility_tr').hide();
+                        $('#id_guard').val(14-size);
+                setSoak(14+size);
+                $('#id_dam_text').html(damValues[size-1]);
                 break;
             case 12: //mecha
-                var damValues= [0, 12, 14, 16, 20, 24];
-                var soak = 13+size;
+                var damValues= [12, 14, 16, 20, 24];
                 $('#id_guard').val(15-size);
-                if (soak > 15)
-                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
-                $('#id_soak').val(soak);
-                $('#id_dam_text').html(damValues[size]);
-                $('#id_mobility_tr').hide();
-                $('#id_air_mobility_tr').hide();
+                setSoak(13+size);
+                $('#id_dam_text').html(damValues[size-1]);
                 break;
             case 13: //GSV
-                var damValues= [0, 10, 12, 16, 20, 22];
-                var soakValues=[0, 15, 15, 16, 17, 18];
-                var soak = soakValues[size];
+                var damValues= [10, 12, 16, 17, 18];
+                var soakValues=[15, 15, 16, 17, 18];
+                setSoak(soakValues[size-1]);
                 $('#id_guard').val(14-size);
-                if (soak > 15)
-                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
-                $('#id_soak').val(soakValues[size]);
-                $('#id_dam_text').html(damValues[size]);
-                $('#id_mobility_tr').show();
-                $('#id_air_mobility_tr').hide();
+                $('#id_dam_text').html(damValues[size-1]);
                 break;
             case 14: //ASV
-                var damValues= [0, 10, 12, 14, 16, 18];
-                var soakValues=[0, 13, 14, 15, 16, 17];
-                var soak = soakValues[size];
-                if (soak > 15)
-                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
+                var damValues= [10, 12, 14, 16, 18];
+                var soakValues=[13, 14, 15, 16, 17];
+                setSoak(soakValues[size-1]);
                 $('#id_guard').val(15-size);
-                $('#id_soak').val(soakValues[size]);
-                $('#id_dam_text').html(damValues[size]);
-                $('#id_mobility_tr').hide();
-                $('#id_air_mobility_tr').show();
+                $('#id_dam_text').html(damValues[size-1]);
                 break;
             case 15: //Artillery
-                var damValues= [0, 12, 14, 18, 22, 24];
-                var soak=13+size;
+                var damValues= [12, 14, 18, 22, 24];
                 $("#id_guard").val(14-size);
-                if (soak > 15)
-                    $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>")
-                $("#id_soak").val(13+size);
-                $('#id_dam_text').html(damValues[size]);
-                $('#id_mobility_tr').show();
-                $('#id_air_mobility_tr').hide();
+                setSoak(13+size);
+                $('#id_dam_text').html(damValues[size-1]);
+                break;
+            case 17: // Field Artillery
+                var damValues= [9,11,13,15,17];
+                $("#id_guard").val(14-size);
+                setSoak(12+size);
+                $('#id_dam_text').html(damValues[size-1]);
+                break;
+            case 18:
+                var damValues= [8,10,12,14,16];
+                var guardValues=[14,13,13,12,11];
+                setSoak(12+size);
+                $('#id_guard').val( guardValues[size-1]);
+                $('#id_dam_text').html(damValues[size-1]);
+                break;
+            case (19):
+                $('#id_dam_text').html([12,14,16,18,20][size-1]);
+                setSoak(11+size);
+                $('#id_guard').val(16-size);
+                break;
+            case 20: // SHT
+                var damage=[34,38,42,46,50][size-1];
+                var guard = 9-size;
+                if (guard< 10)
+                    $("#id_guard").append("<option value='"+guard+"'>"+guard+"</option>");
+                $('#id_guard').val(guard);
+                setSoak(19+size);
+                $('#id_dam_text').html(damage);
+                break;
+            case 21: // SHAS
+                var damage=[34,38,42,46,50][size-1];
+                var guard = 11-size;
+                if (guard< 10)
+                    $("#id_guard").append("<option value='"+guard+"'>"+guard+"</option>");
+                $('#id_guard').val(guard);
+                setSoak(17+size);
+                $('#id_dam_text').html(damage);
+                break;
+            case 22:
+                var damValues= [15,20,25,30,35];
+                var guard = 16-size;
+                if (guard > 14)
+                    $("#id_guard").append("<option value='"+guard+"'>{% trans 'Super Fast'%} ("+guard+")</option>");
+                $('#id_guard').val(guard);
+                setSoak([14,15,18,19,20][size-1]);
+                $('#id_dam_text').html(damValues[size-1]);
+                break;
+            case 1:
+            case 2:
                 break;
             default:
-                alert ('Unit type ' + utype + ' not yet supported.');
+                alert('updateStats unsupported unit type, remove once all done');
+                break;
         }
+        if ($('#id_guard').val() == null)
+            $('#id_guard').val(10);
+        if ($('#id_soak').val() == null)
+            $('#id_soak').val(14);
 
-        if ( utype == 1 || utype == 2 || utype == 4 ) {
+        showMobility(utype);
+
+        if ( utype == 1 || utype == 2 || utype == 4 || utype == 3 ) {
             $("#id_guard option").removeAttr("disabled");
             $("#id_soak option").removeAttr("disabled");
         } else {
@@ -484,6 +742,7 @@ function showWeapons(utype) {
             case(1):
             case(3):
             case(4):
+            case(16):
                 $('#id_perks_tb').show();
                 break;
             default:
@@ -543,8 +802,6 @@ function weaponOR(event) {
         updateSave();
 
         $('select').change(updateCost);
-        $('#id_medicSpecialist').change(updateCost);
-        $('#id_engineerSpecialist').change(updateCost);
         $('#id_cmdTek').change(updateCost);
         $('#star').raty({
             score:{{unit.getRating}},
@@ -624,8 +881,23 @@ function weaponOR(event) {
                                 <tbody id="id_mobility_tr">
                                     <tr><td>{% trans "Mobility" %}</td><td>{{formObject.mobility}}</td><td id="id_mech_walk">{%trans "Mecha?" %}{{formObject.mechaSpecialist}}</td></tr>
                                 </tbody>
+                                <tbody id="id_commander_mobility_tr">
+                                    <tr><td>{{formObject.commander_mobility.label}}</td><td>{{formObject.commander_mobility}}</td></tr>
+                                </tbody>
                                 <tbody id="id_air_mobility_tr">
                                     <tr><td>{{formObject.air_mobility.label}}</td><td>{{formObject.air_mobility}}</td></tr>
+                                </tbody>
+                                <tbody id="id_vspec_mobility_tr">
+                                    <tr><td>{{formObject.vspec_mobility.label}}</td><td>{{formObject.vspec_mobility}}</td></tr>
+                                </tbody>
+                                <tbody id="id_field_artillery_mobility_tr">
+                                    <tr><td>{{formObject.field_artillery_mobility.label}}</td><td>{{formObject.field_artillery_mobility}}</td></tr>
+                                </tbody>
+                                <tbody id="id_fighter_mobility_tr">
+                                    <tr><td>{{formObject.fighter_mobility.label}}</td><td>{{formObject.fighter_mobility}}</td></tr>
+                                </tbody>
+                                <tbody id="id_monster_mobility_tr">
+                                    <tr><td>{{formObject.monster_mobility.label}}</td><td>{{formObject.monster_mobility}}</td></tr>
                                 </tbody>
                                 <tbody>
                                     <tbody id="id_basicWeapons_tb">
@@ -655,9 +927,12 @@ function weaponOR(event) {
                                         <tr id="tr_OR_inline2"><td>{{formObject.inline2_Custom.label}}</td><td>{{formObject.inline2_Custom}}</td></tr>
                                     </tbody>
                                 </tbody>
-                                <tbody id="id_mainWeapons_tb">
-                                    <tr><td>{{formObject.mainWeapons.label}}</td><td>{{formObject.mainWeapons}}</td><td>{{formObject.OR_MW}}</td></tr>
-                                    <tr id="tr_OR_MW"><td>{{formObject.MW_Custom.label}}</td><td>{{formObject.MW_Custom}}</td></tr> 
+                                <tbody id="id_squadSize_tb">
+                                    <tr><td>{% trans "Squad Size" %}</td><td>{{formObject.squadSize}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons1_tb">
+                                    <tr><td>{{formObject.mainWeapons1.label}}</td><td>{{formObject.mainWeapons1}}</td><td>{{formObject.OR_MW1}}</td></tr>
+                                    <tr id="tr_OR_MW1"><td>{{formObject.MW1_Custom.label}}</td><td>{{formObject.MW1_Custom}}</td></tr> 
                                 </tbody>
                                 <tbody id="id_mainWeapons2_tb">
                                     <tr><td></td><td>{{formObject.mainWeapons2}}</td><td>{{formObject.OR_MW2}}</td></tr>
@@ -671,6 +946,14 @@ function weaponOR(event) {
                                     <tr><td></td><td>{{formObject.mainWeapons4}}</td><td>{{formObject.OR_MW4}}</td></tr>
                                     <tr id="tr_OR_MW4"><td>{{formObject.MW4_Custom.label}}</td><td>{{formObject.MW4_Custom}}</td></tr>
                                 </tbody>
+                                <tbody id="id_mainWeapons5_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons5}}</td><td>{{formObject.OR_MW5}}</td></tr>
+                                    <tr id="tr_OR_MW5"><td>{{formObject.MW5_Custom.label}}</td><td>{{formObject.MW5_Custom}}</td></tr>
+                                </tbody>
+                                <tbody id="id_mainWeapons6_tb">
+                                    <tr><td></td><td>{{formObject.mainWeapons6}}</td><td>{{formObject.OR_MW6}}</td></tr>
+                                    <tr id="tr_OR_MW6"><td>{{formObject.MW6_Custom.label}}</td><td>{{formObject.MW6_Custom}}</td></tr>
+                                </tbody>
                                 <tbody id="id_AIWeapons_tb">
                                     <tr><td>{{formObject.AIWeapons.label}}</td><td>{{formObject.AIWeapons}}</td><td>{{formObject.OR_AI}}</td></tr>
                                     <tr id="tr_OR_AI"><td>{{formObject.AI_Custom.label}}</td><td>{{formObject.AI_Custom}}</td></tr> 
@@ -679,9 +962,12 @@ function weaponOR(event) {
                                     <tr><td></td><td>{{formObject.AIWeapons2}}</td><td>{{formObject.OR_AI2}}</td></tr>
                                     <tr id="tr_OR_AI2"><td></td><td>{{formObject.AI2_Custom}}</td></tr> 
                                 </tbody>
+                                <tbody id="id_MECHA_CCW_tb">
+                                    <tr><td>{{formObject.MECHA_CCW.label}}</td><td>{{formObject.MECHA_CCW}}</td><td>{{formObject.OR_MECHA_CCW}}</td></tr>
+                                    <tr id="tr_OR_MECHA_CCW"><td>{{formObject.MECHA_CCW_Custom.label}}</td><td>{{formObject.MECHA_CCW_Custom}}</td></tr>
+                                </tbody>
                                 <tbody>
                                     <tr id="id_cmdTek_tr"><td>{{formObject.cmdTek.label}}</td><td>{{formObject.cmdTek}}</td></tr>
-                                    <tr id="id_spec_abilities"><td>{%trans "Engineer "%} {{formObject.engineerSpecialist}}</td><td>{%trans "Medic"%}{{formObject.medicSpecialist}}</td></tr>
                                 </tbody>
                             </table>
                         </div>

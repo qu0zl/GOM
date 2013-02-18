@@ -1,2 +1,5 @@
 #python build
 *.pyc
+
+local_settings.py
+user_media

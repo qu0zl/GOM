@@ -31,7 +31,7 @@ def drawStats(p, grunt, WIDTH, HEIGHT):
     locations[0][2] = grunt.shoot
     locations[1][2] = grunt.getGuard()
     locations[2][2] = grunt.assault
-    locations[3][2] = grunt.getSoak()
+    locations[3][2] = grunt.getSoakStr()
     locations[4][2] = grunt.mental
     locations[5][2] = grunt.skill
     locations[0][3] = _('Shoot')
@@ -42,7 +42,7 @@ def drawStats(p, grunt, WIDTH, HEIGHT):
     locations[5][3] = _('Skill')
 
     p.setFillColor(colors.darkgrey)
-    p.roundRect(.4*WIDTH, .52*HEIGHT, (.6*WIDTH)-1, .18*HEIGHT+(.6*inch), radius=4, fill=1, stroke=0)
+    p.roundRect(.4*WIDTH, .47*HEIGHT, (.6*WIDTH)-1, .23*HEIGHT+(.6*inch), radius=4, fill=1, stroke=0)
     p.setStrokeColor(colors.white)
     # Only display guard, soak and skill for vehicles
     if grunt.isVehicle():
@@ -70,52 +70,40 @@ def getForceUnits(force):
         print 'getForceUnits caught exception:', e
     return units
 
-def drawPerks(p, grunt, WIDTH, HEIGHT):
-    if grunt.isInfantry():
+def getPerkText(grunt):
+    modz = None
+    perkz = None
+    if grunt.isInfantry() or grunt.unitType == 16:
         if grunt.unitType == 2: # Squad attachments display no perk string
             return
         perkString = _('No Perks')
-        perkList = grunt.perks
-    else:
+        perkz = grunt.perks.all()
+    if grunt.isVehicle():
         perkString = _('No Modz')
-        perkList = grunt.modz
+        modz = grunt.modz.all()
 
-    if perkList:
-        count = 0
-        for perk in perkList.all():
-            if count > 0:
-                perkString = perkString + '<br/>%s: %s' % (perk.perkName, perk.perkEffect)
-            else:
-                perkString = '%s: %s' % (perk.perkName, perk.perkEffect)
-            count = count+1
-
-    if grunt.isVehicle():
-        perkX = .43*WIDTH
-        perkY = .55*HEIGHT
-    else:
-        perkX = .05*WIDTH
-        if count > 1:
-            # Give more space if they have two perks. They'll need it!
-            perkY = .06 *HEIGHT
-        else:
-            perkY = .10*HEIGHT
-
-    para = paragraph.Paragraph(perkString, justifyStyle())
-
-    if grunt.isVehicle():
-        para.wrapOn(p, .54*WIDTH, .14*HEIGHT)
-    else:
-        if grunt.unitType == 3 and (grunt.medicSpecialist or grunt.engineerSpecialist):
-            para.wrapOn(p, .725*WIDTH, .14*HEIGHT)
-        else:
-            para.wrapOn(p, .9*WIDTH, .14*HEIGHT)
-    para.canv = p
-    p.translate(perkX, perkY)
-    para.drawPara()
-    p.translate(-perkX, -perkY)
-
+    count = 0
+    for list in perkz, modz:
+        if list != None:
+            for perk in list:
+                if count > 0:
+                    perkString = perkString + '<br/>%s: %s' % (perk.perkName, perk.perkEffect)
+                else:
+                    perkString = '%s: %s' % (perk.perkName, perk.perkEffect)
+                count = count+1
+    return perkString
 
 def calcCriticalInterval(dmg):
+    if dmg >= 50:
+        return 15
+    if dmg >= 46:
+        return 14
+    if dmg >= 42:
+        return 12
+    if dmg >= 38:
+        return 11
+    if dmg >= 34:
+        return 10
     if dmg >= 26:
         return 7
     elif dmg >= 20:
@@ -130,44 +118,42 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
     dmg = grunt.getDam()
     interval = calcCriticalInterval(dmg)
 
-    if grunt.unitType == 1:
-        dmgString='1' # Grunt squad
-    else:
-        dmgString = str(dmg)
+    dmgString = str(dmg)
 
     p.setStrokeColor(colors.black)
     p.setFillColor(colors.white)
     p.setFont("Helvetica-Bold", 6)
     x = .07*WIDTH
-    if grunt.isVehicle():
-        y = .19*HEIGHT
+   
+    if grunt.getDam() > 40:
+        y = .21 * HEIGHT
     else:
-        y = .22*HEIGHT
+        y = .19*HEIGHT
     boxWidth = WIDTH/19
     boxGap = WIDTH/119
     for i in range(0, dmg):
         boxX = x+((i%10)*(boxWidth+boxGap))
         boxY = y-((i/10)*(boxWidth+boxGap))
         p.roundRect(boxX, boxY, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
-        if (i+1)%interval == 0 and grunt.isVehicle():
+        if (i+1)%interval == 0 and grunt.nonVSpecVehicle():
             if (i+1)/interval <= 3:
                 p.setFillColor(colors.black)
                 # Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
                 p.drawCentredString( boxX+(boxWidth/2), boxY+.01*HEIGHT , _('C'))
                 p.setFillColor(colors.white)
     p.setFillColor(colors.black)
-    p.drawString(.7 * WIDTH, .24*HEIGHT, _('Damage:'))
+    p.drawString(.7 * WIDTH, .225*HEIGHT, _('Damage:'))
     p.setFont("Helvetica-Bold", 8)
-    p.drawCentredString(.9*WIDTH, .23*HEIGHT, dmgString)
+    p.drawCentredString(.9*WIDTH, .215*HEIGHT, dmgString)
     p.setStrokeColor(colors.lightgrey)
-    p.circle( .9*WIDTH, .24*HEIGHT, .04*WIDTH, fill=0, stroke=1)
-    # Draw Critical boxes if this is a vehicle
-    if grunt.isVehicle():
+    p.circle( .9*WIDTH, .227*HEIGHT, .035*WIDTH, fill=0, stroke=1)
+    # Draw Critical boxes if this is a vehicle other than vehicle specialist
+    if grunt.nonVSpecVehicle():
         strings=(_('Armour'), _('Engine'),
                 # Translators: Abbreviation of CmdTek - Gruntz term for vehicle carried command and control technology.
                 _('Tek'))
-        for i in range(0,3):
-            dy = y-(.03*HEIGHT)-((boxWidth+boxGap)*i)
+        for i in range(0,len(strings)):
+            dy = (.16*HEIGHT)-((boxWidth+boxGap)*i)
             p.setStrokeColor(colors.black)
             p.setFillColor(colors.white)
             p.roundRect(.88*WIDTH, dy, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
@@ -176,16 +162,17 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
 
 def drawSlots(p, grunt, WIDTH, HEIGHT):
     slots = grunt.getSlots()
-    if slots > 0:
-        x = .07*WIDTH
-        boxWidth = WIDTH/19
+    if slots:
+        x = .026*WIDTH
+        boxWidth = WIDTH/23
         boxGap = WIDTH/119
-        y = .24*HEIGHT
+        y = .51*HEIGHT
         p.setStrokeColor(colors.lightgrey)
         p.setFillColor(colors.white)
         p.roundRect(x, y, 8*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
         p.setFillColor(colors.black)
-        p.drawCentredString(x + 4*boxWidth, y+(boxWidth/4), "%s %d" % (_('Transport Slots:'), slots) )
+        p.setFont("Helvetica-Bold", 6)
+        p.drawCentredString(x + 4*boxWidth, y+(boxWidth/4), "%s %s" % (_('Transport Slots:'), slots) )
 
 def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
     try: # draw engineer or medic boxes if necessary
@@ -193,14 +180,14 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
             boxWidth = WIDTH/19
             boxGap = WIDTH/119
             dy = .14*HEIGHT
-            if grunt.medicSpecialist:
+            if False and grunt.medicSpecialist:
                 p.setStrokeColor(colors.lightgrey)
                 p.setFillColor(colors.white)
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
                 p.setFillColor(colors.black)
                 p.drawCentredString((.80*WIDTH) + 1.5*boxWidth, dy+(boxWidth/4), _('Medic'))
                 dy = dy - (boxWidth+boxGap)
-            if grunt.engineerSpecialist:
+            if False and grunt.engineerSpecialist:
                 p.setStrokeColor(colors.lightgrey)
                 p.setFillColor(colors.white)
                 p.roundRect(.80*WIDTH, dy, 3*boxWidth, boxWidth, radius=3, fill=1, stroke=1)
@@ -214,18 +201,22 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
 # Draw the weapon stat for a unitWeapon OR a weapon. Handles both.
 # Which is number of box this is, as we offset downwards for each box.
 # dxs are the x co-ords of the breaks in the weapon box.
-def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon):
+def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon, unit=None):
         p.setFillColor(colors.white)
-        dy = y+(.5*inch)-(which*BOX_HEIGHT)
+        dy = y-(which*BOX_HEIGHT)
         p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
         p.setFillColor(colors.black)
         p.drawString(x+(.03*inch), dy+(.03*inch), weapon.__unicode__())
+
         # Now that we've gotten the name, which may be an override from a unitWeapon
         # get the associated weapon if this is a unitWeapon. So that either way, we have a weapon from here on.
         try:
             weapon = weapon.weapon
         except:
             pass
+        if weapon.weaponFA:
+            p.drawImage('static/FA.png', .46*WIDTH, dy+(.1*BOX_HEIGHT) , width=.9*BOX_HEIGHT, height=.8*BOX_HEIGHT, preserveAspectRatio=True, mask='auto')
+
         dx = dxs[0]
         p.setFillColor(colors.white)
         p.rect(dx, dy, .11*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
@@ -252,7 +243,12 @@ def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, w
         if weapon.weaponAP != 0 :
             p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, str(weapon.weaponAP) )
         else:
-            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, '-' )
+            # Check if it's a Mecha using  a CCW weapon - affects AP value
+            if unit and unit.unitType == 12 and weapon.weaponType == 0:
+                apString=str([1,2,3,4,5][unit.size-1])
+            else:
+                apString = '-'
+            p.drawCentredString( dx+((.11*WIDTH)/2), dy+textYOffset, apString )
 
 
         dx = dxs[3]
@@ -270,10 +266,10 @@ def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, w
 
 def drawWeapons(p, unit, WIDTH, HEIGHT):
     x=.02*WIDTH
-    y=.3*HEIGHT
     BOX_HEIGHT=.16*inch
-    TOTAL_HEIGHT=.145*HEIGHT
-    MAX_HEIGHT=.045*HEIGHT
+    MAX_HEIGHT=.068*HEIGHT
+    y=.462*HEIGHT
+    TOTAL_HEIGHT=.182*HEIGHT
 
     # Work out how big weapon stat boxes can be - based on number of weapons
     count = 0
@@ -281,29 +277,33 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
     ram = unit.getRam()
 
     try:
-         count = unitWeaponList.count()
-         if ram > 0:
-             ramWeapon = gom.models.Weapons(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
-             count = count+1
-         BOX_HEIGHT = TOTAL_HEIGHT/count
-         if BOX_HEIGHT > MAX_HEIGHT:
-             BOX_HEIGHT=MAX_HEIGHT
+        count = unitWeaponList.count()
+        if ram > 0:
+            ramWeapon = gom.models.Weapons(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
+            count = count+1
+        BOX_HEIGHT = TOTAL_HEIGHT/count
+        if BOX_HEIGHT > MAX_HEIGHT:
+            BOX_HEIGHT=MAX_HEIGHT
     except:
         pass
 
+    print 'box height is', BOX_HEIGHT, MAX_HEIGHT, TOTAL_HEIGHT
+
     p.setFillColor(colors.black)
-    p.drawString(x, y+(.5*inch)+BOX_HEIGHT+(.04*inch), _('Attacks:'))
+    p.drawString(x, y+(.04*inch), _('Attacks:'))
+    
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.darkgrey)
-    p.rect(x,y+(.5*inch), .96*WIDTH, BOX_HEIGHT, fill=1)
+    p.rect(x,y-BOX_HEIGHT, .96*WIDTH, BOX_HEIGHT, fill=1)
     p.setStrokeColor(colors.lightgrey)
     # Lines in the title bar of weapons box.
     dxs = (x+.52*WIDTH, x+.63*WIDTH, x+.74*WIDTH, x+.85*WIDTH)
-    dys = (y+(.5*inch), y+(.5*inch)+BOX_HEIGHT)
+    dys = (y-BOX_HEIGHT, y)
     p.lines( [(dxs[0], dys[0], dxs[0],dys[1]),\
              (dxs[1], dys[0], dxs[1],dys[1]),\
              (dxs[2], dys[0], dxs[2],dys[1]),\
              (dxs[3], dys[0], dxs[3],dys[1])])
+
     p.setFillColor(colors.white)
     p.setFont("Helvetica-Bold", 6)
     # Make sure only to shift box text proportionally to how much we have shrunk boxes
@@ -325,24 +325,28 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
         pass
     for unitWeapon in unitWeaponList:
         i = i + 1
-        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon)
+        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon, unit)
 
 def drawDesc(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.white)
     p.setStrokeColor(colors.darkgrey)
     # Description box 
+    fontSize=8
+    MIN_FONT_SIZE = 1
     try:
         if unit.isVehicle():
-            p.roundRect(.42*WIDTH, .53*HEIGHT, .56*WIDTH, .24*HEIGHT, radius=2, fill=1)
-            descY=.67*HEIGHT
+            p.roundRect(.42*WIDTH, .48*HEIGHT, .56*WIDTH, .29*HEIGHT, radius=2, fill=1)
+            descHeight=.278*HEIGHT
         else:
-            p.roundRect(.42*WIDTH, .53*HEIGHT, .56*WIDTH, .1505*HEIGHT, radius=2, fill=1)
-            descY=.55*HEIGHT
+            p.roundRect(.42*WIDTH, .48*HEIGHT, .56*WIDTH, .2005*HEIGHT, radius=2, fill=1)
+            descHeight=.188*HEIGHT
+        descY=.488*HEIGHT
         descX=.43*WIDTH
         descWidth=.54*WIDTH
-        descHeight=.14*HEIGHT
         desc=unit.desc
-        fontSize=5
+        if desc:
+            desc = desc +'<br/><br/>'
+        desc = desc + getPerkText(unit)
     except: # must be a force
         p.roundRect(.05*WIDTH,.72 *HEIGHT, .9*WIDTH, .16*HEIGHT, radius=2, fill=1)
         descY=.74*HEIGHT
@@ -350,22 +354,24 @@ def drawDesc(p, unit, WIDTH, HEIGHT):
         descWidth=.88*WIDTH
         descHeight=.15*HEIGHT
         desc=unit.description
-        fontSize=7
 
     if desc:
-        para = paragraph.Paragraph(desc, justifyStyle(fontSize=fontSize))
-        para.wrapOn(p, descWidth, descHeight)
+        while fontSize >= MIN_FONT_SIZE:
+            para = paragraph.Paragraph(desc, justifyStyle(fontSize=fontSize))
+            width, height = para.wrapOn(p, descWidth, descHeight)
+            if height < descHeight:
+                break
+            fontSize = fontSize - 1
         para.canv = p
         p.translate(descX, descY)
         para.drawPara()
         p.translate(-descX, -descY)
 
 def mobString(unit):
-    if unit.unitType == 14: #ASV
-        mobStrings = (_('None'),_('Helicopter'),_('Prop VTOL'),_('Jet VTOL'),_('Grav'),_('Error'))
-    else:
-        mobStrings = (_('None'),_('Walk'),_('Track'),_('Wheels'),_('Hover'),_('Grav'))
-    return mobStrings[unit.mobility]
+    for i, string in gom.models.ALL_MOBILITY_CHOICES:
+        if i == unit.mobility:
+            return string
+    return _('Error')
 
 def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
     sizeString = (_('None'),_('Scout'),_('Light'),_('Medium'),_('Heavy'),_('Assault'))
@@ -382,7 +388,24 @@ def drawSizeAndMobility(p, unit, WIDTH, HEIGHT):
 
     p.drawString( .54*WIDTH , y+.01*HEIGHT, '%s %s' % (_('Size:'),sizeString[unit.size]) )
     p.setFont("Helvetica-Bold", 8)
-    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, str(unit.getSpeed()) )
+    speed = unit.getSpeedStr()
+    if speed < 0:
+        speed = "*"
+    else:
+        speed = str(speed)
+    p.drawCentredString( .065*WIDTH , y+.01*HEIGHT, speed )
+
+def drawCmdTek(p, unit, WIDTH, HEIGHT):
+    if not unit.cmdTek:
+        return
+    p.setStrokeColor(colors.darkgrey)
+    p.setFillColor(colors.white)
+    x = .75*WIDTH
+    y = .03 * HEIGHT
+    p.roundRect( x, y, .18*WIDTH, .037*HEIGHT, radius=5, fill=1, stroke=1)
+    p.setFillColor(colors.black)
+    p.setFont("Helvetica-Bold", 7)
+    p.drawCentredString( x+ (.18*WIDTH/2), y+.008*HEIGHT, _('CmdTek'))
 
 def drawType(p, unit, WIDTH, HEIGHT):
     p.setStrokeColor(colors.darkgrey)
@@ -410,10 +433,21 @@ def drawType(p, unit, WIDTH, HEIGHT):
         uString = _('ASV')
     elif unit.unitType == 15:
         uString = _('Artillery')
-    if unit.isVehicle():
-        p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
-    else:
-        p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
+    elif unit.unitType == 16:
+        uString = _('Vehicle Spec.')
+    elif unit.unitType == 17:
+        uString = _('Field Artillery')
+    elif unit.unitType == 18 :
+        uString = _('Air Attack Vehicle')
+    elif unit.unitType == 19 :
+        uString = _('Fighter')
+    elif unit.unitType == 20:
+        uString = _('Super-Heavy Tank')
+    elif unit.unitType == 21:
+        uString = _('S.H. Air Support')
+    elif unit.unitType == 22:
+        uString = _('Monster')
+    p.drawCentredString( x+ (.37*WIDTH/2), y+.007*HEIGHT, uString)
 
 # Calculate how small we need text in Helvetica-Bold font to be, in order to
 # fit inside width
@@ -447,7 +481,7 @@ def drawNameAndCost(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.black)
     p.drawCentredString( .77 * WIDTH, NAME_Y, '%d Pts' % cost)
     p.setStrokeColor(colors.darkgrey)
-    p.lines([ (0,LINE_Y, .85*WIDTH, LINE_Y), (.85*WIDTH,LINE_Y, .88*WIDTH,LINE_Y-(.03*HEIGHT)), (.88*WIDTH, LINE_Y-(.03*HEIGHT), WIDTH-1, LINE_Y-(.03*HEIGHT)) ])
+    p.lines([ (0,LINE_Y, .85*WIDTH, LINE_Y), (.85*WIDTH,LINE_Y, .88*WIDTH,LINE_Y-(.03*HEIGHT)), (.88*WIDTH, LINE_Y-(.03*HEIGHT), WIDTH, LINE_Y-(.03*HEIGHT)) ])
     # Change to use drawImage once I have a gruntz graphic with transparency
     p.drawInlineImage('static/gruntzLogo.jpg', .88*WIDTH, LINE_Y-(0.033*HEIGHT) , width=.105*WIDTH, height=.105*HEIGHT, preserveAspectRatio=True)
 
@@ -463,7 +497,7 @@ def drawManu(p, unit, WIDTH, HEIGHT):
 
 def drawBackgroundBox(p, WIDTH, HEIGHT):
     p.setFillColor(colors.lightgrey)
-    p.rect(0, 0, WIDTH-1, HEIGHT-1, fill=1)
+    p.rect(0, 0, WIDTH, HEIGHT, fill=1)
 
 def forceCard(p, WIDTH, HEIGHT, request, force):
     drawBackgroundBox(p, WIDTH, HEIGHT)
@@ -583,29 +617,29 @@ def oneCard(p, WIDTH, HEIGHT, request, unit):
     p.roundRect( .015*WIDTH, .59*HEIGHT, .371*WIDTH, .27*HEIGHT, radius=2, fill=0, stroke=1)
     p.setLineWidth(1)
 
+    #Lower square box
     p.setStrokeColor(colors.darkgrey)
     p.setFillColor(colors.white)
-    p.rect(0,0,RIGHT, .295*HEIGHT, stroke=1, fill=1)
+    p.rect(0,0,WIDTH, .27*HEIGHT, stroke=1, fill=1)
     p.setStrokeColor(colors.lightgrey)
     p.setFillColor(colors.white)
-
     # Bottom box 
-    p.roundRect(.02*WIDTH, .03*HEIGHT, .96*RIGHT, .26*HEIGHT, radius=10, fill=1, stroke=1) 
+    p.roundRect(.02*WIDTH, .025*HEIGHT, .98*RIGHT, .235*HEIGHT, radius=10, fill=1, stroke=1) 
 
     drawNameAndCost(p, unit, WIDTH, HEIGHT)
     drawStats(p, unit, WIDTH, HEIGHT)
     drawWeapons(p, unit, WIDTH, HEIGHT)
     drawDamage(p, unit, WIDTH, HEIGHT)
-    drawMedicEngineer(p, unit, WIDTH, HEIGHT)
+    drawCmdTek(p, unit, WIDTH, HEIGHT)
     drawSlots(p, unit, WIDTH, HEIGHT)
     drawDesc(p, unit, WIDTH, HEIGHT)
-    drawPerks(p, unit, WIDTH, HEIGHT)
     drawType(p, unit, WIDTH, HEIGHT)
     drawManu(p, unit, WIDTH, HEIGHT)
     drawSizeAndMobility(p, unit, WIDTH, HEIGHT)
     # black box around the edge
+    p.setLineWidth(1)
     p.setStrokeColor(colors.black)
-    p.rect(0, 0, RIGHT, TOP, stroke=1)
+    p.rect(0, 0, WIDTH, HEIGHT, stroke=1)
     return p
 
 def newLine(p, HEIGHT, CARD_HEIGHT, CARD_SPACING, ROW):
