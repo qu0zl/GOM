@@ -697,13 +697,7 @@ def list(request):
     except:
         forces = None
     # Find any users who have units, as we may wish to filter on them
-    owners=[]
-    #for unit in units:
-    #    owner = unit.owner
-    #    if owner not in owners:
-    #        owners.append(owner)
-    ## Put owners list in case-insensitive alphabetical order
-    #owners.sort(key=lambda x: str.lower(repr(x)))
+    owners = User.objects.all().exclude(unit=None).order_by('username')
 
     filterDict=None
     filterSet=None # use to pass defaults for html selects if this is based on user profile
