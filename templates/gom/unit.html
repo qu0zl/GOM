@@ -147,6 +147,13 @@
             return ((count - 1)*5)
         return 0;
     }
+    function heavyChassisCheck(which){
+        // heavy chassis mod is #55
+        if ($('#id_modz').val() == '55' || $('#id_modz2').val() == '55' ) {
+            return true;
+        }
+        return false;
+    }
     function perkCost(utype, size) {
         var cmdTekCost = 0;
         switch (utype) {
@@ -359,9 +366,13 @@
 
 function vehicleWeapon(which, utype, size)
 {
+    if (heavyChassisCheck())
+        dSize = parseInt(size,10) + 1;
+    else
+        dSize = size;
     $(which+'_tb').show();
     $("option", $(which)).each(function(i) {
-            if ($(this).attr("weaponSize")>size 
+            if ($(this).attr("weaponSize")>dSize 
                 || ((utype!=15 && utype!=17) && $(this).attr("weaponType") == 11)
                 || ((utype!=19) && $(this).attr("weaponType") == 12) 
                 || ((utype==19) && $(this).attr("weaponType") != 12) ) {
@@ -795,6 +806,9 @@ function weaponOR(event) {
         $('#id_soak').change(soakClick);
         $('#id_mobility').change(mobiClick);
         $('#id_mech_walk').hide();
+        // To handle heavy chassis
+        $('#id_modz').change(sizeClick);
+        $('#id_modz2').change(sizeClick);
         $('[type=checkbox].[name^="OR_"]').change(weaponOR);
         $('[type=checkbox].[name^="OR_"]').each(weaponOR);
         $('#id_publish').change(publishClick);
