@@ -788,12 +788,10 @@ class Unit(models.Model):
     def getRam(self):
         if self.unitType == MECHA:
             return 6+self.size
-        elif self.unitType in (TANK,GSV,ASV,ARTI,AAV,FIGHTER):
+        elif self.unitType in (TANK,GSV,ASV,ARTI,AAV,FIGHTER,MONSTER):
             return 8+self.size
         elif self.unitType in (SHT,SHAS):
             return 13+self.size
-        elif self.unitType == MONSTER:
-            return [9,10,12,12,13][self.size-1]
         return 0
     def getCost(self):
         if self.cost == 0:
