@@ -269,7 +269,7 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
     BOX_HEIGHT=.16*inch
     MAX_HEIGHT=.068*HEIGHT
     y=.462*HEIGHT
-    TOTAL_HEIGHT=.182*HEIGHT
+    TOTAL_HEIGHT=.188*HEIGHT
 
     # Work out how big weapon stat boxes can be - based on number of weapons
     count = 0
@@ -281,6 +281,7 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
         if ram > 0:
             ramWeapon = gom.models.Weapons(weaponName=_('Ram'),weaponRange=0,weaponDamage=ram,weaponAE=0,weaponAP=0)
             count = count+1
+        count = count +1 # Take weapon header line into account
         BOX_HEIGHT = TOTAL_HEIGHT/count
         if BOX_HEIGHT > MAX_HEIGHT:
             BOX_HEIGHT=MAX_HEIGHT
@@ -317,7 +318,7 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
     # Translators: Abbreviation of 'Area of Effect'
     p.drawCentredString( dxs[3]+((.11*WIDTH)/2), dys[0]+textYOffset, _('AE'))
 
-    i = 0
+    i = 1 # Skip weapon header line
     try: # If we have a ram weapon, draw it
         drawWeaponBox(p, x, y, dxs, textYOffset, i+1, WIDTH, HEIGHT, BOX_HEIGHT, ramWeapon)
         i = i + 1 # do this after the draw, as we only want to do it if a ramWeapon really exists
