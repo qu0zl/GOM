@@ -59,8 +59,8 @@ VEHICLE_TYPE_CHOICES = (
     (ASV,  _('ASV')),
     (ARTI,  _('Artillery')),
     (VSPEC,  _('Vehicle Specialist')),
-    # Translators: Air Attack Vehicle
     (FIELD_ARTI,  _('Field Artillery')),
+    # Translators: Air Attack Vehicle
     (AAV,  _('AAV')),
     (FIGHTER,  _('Fighter')),
     (SHT,  _('Super Heavy Tank')),
