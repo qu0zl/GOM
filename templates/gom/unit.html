@@ -809,8 +809,8 @@ function weaponOR(event) {
         // To handle heavy chassis
         $('#id_modz').change(sizeClick);
         $('#id_modz2').change(sizeClick);
-        $('[type=checkbox].[name^="OR_"]').change(weaponOR);
-        $('[type=checkbox].[name^="OR_"]').each(weaponOR);
+        $('input:checkbox[name^="OR_"]').change(weaponOR);
+        $('input:checkbox[name^="OR_"]').each(weaponOR);
         $('#id_publish').change(publishClick);
         updateStats( parseInt($('#id_unitType').val()), parseInt($('#id_size').val()) );
         updateSave();
