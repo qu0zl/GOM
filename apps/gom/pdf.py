@@ -201,7 +201,7 @@ def drawMedicEngineer(p, grunt, WIDTH, HEIGHT):
 # Draw the weapon stat for a unitWeapon OR a weapon. Handles both.
 # Which is number of box this is, as we offset downwards for each box.
 # dxs are the x co-ords of the breaks in the weapon box.
-def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon, unit=None):
+def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, weapon, unit=None, weaponCount=None):
         p.setFillColor(colors.white)
         dy = y-(which*BOX_HEIGHT)
         p.rect(x, dy, .52*WIDTH, BOX_HEIGHT, stroke=1, fill=1)
@@ -215,7 +215,13 @@ def drawWeaponBox(p, x, y, dxs, textYOffset, which, WIDTH, HEIGHT, BOX_HEIGHT, w
         except:
             pass
         if weapon.weaponFA:
-            p.drawImage('static/FA.png', .46*WIDTH, dy+(.1*BOX_HEIGHT) , width=.9*BOX_HEIGHT, height=.8*BOX_HEIGHT, preserveAspectRatio=True, mask='auto')
+            if weaponCount < 4:
+                x = .4 * WIDTH
+            elif weaponCount < 5:
+                x = .43 * WIDTH
+            else:
+                x = .46 *WIDTH
+            p.drawImage('static/FA2.png', x, dy+(.02*BOX_HEIGHT) , width=1.5*BOX_HEIGHT, height=BOX_HEIGHT, preserveAspectRatio=True, mask='auto')
 
         dx = dxs[0]
         p.setFillColor(colors.white)
@@ -320,13 +326,13 @@ def drawWeapons(p, unit, WIDTH, HEIGHT):
 
     i = 1 # Skip weapon header line
     try: # If we have a ram weapon, draw it
-        drawWeaponBox(p, x, y, dxs, textYOffset, i+1, WIDTH, HEIGHT, BOX_HEIGHT, ramWeapon)
+        drawWeaponBox(p, x, y, dxs, textYOffset, i+1, WIDTH, HEIGHT, BOX_HEIGHT, ramWeapon, None, count)
         i = i + 1 # do this after the draw, as we only want to do it if a ramWeapon really exists
     except Exception, e:
         pass
     for unitWeapon in unitWeaponList:
         i = i + 1
-        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon, unit)
+        drawWeaponBox(p, x, y, dxs, textYOffset, i, WIDTH, HEIGHT, BOX_HEIGHT, unitWeapon, unit, count)
 
 def drawDesc(p, unit, WIDTH, HEIGHT):
     p.setFillColor(colors.white)
