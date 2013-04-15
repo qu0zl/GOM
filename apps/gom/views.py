@@ -284,8 +284,8 @@ def saveVehicleWeapons(unit, form):
                 saveOneVehicleWeapon(unit, form, 3, "main")
                 if unit.size > 4:
                     saveOneVehicleWeapon(unit, form, 4, "main")
-    elif unit.unitType in (13,14,18):
-        # Don't save main weapons for GSV, ASV or AAV
+    elif unit.unitType in (13,14):
+        # Don't save main weapons for GSV or ASV
         if unit.size >= 3:
             saveOneVehicleWeapon(unit, form, 2, "ai")
     elif unit.unitType in (15,17): # Artillery
@@ -294,7 +294,7 @@ def saveVehicleWeapons(unit, form):
             saveOneVehicleWeapon(unit, form, 2, "main")
         if unit.size >= 3:
             saveOneVehicleWeapon(unit, form, 2, "ai")
-    elif unit.unitType == 19: # Fighter
+    elif unit.unitType in (18,19): # AAV or Fighter
         if unit.size > 1:
             saveOneVehicleWeapon(unit, form, 1, "main")
             if unit.size > 2:
