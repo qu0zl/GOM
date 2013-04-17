@@ -209,9 +209,8 @@
                     return WEAPON_COST[$('#id_basicWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(2):
                 return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_CCW').val()];
-            case(4):
-                return WEAPON_COST[$('#id_SAWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(3):
+            case(4):
             case(16):
                 return WEAPON_COST[$('#id_SpecWeapons').val()]+WEAPON_COST[$('#id_grenades').val()]+WEAPON_COST[$('#id_CCW').val()];
             case(11):
@@ -473,7 +472,6 @@ function showWeapons(utype) {
                     $('#id_SpecWeapons_tb').hide();
                     break;
                 case 2:
-                    $('#id_SAWeapons_td').html('{% trans "SA Weapons" %}');
                     $('#id_basicWeapons_tb').hide();
                     $('#id_SAWeapons_tb').show();
                     $('#id_SpecWeapons_tb').hide();
@@ -481,13 +479,14 @@ function showWeapons(utype) {
                 case 3:
                     $('#id_basicWeapons_tb').hide();
                     $('#id_SAWeapons_tb').hide();
+                    $('#id_SpecWeapons_td').html('{% trans "Specialist Weapons" %}');
                     $('#id_SpecWeapons_tb').show();
                     break;
                 case 4:
-                    $('#id_SAWeapons_td').html('{% trans "Commander Weapons" %}');
+                    $('#id_SpecWeapons_td').html('{% trans "Commander Weapons" %}');
                     $('#id_basicWeapons_tb').hide();
-                    $('#id_SAWeapons_tb').show();
-                    $('#id_SpecWeapons_tb').hide();
+                    $('#id_SAWeapons_tb').hide();
+                    $('#id_SpecWeapons_tb').show();
                     break;
                 default:
                     alert('Invalid infantry unit type:' + utype);
@@ -547,6 +546,7 @@ function showWeapons(utype) {
                     }
                     break;
                 case 16:
+                    $('#id_SpecWeapons_td').html('{% trans "Specialist Weapons" %}');
                     $('#id_SpecWeapons_tb').show();
                     break;
                 case 18: // AAV
@@ -919,11 +919,11 @@ score:{%if unit%}{{unit.getRating}}{%else%}null{%endif%},
                                         <tr id="tr_OR_basic"><td>{{formObject.basic_Custom.label}}</td><td>{{formObject.basic_Custom}}</td></tr>
                                     </tbody>
                                     <tbody id="id_SAWeapons_tb">
-                                        <tr><td id="id_SAWeapons_td">{% trans "SA/Commander weapons" %}</td><td>{{formObject.SAWeapons}}</td><td>{{formObject.OR_SA}}</td></tr>
+                                        <tr><td>{% trans "SA weapons" %}</td><td>{{formObject.SAWeapons}}</td><td>{{formObject.OR_SA}}</td></tr>
                                         <tr id="tr_OR_SA"><td>{{formObject.SA_Custom.label}}</td><td>{{formObject.SA_Custom}}</td></tr>
                                     </tbody>
                                     <tbody id="id_SpecWeapons_tb">
-                                        <tr><td>{% trans "Specialist Weapons" %}</td><td>{{formObject.SpecWeapons}}</td><td>{{formObject.OR_Spec}}</td></tr>
+                                        <tr><td id="id_SpecWeapons_td">{% trans "Specialist Weapons" %}</td><td>{{formObject.SpecWeapons}}</td><td>{{formObject.OR_Spec}}</td></tr>
                                         <tr id="tr_OR_Spec"><td>{{formObject.Spec_Custom.label}}</td><td>{{formObject.Spec_Custom}}</td></tr>
                                     </tbody>
                                     <tbody id="id_CCW_tb">
