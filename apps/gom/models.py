@@ -886,7 +886,7 @@ class UnitForm(forms.ModelForm):
     inlineWeapons = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     inlineWeapons2 = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType__in=[1,2,4]), required=False)
     # Grunt CCWs only
-    CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None, label=_('CCW'))
+    CCW = WeaponChoiceField(queryset=Weapons.objects.filter(weaponType=0), required=False, empty_label=None, label=_('CCW'), widget=WeaponSelect)
     MECHA_CCW = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=0, weaponName__in=['Basic','Small']), required=False, label=_('Mecha CCW'))
     # Grunt grenades only
     grenades = forms.ModelChoiceField(queryset=Weapons.objects.filter(weaponType=3), required=False, label=_('Grenade'))

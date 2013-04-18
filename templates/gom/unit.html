@@ -432,6 +432,28 @@ function showMobility(utype) {
             alert ('Unit type ' + utype + ' not yet supported.');
     }
 }
+
+function showCCW(utype) {
+
+    $('#id_CCW_tb').show();
+    var allowSpecCCW = false;
+    if ( utype == 4 || utype == 3 )
+        allowSpecCCW = true;
+    // overload weapon size purpose for CCWs.
+    // a weaponSize of 3 means a Specialist/Commander only CCW weapon
+    $("option", $('#id_CCW_tb')).each(function(i) {
+            if ($(this).attr("weaponSize") == 3 && !allowSpecCCW) {
+                $(this).attr("disabled", "disabled");
+                if ($(this).attr("selected")) {
+                $(this).removeAttr("selected");
+                    $('#id_CCW_tb').val("");
+                }
+            }
+            else
+                $(this).removeAttr("disabled");
+            });
+}
+
 function showWeapons(utype) {
         if ( utype == 1 ) {
             $('#id_inlineWeapons_tb').show();
@@ -457,7 +479,7 @@ function showWeapons(utype) {
             // Hide vehicle specific stuff
             $('#id_modz_tb').hide();
             $('#id_grenades_tb').show();
-            $('#id_CCW_tb').show();
+            showCCW(utype);
             switch (utype) {
                 case 1:
                     if ( utype == 1 && parseInt($('#id_soak').val()) >= 14 ) {
