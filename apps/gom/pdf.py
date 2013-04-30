@@ -131,16 +131,33 @@ def drawDamage(p, grunt, WIDTH, HEIGHT):
         y = .19*HEIGHT
     boxWidth = WIDTH/19
     boxGap = WIDTH/119
-    for i in range(0, dmg):
-        boxX = x+((i%10)*(boxWidth+boxGap))
-        boxY = y-((i/10)*(boxWidth+boxGap))
-        p.roundRect(boxX, boxY, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
-        if (i+1)%interval == 0 and grunt.nonVSpecVehicle():
-            if (i+1)/interval <= 3:
-                p.setFillColor(colors.black)
-                # Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
-                p.drawCentredString( boxX+(boxWidth/2), boxY+.01*HEIGHT , _('C'))
-                p.setFillColor(colors.white)
+    unitCount = 1
+    rowsPerUnit = 1
+    unitCountOffset = 0
+    if grunt.isGrunt():
+        if grunt.getDam() <= 10:
+            unitCount = 4
+            rowsPerUnit = 1
+        elif grunt.getDam() <= 20:
+            unitCount = 2
+            rowsPerUnit = 2
+    for j in range(0, unitCount):
+        if unitCount > 1:
+            p.setFillColor(colors.black)
+            p.drawString( .035*WIDTH, y+(boxWidth/3), '#%s' % (j+1))
+            p.setFillColor(colors.white)
+            unitCountOffset = .015*WIDTH
+        for i in range(0, dmg):
+            boxX = x+((i%10)*(boxWidth+boxGap))+unitCountOffset
+            boxY = y-((i/10)*(boxWidth+boxGap))
+            p.roundRect(boxX, boxY, boxWidth, boxWidth, radius=2, fill=1, stroke=1)
+            if (i+1)%interval == 0 and grunt.nonVSpecVehicle():
+                if (i+1)/interval <= 3:
+                    p.setFillColor(colors.black)
+                    # Translators: This is the first letter of 'Critical' and is used to flag critical boxes on vehicles cards.
+                    p.drawCentredString( boxX+(boxWidth/2), boxY+.01*HEIGHT , _('C'))
+                    p.setFillColor(colors.white)
+        y = y - ((rowsPerUnit/4.0)*.20*HEIGHT) # move down in case we're a gruntz unit
     p.setFillColor(colors.black)
     p.drawString(.7 * WIDTH, .225*HEIGHT, _('Damage:'))
     p.setFont("Helvetica-Bold", 8)
