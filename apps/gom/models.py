@@ -409,6 +409,8 @@ class Unit(models.Model):
         return False
     def isInfantry(self):
         return not self.isVehicle()
+    def isGrunt(self):
+        return self.unitType == GRUNT
     def nonVSpecVehicle(self):
         if self.isVehicle() and self.unitType != VSPEC:
             return True
