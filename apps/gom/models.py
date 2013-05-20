@@ -1032,15 +1032,20 @@ class UnitForm(forms.ModelForm):
                     self.fields['OR_inline2'].initial=True
             except IndexError:
                 pass
-            try:
-                self.fields['perks'].initial=kwargs['instance'].perks.all()[0]
-            except IndexError:
-                pass
-            try:
-                self.fields['perks2'].initial=kwargs['instance'].perks.all()[1]
-            except IndexError:
-                pass
-            try:
+            try: # Use this approach rather than all()[0] & all()[1] as on some querysets
+                # but not others, those would return the same result even if iterating through
+                # the queryset showed that the components differed. Dunno what caused it, I
+                # guess that it's a django bug - I know that querysets are lazy but don't think
+                # that's the cause.
+                perk1, perk2 = kwargs['instance'].perks.all()
+                self.fields['perks'].initial=perk1
+                self.fields['perks2'].initial=perk2
+            except ValueError:
+                try:
+                    self.fields['perks'].initial=kwargs['instance'].perks.all()[0]
+                except IndexError:
+                    pass
+            try: # if you have issues with modz being erroneously returned here, read the above perks comment
                 self.fields['modz'].initial=kwargs['instance'].modz.all()[0]
             except IndexError:
                 pass
