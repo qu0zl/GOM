@@ -344,6 +344,15 @@ class Unit(models.Model):
         for weapon in self.weapons.all():
             s = s + repr(weapon)
         return s
+    def test(self):
+        mainCount = UnitWeapon.objects.filter(unit=self, mountType=0).count()
+        if mainCount > 6:
+            print 'Too many main weapons on unit %d', self.id
+        if UnitWeapon.objects.filter(unit=self, mountType=1).count() >2:
+            print 'Too many main weapons on unit %d' % self.id
+        if self.unitType in (13,14) and mainCount > 0:
+            print 'Main weapons on an invalid unit type. Unit id %d' % self.id
+
     def addRating(self, rating, user):
         if rating=='null':
             print 'Null rating, trying to remove user rating'
@@ -620,23 +629,28 @@ class Unit(models.Model):
         else:
             return 0
     def mountCost(self):
-        # 0 mount cost for infantry and vehicle specialists
-        if self.isInfantry() or self.unitType == 16 :
-            return 0
-        if self.unitType == 13 or self.unitType == 14:
-            # Ensure an exception is thrown if we somehow end up with main weapons
-            # on a GSV or ASV
-            mainCosts = (0,)
-        elif self.unitType in (SHT,SHAS):
-            mainCosts = (0,1,4,8,12,14,16)
-        else:
-            mainCosts = (0, 1, 4, 8, 13)
-        AICosts = (0, 2, 4)
-        mainWeapons = UnitWeapon.objects.filter(unit=self, mountType=0).count()
-        AIWeapons = UnitWeapon.objects.filter(unit=self, mountType=1).count()
-        print 'mainWeapons:%d, AIWeapons:%d' % (mainWeapons, AIWeapons)
-        mountCosts = mainCosts[mainWeapons] + AICosts[AIWeapons]
-        return mountCosts
+        try:
+            # 0 mount cost for infantry and vehicle specialists
+            if self.isInfantry() or self.unitType == 16 :
+                return 0
+            if self.unitType == 13 or self.unitType == 14:
+                # Ensure an exception is thrown if we somehow end up with main weapons
+                # on a GSV or ASV
+                mainCosts = (0,)
+            elif self.unitType in (SHT,SHAS):
+                mainCosts = (0,1,4,8,12,14,16)
+            else:
+                mainCosts = (0, 1, 4, 8, 13)
+            AICosts = (0, 2, 4)
+            # Don't include CCW weapons when calculating mount cost - for example on Mechas
+            mainWeapons = UnitWeapon.objects.filter(unit=self, mountType=0).exclude(weapon__weaponType=0).count()
+            AIWeapons = UnitWeapon.objects.filter(unit=self, mountType=1).count()
+            print 'mainWeapons:%d, AIWeapons:%d' % (mainWeapons, AIWeapons)
+            mountCosts = mainCosts[mainWeapons] + AICosts[AIWeapons]
+            return mountCosts
+        except Exception as e:
+            print 'MountCost exception %s on unit %d' % (e, self.id)
+            return 999
     def perkCost(self):
         perkCount = 0 # only track positive cost perks
         cost=0
