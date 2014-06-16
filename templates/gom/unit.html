@@ -524,6 +524,8 @@ function showWeapons(utype) {
             $('#id_basicWeapons_tb').hide();
             $('#id_grenades_tb').hide();
             $('#id_CCW_tb').hide();
+            // filter in or out mecha only modz
+            mechaModz(utype);
             $('#id_modz_tb').show();
             if ( utype != 16 && utype != 22 )
                 vehicleWeapon('#id_AIWeapons', utype, size);
@@ -623,6 +625,18 @@ function showWeapons(utype) {
         if (soak > 15)
             $("#id_soak").append("<option value='"+soak+"'>"+soak+"</option>");
         $("#id_soak").val(soak);
+    }
+    function mechaModz(utype) {
+        $("option", $('#id_modz_tb')).each(function(i) {
+            if ($(this).attr("modzavailability") == 1 && utype!=12) {
+                $(this).attr("disabled", "disabled");
+                if ($(this).attr("selected")) {
+                    $(this).removeAttr("selected");
+                }
+            }
+            else
+                $(this).removeAttr("disabled");
+            });
     }
     function updateStats(utype, size) {
         if ( utype >= 3) {

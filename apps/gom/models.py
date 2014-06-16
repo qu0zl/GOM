@@ -206,6 +206,11 @@ class WeaponChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.weaponSize, obj.weaponType, obj.weaponName)
 
+# Over-ride ModelChoiceField to return availability as well as name, rather than just unicode name
+class AvailChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return (obj.modzType, obj.modzAvailability, obj.perkName)
+
 class WeaponSelect(forms.Select):
     def render_option(self, selected_choices, option_value, option):
         option_value = force_unicode(option_value)
@@ -222,6 +227,31 @@ class WeaponSelect(forms.Select):
         return u'<option value="%s" weaponSize="%s" weaponType="%s" %s>%s</option>' % (
             escape(option_value), weaponSize, weaponType, selected_html,
             conditional_escape(force_unicode(option_label)))
+
+    def render_options(self, choices, selected_choices):
+        # Normalize to strings.
+        selected_choices = set([force_unicode(v) for v in selected_choices])
+        output = []
+        for option_value, option_label in chain(self.choices, choices):
+            output.append(self.render_option(selected_choices, option_value, option_label))
+        return u'\n'.join(output)
+
+class AvailSelect(forms.Select):
+    def render_option(self, selected_choices, option_value, option):
+        option_value = force_unicode(option_value)
+        selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
+        # May not be a tuple if it's the empty value
+        if isinstance(option, (list, tuple)):
+            modzType = option[0]
+            modzAvailability = option[1]
+            option_label = option[2]
+        else:
+            modzType = 0
+            modzAvailability = 0
+            option_label = option
+        return u'<option value="%s" modzType="%s" modzAvailability="%s" %s>%s%s</option>' % (
+            escape(option_value), modzType, modzAvailability, selected_html,
+            conditional_escape(force_unicode(option_label)),"" if not modzAvailability else " (mecha only)")
 
     def render_options(self, choices, selected_choices):
         # Normalize to strings.
@@ -941,8 +971,8 @@ class UnitForm(forms.ModelForm):
     OR_inline2 = forms.BooleanField(required=False)
     perks = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk"))
     perks2 = forms.ModelChoiceField(queryset=Perks.objects.all().order_by('perkName'), required=False, label=_("Perk 2"))
-    modz = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
-    modz2 = forms.ModelChoiceField(queryset=Modz.objects.filter(modzAvailability=0), required=False) # Add mecha modz for mechas
+    modz = AvailChoiceField(queryset=Modz.objects.all(), required=False, widget=AvailSelect) # html responsible for mecha mod filtering
+    modz2 = AvailChoiceField(queryset=Modz.objects.all(), required=False, widget=AvailSelect)
     manu = forms.ModelChoiceField(queryset=Manufacturer.objects.all().order_by('manuName'), required=False)
     mobility = forms.ChoiceField(choices=BASIC_MOBILITY_CHOICES, required=False, label=_("Mobility"), initial=MOBILITY_WALK)
     # Use a DynamicChoiceField so that we will accept values outside of GUARD_CHOICES. Needed for assault class tanks.
