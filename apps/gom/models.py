@@ -1116,10 +1116,28 @@ class UnitForm(forms.ModelForm):
                 print "commander mobility exception", e
                 pass
             try:
-                if kwargs['instance'].unitType == 14: #ASV
+                if kwargs['instance'].unitType == FIGHTER:
+                    self.fields['fighter_mobility'].initial = kwargs['instance'].mobility
+            except Exception, e:
+                print "fighter mobility exception", e
+                pass
+            try:
+                if kwargs['instance'].unitType in [ASV,AAV,SHAS]:
                     self.fields['air_mobility'].initial = kwargs['instance'].mobility
             except Exception, e:
                 print "air mobility exception", e
+                pass
+            try:
+                if kwargs['instance'].unitType == MONSTER:
+                    self.fields['monster_mobility'].initial = kwargs['instance'].mobility
+            except Exception, e:
+                print "monster mobility exception", e
+                pass
+            try:
+                if kwargs['instance'].unitType == FIELD_ARTI:
+                    self.fields['field_artillery_mobility'].initial = kwargs['instance'].mobility
+            except Exception, e:
+                print "field artillery mobility exception", e
                 pass
             try:
                 if kwargs['instance'].unitType == VSPEC:
