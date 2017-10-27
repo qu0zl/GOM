@@ -761,6 +761,8 @@ function showWeapons(utype) {
                 $('#id_dam_text').html(damValues[size-1]);
                 break;
             case 1:
+                $("#id_soak").append("<option value='16'>{% trans 'Uber(16)'%}</option>");
+                break;
             case 2:
                 break;
             default:
